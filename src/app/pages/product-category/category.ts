@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AlertController } from "@ionic/angular";
+import { AlertController, LoadingController } from "@ionic/angular";
 import { Observable } from "rxjs";
 import { ProductCategory } from "../../interfaces/product-category";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
@@ -24,14 +24,22 @@ export class CategoryListPage implements OnInit {
   shopCode: string;
   categoryList: ProductCategory[];
   rowCount: Array<ProductCategory[]>;
+  loading:any;
   constructor(
-    public categoryListProvider: CategoryListProvider,public alert:AlertController
+    public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController
   ) {
-
+    this.loading =  this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Please wait...',
+      duration: 2000
+    });
   }
 ngOnInit(): void {
+  this.loading().present();
  this.categoryListProvider.getProductCategoryList("shopCode")
- .subscribe(c => {this.categoryList = c},
+ .subscribe(c => {
+  this.loading().dismiss();
+   this.categoryList = c},
   (error) =>{
     this.presentAlert();
   } 
