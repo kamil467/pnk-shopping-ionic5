@@ -37,12 +37,14 @@ ngOnInit(): void {
 this.presentLoading
  this.categoryListProvider.getProductCategoryList("shopCode")
  .subscribe(c => {
-   this.categoryList = c},
+   this.categoryList = c;
+    this.rowCount = BuildGridArray(this.categoryList,3);
+   },
   (error) =>{
     this.presentAlert();
   } 
   );
-  this.rowCount = BuildGridArray(this.categoryList,3);
+ 
 
 }
   async presentAlert() {
