@@ -1,0 +1,69 @@
+<!--
+  Generated template for the ShoplistPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<ion-header>
+  <ion-toolbar color="crimson">
+  Shop List
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="card-background-page">
+ <div *ngFor="let shop of shopListArray ">
+    <ion-card (click)="clickShop(shop.storeCode)">
+      <ion-item>
+        <!--
+      <ion-avatar item-start>
+        <img src="img/marty-avatar.png">
+      </ion-avatar> -->
+        <h2>{{shop.name}}</h2>
+        <p>
+          <ion-note>
+            {{shop.location}}
+          </ion-note>
+        </p>
+      </ion-item>
+      <ng-container
+        *ngIf="shop.tileImageUrl!=null; then customImage;else defaultImage"
+      ></ng-container>
+      <ng-template #customImage>
+        <img [src]="shop.tileImageUrl" />
+      </ng-template>
+      <ng-template #defaultImage>
+        <img
+          src="https://firebasestorage.googleapis.com/v0/b/pnkshop-adb8e.appspot.com/o/supermarket%2FsupermarketTile.jpg?alt=media&token=8d3b3eb8-dc5d-461e-93df-647752f10561"
+        />
+      </ng-template>
+
+      <ion-card-content>
+        <p>{{shop.description}}</p>
+      </ion-card-content>
+      <ion-row>
+        <ion-col>
+          <ion-icon name="bicycle"></ion-icon>
+          <div>{{shop.deliverySpeed}}</div>
+        </ion-col>
+        <ion-col>
+          <ion-icon name="alarm"></ion-icon>
+          <div>{{shop.operationHours}}</div>
+        </ion-col>
+        <ion-col>
+          <ion-icon name="call"></ion-icon>
+          <div>{{shop.shopContactNumber1}},{{shop.shopContactNumber2}}</div>
+        </ion-col>
+      </ion-row>
+      <hr class="card-footer" />
+      <ion-row padding>
+        <p>Our Service Available at</p>
+        <div *ngFor="let area of shop.serviceArea">
+          <ion-col>
+            <ion-badge color="primary">{{area.cityName}}</ion-badge>
+          </ion-col>
+        </div>
+      </ion-row>
+    </ion-card>
+  </div>
+</ion-content>
