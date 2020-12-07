@@ -27,25 +27,25 @@ export class CategoryListPage implements OnInit {
   constructor(
     public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController
   ) {
-   
+  
   }
-ngOnInit(): void {
-
-/** Loading initialization/ */
-
-
-this.presentLoading
+async ngOnInit(){
+   const loading =  await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Please wait...',
+    });
+    loading.present();
  this.categoryListProvider.getProductCategoryList("shopCode")
- .subscribe(c => {
+ .subscribe( c => {
    this.categoryList = c;
     this.rowCount = BuildGridArray(this.categoryList,3);
+   loading.dismiss();
    },
   (error) =>{
     this.presentAlert();
-  } 
+  },
   );
  
-
 }
   async presentAlert() {
     const alert = await this.alert.create({
@@ -57,15 +57,5 @@ this.presentLoading
     });
     await alert.present();
   }
-  async presentLoading() {
-    const loading = await this.loadingController.create({
-      cssClass: 'my-custom-class',
-      message: 'Please wait...',
-      duration: 2000
-    });
-    await loading.present();
 
-    const { role, data } = await loading.onDidDismiss();
-    console.log('Loading dismissed!');
-  }
 }
