@@ -18,7 +18,7 @@
 					<ng-container *ngIf="category != undefined; then pccard;">
 					</ng-container>
 					<ng-template #pccard>
-						<ion-card (click)="categoryClicked(category.id)">
+						<ion-card routerLink="/app/tabs/market/product-list">
 							<ng-container *ngIf="category.imageURL != null; then customImage;else defaultImage">
 							</ng-container>
 							<ng-template #customImage>
