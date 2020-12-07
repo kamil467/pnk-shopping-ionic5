@@ -13,7 +13,7 @@ export class ProductListProvider {
 
   getProductsByCategory(categroyCode:string):Observable<Product[]>
   {
-    return this.http.get<Product[]>(environment.productCategoryListAPI)
+    return this.http.get<Product[]>(environment.productListAPI)
     .pipe(
    retry(3),
    catchError(this.handleError)
