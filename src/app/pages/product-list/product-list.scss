@@ -1,0 +1,23 @@
+//page-product-list {
+.card-background-page {
+  background-color: #b94545;
+
+  .newprice {
+    text-align: end;
+  }
+  .cart-button {
+    background-color: crimson;
+    color: white;
+  }
+  .stockin {
+    background-color: crimson;
+    color: rgb(247, 244, 244);
+  }
+  .out-stock {
+    opacity: 0.5;
+  }
+  .col-end-align {
+    text-align: end;
+  }
+}
+//}

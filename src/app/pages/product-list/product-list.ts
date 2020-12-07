@@ -18,7 +18,41 @@ import { BuildGridArray } from "../../Utility/utility";
     styleUrls: ["product-list.scss"]
 })
 export class ProductListPage implements OnInit {
-ngOnInit(): void {
-throw new Error("Method not implemented.");
+  allProducts: Product[];
+  rowItems: Array<Product[]>;
+constructor(public productListProvider:ProductListProvider,
+public loader:LoadingController,public alert:AlertController)
+{
+
 }
+
+async ngOnInit() {
+
+  const loading =  await this.loader.create({
+      cssClass: 'my-custom-class',
+      message: 'Please wait...',
+    });
+    await loading.present();
+  this.productListProvider.getProductsByCategory("categoryCode")
+  .subscribe(async pl => {
+    this.allProducts = pl;
+    BuildGridArray(this.allProducts,2);
+    await loading.dismiss();
+  },
+  async (error) =>  {
+    await this.presentAlert();
+  }
+  )
+}
+
+  async presentAlert() {
+    const alert = await this.alert.create({
+      cssClass: 'my-custom-class',
+      header: 'Alert',
+      subHeader: 'Error Occurred',
+      message: 'Please try again later.',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
 }

@@ -1,0 +1,95 @@
+<!--
+  Generated template for the ProductListPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-toolbar color="crimson">
+    Product List
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="card-background-page">
+	<ion-grid>
+		<div *ngFor="let row of rowItems">
+			<ion-row>
+				<ion-col col-6 *ngFor="let product of row">
+					<ng-container *ngIf="product != undefined; then productcard;"></ng-container>
+					<ng-template #productcard>
+						<ion-card>
+							<ng-container *ngIf="product.productImageUrl != null; then customImage;else defaultImage">
+							</ng-container>
+							<ng-template #customImage>
+								<img [src]="product.productImageUrl" />
+              </ng-template>
+								<ng-template #defaultImage>
+									<img
+                  src="https://firebasestorage.googleapis.com/v0/b/pnkshop-adb8e.appspot.com/o/default%2Fdefault.jpg?alt=media&token=a4c659c5-cc60-4ab2-8f69-16e12f2d580e"
+                />
+              </ng-template>
+									<ion-row>
+										<ion-col col-10>
+											<div>{{product.name}}</div>
+										</ion-col>
+										<ion-col col-2>
+											<ion-icon name="information-circle"></ion-icon>
+										</ion-col>
+									</ion-row>
+									<ion-row>
+										<ion-col col>
+											<ion-note>
+												{{product.size}}
+											</ion-note>
+										</ion-col>
+										<ng-container *ngIf="product.inStock == true">
+											<ion-col col class="col-end-align">
+												<ion-badge color="secondary">stock</ion-badge>
+											</ion-col>
+										</ng-container>
+										<ng-container *ngIf="product.inStock == false">
+											<ion-col col class="col-end-align">
+												<ion-badge color="danger">no stock</ion-badge>
+											</ion-col>
+										</ng-container>
+									</ion-row>
+
+									<ion-row>
+										<ng-container *ngIf="product.price != 0; then displayOld;"></ng-container>
+										<ng-template #displayOld>
+											<ion-col>
+												<strong><del>Rs.{{product.price}}</del></strong>
+											</ion-col>
+										</ng-template>
+										<ion-col class="newprice">
+											<strong><ins>Rs.{{product.offeredPrice}}</ins></strong>
+										</ion-col>
+									</ion-row>
+
+									<ion-row>
+										<ng-container
+											*ngIf="product.inStock == true; then addCart; else showOutOfStock">
+										</ng-container>
+										<ng-template #addCart>
+											<ion-col col-12 align-self-center text-center class="cart-button" (click)="addToBasket(product)">
+												<ion-icon name="basket"></ion-icon> Add
+											</ion-col>
+										</ng-template>
+
+										<ng-template #showOutOfStock>
+											<ion-col col-12 align-self-center text-center class="cart-button out-stock">
+												<ion-icon name="basket"></ion-icon> Add
+											</ion-col>
+										</ng-template>
+									</ion-row>
+						</ion-card>
+					</ng-template>
+				</ion-col>
+			</ion-row>
+		</div>
+	</ion-grid>
+</ion-content>
+<ion-footer class="basket-footer">
+	<ion-toolbar>
+		<app-footer-basket [basketFooterObj]="basketFooterObj"></app-footer-basket>
+	</ion-toolbar>
