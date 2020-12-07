@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   shopListAPI:"https://run.mocky.io/v3/178c994d-8c3d-45e6-a093-e308773c0b65",
   productCategoryListAPI:"",
+  
 };
 
 /*

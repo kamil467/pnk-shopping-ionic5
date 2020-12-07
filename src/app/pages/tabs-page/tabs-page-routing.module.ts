@@ -33,15 +33,13 @@ const routes: Routes = [
           },
           {
             path:'shoplist',
-            loadChildren:() => import('../shop-list/shoplist.module').then(m=> m.ShopListModule),
-           children:[
-             {
+            loadChildren:() => import('../shop-list/shoplist.module').then(m=> m.ShopListModule)
+         
+          },
+              {
                 path:'product-category-list',
                 loadChildren:() => import ('../product-category/category.module').then(m => m.CategoryModule)
              }
-           ]
-
-          }
         ]
       },
       {
