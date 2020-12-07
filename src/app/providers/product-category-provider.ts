@@ -14,6 +14,7 @@ export class CategoryListProvider {
 
 getProductCategoryList(shopCode:string):Observable<ProductCategory[]>
 {
+  
 return this.http.get<ProductCategory[]>(environment.productCategoryListAPI)
 .pipe(
   retry(3),
