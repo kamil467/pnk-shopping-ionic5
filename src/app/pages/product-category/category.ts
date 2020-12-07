@@ -24,21 +24,19 @@ export class CategoryListPage implements OnInit {
   shopCode: string;
   categoryList: ProductCategory[];
   rowCount: Array<ProductCategory[]>;
-  loading:any;
   constructor(
     public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController
   ) {
-    this.loading =  this.loadingController.create({
-      cssClass: 'my-custom-class',
-      message: 'Please wait...',
-      duration: 2000
-    });
+   
   }
 ngOnInit(): void {
-  this.loading().present();
+
+/** Loading initialization/ */
+
+
+this.presentLoading
  this.categoryListProvider.getProductCategoryList("shopCode")
  .subscribe(c => {
-  this.loading().dismiss();
    this.categoryList = c},
   (error) =>{
     this.presentAlert();
@@ -56,5 +54,16 @@ ngOnInit(): void {
       buttons: ['OK']
     });
     await alert.present();
+  }
+  async presentLoading() {
+    const loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Please wait...',
+      duration: 2000
+    });
+    await loading.present();
+
+    const { role, data } = await loading.onDidDismiss();
+    console.log('Loading dismissed!');
   }
 }
