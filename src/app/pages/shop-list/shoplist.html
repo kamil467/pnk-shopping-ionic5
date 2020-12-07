@@ -13,7 +13,7 @@
 
 <ion-content class="card-background-page">
  <div *ngFor="let shop of shopListArray ">
-    <ion-card (click)="clickShop(shop.storeCode)">
+    <ion-card routerLink="/app/tabs/market/shoplist/product-category-list">
       <ion-item>
         <!--
       <ion-avatar item-start>

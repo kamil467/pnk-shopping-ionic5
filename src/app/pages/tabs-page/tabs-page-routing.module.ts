@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs-page';
 import { SchedulePage } from '../schedule/schedule';
 import { MarketplacePage } from '../marketplace/marketplace';
+import { CategoryListPage } from '../product-category/category';
 
 
 const routes: Routes = [
@@ -32,7 +33,14 @@ const routes: Routes = [
           },
           {
             path:'shoplist',
-            loadChildren:() => import('../shop-list/shoplist.module').then(m=> m.ShopListModule)
+            loadChildren:() => import('../shop-list/shoplist.module').then(m=> m.ShopListModule),
+           children:[
+             {
+                path:'product-category-list',
+                loadChildren:() => import ('../product-category/category.module').then(m => m.CategoryModule)
+             }
+           ]
+
           }
         ]
       },
