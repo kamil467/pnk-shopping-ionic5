@@ -20,6 +20,7 @@ import { BuildGridArray } from "../../Utility/utility";
 export class ProductListPage implements OnInit {
   allProducts: Product[];
   rowItems: Array<Product[]>;
+  
 constructor(public productListProvider:ProductListProvider,
 public loader:LoadingController,public alert:AlertController)
 {
