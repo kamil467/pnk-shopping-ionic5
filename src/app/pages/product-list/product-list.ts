@@ -36,7 +36,7 @@ async ngOnInit() {
   this.productListProvider.getProductsByCategory("categoryCode")
   .subscribe(async pl => {
     this.allProducts = pl;
-   thirowItems= BuildGridArray(this.allProducts,2);
+   this.rowItems= BuildGridArray(this.allProducts,2);
     await loading.dismiss();
   },
   async (error) =>  {
