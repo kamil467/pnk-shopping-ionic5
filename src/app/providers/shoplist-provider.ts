@@ -33,4 +33,11 @@ export class ShopListProvider {
   return throwError(
     'Something bad happened; please try again later.');
 }
+getShopByCode(shopCode:string):Observable<Shop>
+{
+  return this.http.get<Shop>(environment.shopAPI).pipe(
+    retry(3),
+    catchError(this.handleError)
+  );
+}
 }

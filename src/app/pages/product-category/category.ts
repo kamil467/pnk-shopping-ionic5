@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { AlertController, LoadingController } from "@ionic/angular";
-import { Observable } from "rxjs";
+import { concat, from,  Observable } from "rxjs";
+import { concatMap } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
 import { ProductCategory } from "../../interfaces/product-category";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
@@ -30,13 +31,9 @@ export class CategoryListPage implements OnInit {
   basketObj: BasketObj;
   shopObj:Shop;
   constructor(
-    public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController, private basketProvider: BasketProvider
+    public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController, public basketProvider: BasketProvider,public shopProvider:ShopListProvider
   ) {
-  this.shopObj = {
-    name:"Shop Code",
-    serviceArea:[],
-    storeCode:"1234"
-    }
+ 
   }
   
 async ngOnInit(){
@@ -45,26 +42,25 @@ async ngOnInit(){
       message: 'Please wait...',
     });
     loading.present();
+
+const shopSubscribe = this.shopProvider.getShopByCode("1234").subscribe(s => this.shopObj = s);
+const basketSubscribe = this.basketProvider.initiateBasket(this.shopObj).subscribe(b => this.basketObj = b);
+const map = from([shopSubscribe,basketSubscribe]).pipe(concatMap(x => x)).subscribe(x =>x);
+
+                      
+                       
+                        
  this.categoryListProvider.getProductCategoryList("shopCode")
  .subscribe( c => {
    this.categoryList = c;
     this.rowCount = BuildGridArray(this.categoryList,3);
-     this.basketProvider
-      .initiateBasket(this.shop)
-      .subscribe(bask => (this.basketObj = bask));
-    console.log("Basket initiated");
-    this.basketFooterObj = {
-      storecode: this.basketObj.storeCode,
-      totalBasket: 0,
-      totalItemCount: 0
-    };
    loading.dismiss();
    },
   (error) =>{
     this.presentAlert();
   },
   );
- 
+
 }
   async presentAlert() {
     const alert = await this.alert.create({
