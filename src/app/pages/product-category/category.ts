@@ -41,15 +41,7 @@ async ngOnInit(){
       cssClass: 'my-custom-class',
       message: 'Please wait...',
     });
-    loading.present();
-
-const shopSubscribe = this.shopProvider.getShopByCode("1234").subscribe(s => this.shopObj = s);
-const basketSubscribe = this.basketProvider.initiateBasket(this.shopObj).subscribe(b => this.basketObj = b);
-const map = from([shopSubscribe,basketSubscribe]).pipe(concatMap(x => x)).subscribe(x =>x);
-
-                      
-                       
-                        
+    loading.present();                                             
  this.categoryListProvider.getProductCategoryList("shopCode")
  .subscribe( c => {
    this.categoryList = c;
@@ -60,6 +52,11 @@ const map = from([shopSubscribe,basketSubscribe]).pipe(concatMap(x => x)).subscr
     this.presentAlert();
   },
   );
+
+const shopSubscribe = this.shopProvider.getShopByCode("1234");
+const basketShopSubscribe = shopSubscribe.pipe(concatMap(b => this.basketProvider.initiateBasket(b)
+));
+basketShopSubscribe.subscribe(b => this.basketObj = b);   
 
 }
   async presentAlert() {
@@ -72,5 +69,8 @@ const map = from([shopSubscribe,basketSubscribe]).pipe(concatMap(x => x)).subscr
     });
     await alert.present();
   }
-
+assignShop(shop:Shop)
+{
+  this.shopObj = shop;
+}
 }
