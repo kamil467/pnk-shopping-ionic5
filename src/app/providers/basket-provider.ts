@@ -56,6 +56,7 @@ export class BasketProvider {
        console.log("basket code 2");
       this.myBasket.items = new Array();
       this.myBasket.items.push(oderItem);
+      console.log("Items pushed");
     } else {
        console.log("basket code 3");
       let isFound = this.myBasket.items.find(i => i.productId == item.id);
@@ -66,7 +67,7 @@ export class BasketProvider {
         isFound.quantity = isFound.quantity + 1;
         isFound.totalPrice = isFound.pricePerQuantity * isFound.quantity;
       } else {
-        
+         console.log("basket code 5");
         console.log("else reszult" + isFound);
         let oderItem: OrderItem = {
           orderItemId:null,
@@ -89,7 +90,7 @@ export class BasketProvider {
   getFooterObj(orderItems: OrderItem[]): Observable<BasketFooterObj> {
     console.log("code is here");
     let footerBasket: BasketFooterObj;
-    let totalItemCount: number = 2;
+    let totalItemCount: number = 0;
     let totalBasketAmount: number = 0;
     if (orderItems != undefined) {
       if (orderItems.length > 0) {

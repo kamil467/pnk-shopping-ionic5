@@ -34,8 +34,7 @@ public loader:LoadingController,public alert:AlertController)
 
 }
 
-async ngOnInit() {
-  
+async ngOnInit() { 
 this.basketFooterObj = {
   storecode:"storecode",
   totalBasket:0,
@@ -69,7 +68,6 @@ async (error) =>{
 }
 );
 }
-
   async presentAlert(errorMessage:any,componenet:string) {
     const alert = await this.alert.create({
       cssClass: 'my-custom-class',
@@ -85,11 +83,7 @@ async (error) =>{
     console.log("add to basket clicked"+product.name);
     // build orderItem.
      this.basketProvider.addItemToBasket(product);
-         this.basketProvider.getFooterObj(this.basketObj.items)
-  .subscribe(f => {this.basketFooterObj = f},
-  (error) =>{
-    this.presentAlert(error,"addToItemCartIssue");
-  }
-  ); // refresh the basket everytim.// local call - no expensive service call.
+     this.getBasketFromMemory();
+  // refresh the basket everytim.// local call - no expensive service call.
   }
 }
