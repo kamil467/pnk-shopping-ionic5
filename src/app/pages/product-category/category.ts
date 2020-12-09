@@ -41,7 +41,11 @@ export class CategoryListPage implements OnInit {
     this.defaultHref = `/app/tabs/market/shoplist`;
   }
 async ngOnInit(){
-  
+  this.basketFooterObj = {
+  storecode:"storecode",
+  totalBasket:0,
+  totalItemCount:0
+}
    const loading =  await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
