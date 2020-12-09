@@ -32,9 +32,11 @@ export class CategoryListPage implements OnInit {
   defaultHref='';
   shopObj:Shop;
   constructor(
-    public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController, public basketProvider: BasketProvider,public shopProvider:ShopListProvider
+    public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController, public basketProvider: BasketProvider,public shopProvider:ShopListProvider,public platform:Pla
   ) {
- 
+ this.platform.backButton.subscribeWithPriority(10, () => {
+    console.log('Handler was called!');
+  });
   }
   
    ionViewDidEnter() {
