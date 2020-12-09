@@ -20,6 +20,7 @@ import { ShopListProvider } from "../../providers/shoplist-provider";
 export class ShoplistPage implements OnInit {
   shopCategoryCode: string;
   shopListArray: Shop[];
+   defaultHref = '';
   constructor(
     public shopListProvider: ShopListProvider,public alert:AlertController
   ) {
@@ -44,5 +45,8 @@ ngOnInit(): void {
     });
 
     await alert.present();
+  }
+   ionViewDidEnter() {
+    this.defaultHref = `/app/tabs/market`;
   }
 }

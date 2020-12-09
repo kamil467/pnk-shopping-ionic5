@@ -29,6 +29,7 @@ export class CategoryListPage implements OnInit {
   rowCount: Array<ProductCategory[]>;
    basketFooterObj: BasketFooterObj;
   basketObj: BasketObj;
+  defaultHref='';
   shopObj:Shop;
   constructor(
     public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController, public basketProvider: BasketProvider,public shopProvider:ShopListProvider
@@ -36,6 +37,9 @@ export class CategoryListPage implements OnInit {
  
   }
   
+   ionViewDidEnter() {
+    this.defaultHref = `/app/tabs/market/product-category-lis`;
+  }
 async ngOnInit(){
    const loading =  await this.loadingController.create({
       cssClass: 'my-custom-class',

@@ -27,13 +27,15 @@ export class ProductListPage implements OnInit {
    shop: Shop;
   basketObj: BasketObj;
   basketFooterObj: BasketFooterObj;
-  
+  defaultHref='';
 constructor(public productListProvider:ProductListProvider,public basketProvider: BasketProvider,
 public loader:LoadingController,public alert:AlertController)
 {
 
 }
-
+   ionViewDidEnter() {
+    this.defaultHref = `/app/tabs/market/product-category-list`;
+  }
 async ngOnInit() { 
 this.basketFooterObj = {
   storecode:"storecode",
