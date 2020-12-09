@@ -41,6 +41,7 @@ export class BasketProvider {
   }
 
   addItemToBasket(item: Product) {
+    console.log("basket code 1");
     // check for existing productId.
     if (this.myBasket.items == undefined || this.myBasket.items.length == 0) {
       let oderItem: OrderItem = {
@@ -52,16 +53,20 @@ export class BasketProvider {
         productImageUrl: item.productImageUrl,
         totalPrice: item.offeredPrice
       };
+       console.log("basket code 2");
       this.myBasket.items = new Array();
       this.myBasket.items.push(oderItem);
     } else {
+       console.log("basket code 3");
       let isFound = this.myBasket.items.find(i => i.productId == item.id);
       if (isFound != undefined || isFound != null) {
         // item has been found.
+         console.log("basket code 4");
         console.log("Item found");
         isFound.quantity = isFound.quantity + 1;
         isFound.totalPrice = isFound.pricePerQuantity * isFound.quantity;
       } else {
+        
         console.log("else reszult" + isFound);
         let oderItem: OrderItem = {
           orderItemId:null,
@@ -84,7 +89,7 @@ export class BasketProvider {
   getFooterObj(orderItems: OrderItem[]): Observable<BasketFooterObj> {
     console.log("code is here");
     let footerBasket: BasketFooterObj;
-    let totalItemCount: number = 0;
+    let totalItemCount: number = 2;
     let totalBasketAmount: number = 0;
     if (orderItems != undefined) {
       if (orderItems.length > 0) {
@@ -104,6 +109,7 @@ export class BasketProvider {
       totalBasket: totalBasketAmount,
       totalItemCount: totalItemCount
     };
+    console.log(footerBasket.totalItemCount);
     this.footerObj = footerBasket;
     return of(footerBasket);
   }

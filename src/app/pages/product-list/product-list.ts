@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AlertController, LoadingController } from "@ionic/angular";
 import { Observable, throwError } from "rxjs";
 import { catchError, concatMap } from "rxjs/operators";
-import { BasketFooterObj, BasketObj, BasketObj } from "../../interfaces/basket-interface";
+import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
 import { Product } from "../../interfaces/product-category";
 import { Shop } from "../../interfaces/shop-list";
 import { BasketProvider } from "../../providers/basket-provider";
@@ -35,7 +35,12 @@ public loader:LoadingController,public alert:AlertController)
 }
 
 async ngOnInit() {
-
+  
+this.basketFooterObj = {
+  storecode:"storecode",
+  totalBasket:0,
+  totalItemCount:0,
+}
   const loading =  await this.loader.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
@@ -51,14 +56,14 @@ async ngOnInit() {
     await this.presentAlert(error,"getProductsByCategory");
   }
   )
-    await this.getBasketFromMemory();
+    this.getBasketFromMemory();
 }
-async getBasketFromMemory()
+ getBasketFromMemory()
 {
 const basketObjObser = this.basketProvider.getBasketObj("storecode");
 const footerObser = basketObjObser.pipe(concatMap(b => this.basketProvider.getFooterObj(b.items)),
 catchError(err => throwError(err)));
-footerObser.subscribe(f => {this.basketFooterObj},
+footerObser.subscribe(f => {this.basketFooterObj=f},
 async (error) =>{
  await this.presentAlert(error,"getBasketFromMemory");
 }
@@ -76,9 +81,15 @@ async (error) =>{
     await alert.present();
   }
 
-  async ionViewWillEnter()
-  {
-  
-  
+  addToBasket(product: Product) {
+    console.log("add to basket clicked"+product.name);
+    // build orderItem.
+     this.basketProvider.addItemToBasket(product);
+         this.basketProvider.getFooterObj(this.basketObj.items)
+  .subscribe(f => {this.basketFooterObj = f},
+  (error) =>{
+    this.presentAlert(error,"addToItemCartIssue");
+  }
+  ); // refresh the basket everytim.// local call - no expensive service call.
   }
 }
