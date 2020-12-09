@@ -35,3 +35,13 @@ export function BuildGridArray<T>(
 
   return rowCount;
 }
+  export async function presentAlert(errorMessage:any,componenet:string) {
+    const alert = await this.alert.create({
+      cssClass: 'my-custom-class',
+      header: 'Alert',
+      subHeader: 'Error Occurred:'+errorMessage,
+      message: 'Error:'+componenet,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }

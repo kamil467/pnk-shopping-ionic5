@@ -11,9 +11,9 @@
 </ion-header>
 
 <ion-content class="card-background-page">
-	  <ion-fab vertical="top" horizontal="end" slot="fixed" >
-    <ion-fab-button color="crimson"><ion-badge color="primary" >11</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
-  </ion-fab>
+  <ng-container *ngIf="basketFooterObj.totalItemCount != undefined;">
+  </ng-container>
+	
   <ion-grid>
 		<div *ngFor="let row of rowItems">
 			<ion-row>

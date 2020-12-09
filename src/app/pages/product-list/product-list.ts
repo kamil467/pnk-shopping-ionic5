@@ -1,7 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { AlertController, LoadingController } from "@ionic/angular";
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
+import { catchError, concatMap } from "rxjs/operators";
+import { BasketFooterObj, BasketObj, BasketObj } from "../../interfaces/basket-interface";
 import { Product } from "../../interfaces/product-category";
+import { Shop } from "../../interfaces/shop-list";
+import { BasketProvider } from "../../providers/basket-provider";
 import { ProductListProvider } from "../../providers/product-list.provider";
 import { BuildGridArray } from "../../Utility/utility";
 
@@ -20,8 +24,11 @@ import { BuildGridArray } from "../../Utility/utility";
 export class ProductListPage implements OnInit {
   allProducts: Product[];
   rowItems: Array<Product[]>;
+   shop: Shop;
+  basketObj: BasketObj;
+  basketFooterObj: BasketFooterObj;
   
-constructor(public productListProvider:ProductListProvider,
+constructor(public productListProvider:ProductListProvider,public basketProvider: BasketProvider,
 public loader:LoadingController,public alert:AlertController)
 {
 
@@ -41,19 +48,37 @@ async ngOnInit() {
     await loading.dismiss();
   },
   async (error) =>  {
-    await this.presentAlert();
+    await this.presentAlert(error,"getProductsByCategory");
   }
   )
+    await this.getBasketFromMemory();
+}
+async getBasketFromMemory()
+{
+const basketObjObser = this.basketProvider.getBasketObj("storecode");
+const footerObser = basketObjObser.pipe(concatMap(b => this.basketProvider.getFooterObj(b.items)),
+catchError(err => throwError(err)));
+footerObser.subscribe(f => {this.basketFooterObj},
+async (error) =>{
+ await this.presentAlert(error,"getBasketFromMemory");
+}
+);
 }
 
-  async presentAlert() {
+  async presentAlert(errorMessage:any,componenet:string) {
     const alert = await this.alert.create({
       cssClass: 'my-custom-class',
       header: 'Alert',
-      subHeader: 'Error Occurred',
-      message: 'Please try again later.',
+      subHeader: 'Error Occurred:'+errorMessage,
+      message: 'Error:'+componenet,
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  async ionViewWillEnter()
+  {
+  
+  
   }
 }

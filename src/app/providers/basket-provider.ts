@@ -15,7 +15,7 @@ export class BasketProvider {
         storeName: shop.name,
         serviceArea: shop.serviceArea,
         storeCode: shop.storeCode,
-        items: undefined
+        items:new Array<OrderItem>(),
       };
       return of(this.myBasket);
     }
@@ -82,6 +82,7 @@ export class BasketProvider {
   }
 
   getFooterObj(orderItems: OrderItem[]): Observable<BasketFooterObj> {
+    console.log("code is here");
     let footerBasket: BasketFooterObj;
     let totalItemCount: number = 0;
     let totalBasketAmount: number = 0;
@@ -93,6 +94,7 @@ export class BasketProvider {
         });
       } else {
         // array initialized but empty.
+        console.log("array is empty")
       }
     } else {
       // array not initialized yet.
