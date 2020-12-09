@@ -4,7 +4,7 @@ import { BasketFooterObj, BasketObj, OrderItem } from "../interfaces/basket-inte
 import { Product } from "../interfaces/product-category";
 import { Shop } from "../interfaces/shop-list";
 
-@Injectable()
+@Injectable({ providedIn: "root" })
 export class BasketProvider {
   public myBasket: BasketObj;
   public footerObj: BasketFooterObj;

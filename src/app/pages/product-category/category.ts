@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { AlertController, LoadingController } from "@ionic/angular";
-import { concat, from,  Observable } from "rxjs";
-import { concatMap } from "rxjs/operators";
+import { concat, from,  Observable, throwError } from "rxjs";
+import { catchError, concatMap } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
 import { ProductCategory } from "../../interfaces/product-category";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
@@ -41,7 +41,8 @@ async ngOnInit(){
       cssClass: 'my-custom-class',
       message: 'Please wait...',
     });
-    loading.present();                                             
+    loading.present();    
+    /* Load Grid Items */                                         
  this.categoryListProvider.getProductCategoryList("shopCode")
  .subscribe( c => {
    this.categoryList = c;
@@ -49,28 +50,31 @@ async ngOnInit(){
    loading.dismiss();
    },
   (error) =>{
-    this.presentAlert();
+    this.presentAlert(error,"categoryList");
   },
   );
-
-const shopSubscribe = this.shopProvider.getShopByCode("1234");
-const basketShopSubscribe = shopSubscribe.pipe(concatMap(b => this.basketProvider.initiateBasket(b)
-));
-basketShopSubscribe.subscribe(b => this.basketObj = b);   
-
+  /*End of Grid Events */
+  await this.loadBasket();
 }
-  async presentAlert() {
+  async presentAlert(errorMessage:any,componenet:string) {
     const alert = await this.alert.create({
       cssClass: 'my-custom-class',
       header: 'Alert',
-      subHeader: 'Error Occurred',
-      message: 'Please try again later.',
+      subHeader: 'Error Occurred:'+errorMessage,
+      message: 'Error:'+componenet,
       buttons: ['OK']
     });
     await alert.present();
   }
-assignShop(shop:Shop)
+
+ async loadBasket()
 {
-  this.shopObj = shop;
+const shopSubscribe = this.shopProvider.getShopByCode("1234");
+const basketShopSubscribe = shopSubscribe.pipe(concatMap(b =>this.basketProvider.initiateBasket(b)),
+catchError(error => throwError(error))
+);
+basketShopSubscribe.subscribe(b => {this.basketObj = b},(error)=>{
+  this.presentAlert(error,"basket-loader");
+}); 
 }
 }
