@@ -16,15 +16,14 @@
 </ion-header>
 
 <ion-content class="card-background-page">
-   <ng-container *ngIf="basketFooterObj != 'undefined';">
-     <ng-container *ngIf="basketFooterObj.totalItemCount!=0">
-
-       <ion-fab vertical="top" horizontal="end" slot="fixed" >
-    <ion-fab-button color="crimson"><ion-badge color="primary" >{{basketFooterObj.totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
+  <div  *ngIf="newB">
+    <ng-container *ngIf="(newB | async).totalItemCount != 0"  >
+        <ion-fab vertical="top" horizontal="end" slot="fixed" >
+    <ion-fab-button color="crimson"><ion-badge color="primary" >{{(newB | async).totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
   </ion-fab>
-     </ng-container>
-      
-  </ng-container>
+    </ng-container>
+     
+     </div>
 	<ion-grid>
 		<div *ngFor="let row of rowCount">
 			<ion-row>

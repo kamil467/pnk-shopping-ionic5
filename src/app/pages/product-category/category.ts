@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { AlertController, LoadingController } from "@ionic/angular";
-import { concat, from,  Observable, throwError } from "rxjs";
+import { AlertController, LoadingController, Platform } from "@ionic/angular";
+import { concat, from,  Observable, of, throwError } from "rxjs";
 import { catchError, concatMap } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
 import { ProductCategory } from "../../interfaces/product-category";
@@ -31,8 +31,9 @@ export class CategoryListPage implements OnInit {
   basketObj: BasketObj;
   defaultHref='';
   shopObj:Shop;
+  newB:Observable<BasketFooterObj>;
   constructor(
-    public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController, public basketProvider: BasketProvider,public shopProvider:ShopListProvider,public platform:Pla
+    public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController, public basketProvider: BasketProvider,public shopProvider:ShopListProvider,public platform:Platform
   ) {
  this.platform.backButton.subscribeWithPriority(10, () => {
     console.log('Handler was called!');
@@ -47,6 +48,12 @@ export class CategoryListPage implements OnInit {
     this.presentAlert(error,"reloadBasket-ionViewWillEnter-");
   }
   );
+
+  this.newB = of({
+   storecode:"storecode",
+  totalBasket:this.basketFooterObj.totalBasket,
+  totalItemCount:this.basketFooterObj.totalItemCount
+});
   }
 async ngOnInit(){
   this.basketFooterObj = {
@@ -54,6 +61,11 @@ async ngOnInit(){
   totalBasket:0,
   totalItemCount:0
 }
+this.newB = of({
+   storecode:"storecode",
+  totalBasket:this.basketFooterObj.totalBasket,
+  totalItemCount:this.basketFooterObj.totalItemCount
+});
    const loading =  await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
@@ -71,7 +83,7 @@ async ngOnInit(){
   },
   );
   /*End of Grid Events */
-   this.loadBasket();
+   await this.loadBasket();
 }
   async presentAlert(errorMessage:any,componenet:string) {
     const alert = await this.alert.create({
@@ -84,7 +96,7 @@ async ngOnInit(){
     await alert.present();
   }
 
- loadBasket()
+ async loadBasket()
 {
 const shopSubscribe = this.shopProvider.getShopByCode("1234");
 const basketShopSubscribe = shopSubscribe.pipe(concatMap(b =>this.basketProvider.initiateBasket(b)),
