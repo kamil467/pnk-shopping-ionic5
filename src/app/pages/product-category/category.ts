@@ -38,9 +38,10 @@ export class CategoryListPage implements OnInit {
   }
   
    ionViewDidEnter() {
-    this.defaultHref = `/app/tabs/market/product-category-lis`;
+    this.defaultHref = `/app/tabs/market/shoplist`;
   }
 async ngOnInit(){
+  
    const loading =  await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
