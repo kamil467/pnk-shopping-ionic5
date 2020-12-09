@@ -39,6 +39,12 @@ export class CategoryListPage implements OnInit {
   
    ionViewDidEnter() {
     this.defaultHref = `/app/tabs/market/shoplist`;
+    this.basketProvider.getFooterObjForOrder()
+  .subscribe(f => {this.basketFooterObj = f},
+  (error) =>{
+    this.presentAlert(error,"reloadBasket-ionViewWillEnter-");
+  }
+  );
   }
 async ngOnInit(){
   this.basketFooterObj = {
@@ -86,13 +92,5 @@ basketShopSubscribe.subscribe(b => {this.basketObj = b},(error)=>{
   this.presentAlert(error,"basket-loader");
 }); 
 }
-ionViewWillEnter()
-{
-  this.basketProvider.getFooterObjForOrder()
-  .subscribe(f => {this.basketFooterObj = f},
-  (error) =>{
-    this.presentAlert(error,"reloadBasket-ionViewWillEnter-");
-  }
-  );
-}
+
 }
