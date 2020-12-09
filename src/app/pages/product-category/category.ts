@@ -63,7 +63,7 @@ async ngOnInit(){
   },
   );
   /*End of Grid Events */
-  await this.loadBasket();
+   this.loadBasket();
 }
   async presentAlert(errorMessage:any,componenet:string) {
     const alert = await this.alert.create({
@@ -76,7 +76,7 @@ async ngOnInit(){
     await alert.present();
   }
 
- async loadBasket()
+ loadBasket()
 {
 const shopSubscribe = this.shopProvider.getShopByCode("1234");
 const basketShopSubscribe = shopSubscribe.pipe(concatMap(b =>this.basketProvider.initiateBasket(b)),
@@ -85,5 +85,14 @@ catchError(error => throwError(error))
 basketShopSubscribe.subscribe(b => {this.basketObj = b},(error)=>{
   this.presentAlert(error,"basket-loader");
 }); 
+}
+ionViewWillEnter()
+{
+  this.basketProvider.getFooterObjForOrder()
+  .subscribe(f => {this.basketFooterObj = f},
+  (error) =>{
+    this.presentAlert(error,"reloadBasket-ionViewWillEnter-");
+  }
+  );
 }
 }

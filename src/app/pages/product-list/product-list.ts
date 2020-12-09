@@ -37,7 +37,11 @@ public loader:LoadingController,public alert:AlertController)
     this.defaultHref = `/app/tabs/market/product-category-list`;
   }
 async ngOnInit() { 
-
+    this.basketFooterObj = {
+  storecode:"storecode",
+  totalBasket:0,
+  totalItemCount:0
+}
   const loading =  await this.loader.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
