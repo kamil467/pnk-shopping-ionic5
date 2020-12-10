@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AlertController } from "@ionic/angular";
+import { AlertController, LoadingController } from "@ionic/angular";
 import { Observable } from "rxjs";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
 import { ShopListProvider } from "../../providers/shoplist-provider";
@@ -22,13 +22,20 @@ export class ShoplistPage implements OnInit {
   shopListArray: Shop[];
    defaultHref = '';
   constructor(
-    public shopListProvider: ShopListProvider,public alert:AlertController
+    public shopListProvider: ShopListProvider,public alert:AlertController,public loading:LoadingController
   ) {
 
   }
-ngOnInit(): void {
-   this.shopListProvider.getShopsByCategory("sd").subscribe(s =>
-    {this.shopListArray = s},
+async ngOnInit() {
+   const loading =  await this.loading.create({
+      cssClass: 'my-custom-class',
+      message: 'Please wait...',
+    });
+    await loading.present();
+   this.shopListProvider.getShopsByCategory("sd").subscribe(async s =>
+    {this.shopListArray = s;
+    await loading.dimiss();
+    },
     (error) =>{
        this.presentAlert();
     }
