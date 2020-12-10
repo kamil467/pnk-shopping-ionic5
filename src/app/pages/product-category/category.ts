@@ -38,6 +38,7 @@ export class CategoryListPage implements OnInit {
  this.platform.backButton.subscribeWithPriority(10, () => {
     console.log('Handler was called!');
   });
+  
   }
   
    ionViewDidEnter() {
