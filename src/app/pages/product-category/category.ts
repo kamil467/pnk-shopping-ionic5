@@ -107,4 +107,25 @@ basketShopSubscribe.subscribe(b => {this.basketObj = b},(error)=>{
 }); 
 }
 
+ionViewWillEnter()
+{
+  console.log("ViewWill enter code");
+   this.basketProvider.getFooterObjForOrder()
+  .subscribe(f => {this.basketFooterObj = f;
+  
+  console.log("");
+  },
+  (error) =>{
+    this.presentAlert(error,"reloadBasket-ionViewWillEnter-");
+  }
+  );
+
+  this.newB = of({
+   storecode:"storecode",
+  totalBasket:this.basketFooterObj.totalBasket,
+  totalItemCount:this.basketFooterObj.totalItemCount
+});
+console.log("ViewWill compeleted");
+}
+
 }
