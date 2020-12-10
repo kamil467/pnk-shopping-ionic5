@@ -16,14 +16,12 @@
 </ion-header>
 
 <ion-content class="card-background-page">
-  <div  *ngIf="newB">
-    <ng-container *ngIf="newB"  >
+    <ng-container *ngIf="newB | async as basketData"  >
         <ion-fab vertical="top" horizontal="end" slot="fixed" >
-    <ion-fab-button color="crimson" routerLink="/app/tabs/market/my-basket"><ion-badge color="primary" >{{newB.totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
+    <ion-fab-button color="crimson" routerLink="/app/tabs/market/my-basket"><ion-badge color="primary" >{{basketData.totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
   </ion-fab>
     </ng-container>
      
-     </div>
 	<ion-grid>
 		<div *ngFor="let row of rowCount">
 			<ion-row>
