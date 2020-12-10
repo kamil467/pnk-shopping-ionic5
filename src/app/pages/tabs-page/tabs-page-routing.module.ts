@@ -45,6 +45,11 @@ const routes: Routes = [
                 path:'product-list',
                 loadChildren:() => import ('../product-list/product-list.module').then(m => m.ProductListModule)
              }
+             ,
+              {
+                path:'my-basket',
+                loadChildren:() => import ('../my-basket/basket.module').then(m => m.Baske)
+             }
         ]
       },
       {
