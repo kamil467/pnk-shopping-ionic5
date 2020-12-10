@@ -17,9 +17,9 @@
 
 <ion-content class="card-background-page">
   <div  *ngIf="newB">
-    <ng-container *ngIf="(newB | async).totalItemCount != 0"  >
+    <ng-container *ngIf="newB"  >
         <ion-fab vertical="top" horizontal="end" slot="fixed" >
-    <ion-fab-button color="crimson" routerLink="/app/tabs/market/my-basket"><ion-badge color="primary" >{{newB?.totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
+    <ion-fab-button color="crimson" routerLink="/app/tabs/market/my-basket"><ion-badge color="primary" >{{newB.totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
   </ion-fab>
     </ng-container>
      

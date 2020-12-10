@@ -41,32 +41,8 @@ export class CategoryListPage implements OnInit {
   
   }
   
-   ionViewDidEnter() {
-    this.defaultHref = `/app/tabs/market/shoplist`;
-    this.basketProvider.getFooterObjForOrder()
-  .subscribe(f => {this.basketFooterObj = f},
-  (error) =>{
-    this.presentAlert(error,"reloadBasket-ionViewWillEnter-");
-  }
-  );
-
-  this.newB = of({
-   storecode:"storecode",
-  totalBasket:this.basketFooterObj.totalBasket,
-  totalItemCount:this.basketFooterObj.totalItemCount
-});
-  }
 async ngOnInit(){
-  this.basketFooterObj = {
-  storecode:"storecode",
-  totalBasket:0,
-  totalItemCount:0
-}
-this.newB = of({
-   storecode:"storecode",
-  totalBasket:this.basketFooterObj.totalBasket,
-  totalItemCount:this.basketFooterObj.totalItemCount
-});
+
    const loading =  await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
@@ -86,16 +62,6 @@ this.newB = of({
   /*End of Grid Events */
    await this.loadBasket();
 }
-  async presentAlert(errorMessage:any,componenet:string) {
-    const alert = await this.alert.create({
-      cssClass: 'my-custom-class',
-      header: 'Alert',
-      subHeader: 'Error Occurred:'+errorMessage,
-      message: 'Error:'+componenet,
-      buttons: ['OK']
-    });
-    await alert.present();
-  }
 
  async loadBasket()
 {
@@ -110,23 +76,33 @@ basketShopSubscribe.subscribe(b => {this.basketObj = b},(error)=>{
 
 ionViewWillEnter()
 {
-  console.log("ViewWill enter code");
-   this.basketProvider.getFooterObjForOrder()
-  .subscribe(f => {this.basketFooterObj = f;
-  
-  console.log("ViewWillEnter data received");
-  },
-  (error) =>{
-    this.presentAlert(error,"reloadBasket-ionViewWillEnter-");
-  }
-  );
-
-  this.newB = of({
-   storecode:"storecode",
-  totalBasket:this.basketFooterObj.totalBasket,
-  totalItemCount:this.basketFooterObj.totalItemCount
-});
-console.log("ViewWill compeleted");
+  console.log("ViewWillEnter");
+ this.getBasketFromMemory();
 }
 
+  ionViewDidEnter() {
+      console.log("ViewDidEnter");
+    this.defaultHref = `/app/tabs/market/shoplist`;
+     this.getBasketFromMemory();
+  }
+ getBasketFromMemory()
+{
+  this.newB = this.basketProvider.getFooterObjForOrder();
+  /**this.basketProvider.getFooterObjForOrder()
+  .subscribe(f => {this.basketFooterObj = f},
+  (error) =>{
+    this.presentAlert(error,"reloadBasket-ionViewWillEnter-");
+  });
+  **/
+}
+  async presentAlert(errorMessage:any,componenet:string) {
+    const alert = await this.alert.create({
+      cssClass: 'my-custom-class',
+      header: 'Alert',
+      subHeader: 'Error Occurred:'+errorMessage,
+      message: 'Error:'+componenet,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
 }
