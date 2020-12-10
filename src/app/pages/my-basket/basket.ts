@@ -13,14 +13,14 @@ export class BasketPage {
   basketItems: BasketObj;
   storecode: string;
   basketTotalAmount: number = 0;
+public navParams = new NavParams();
   constructor(
     public navCtrl: NavController,
-    public params: NavParams,
     public basketProvider: BasketProvider,public alert:AlertController
   ) {
-    this.storecode = this.params.get("storecode");
+   // this.storecode = this.navParams.get("storecode");
     this.basketProvider
-      .getBasketObj(this.storecode)
+      .getBasketObj("storecode")
       .subscribe(b => (this.basketItems = b));
 
     if (this.basketItems.items != undefined) {

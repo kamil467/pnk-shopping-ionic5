@@ -88,4 +88,8 @@ async (error) =>{
      this.getBasketFromMemory();
   // refresh the basket everytim.// local call - no expensive service call.
   }
+  ionViewWillEnter()
+  {
+    this.getBasketFromMemory();
+  }
 }
