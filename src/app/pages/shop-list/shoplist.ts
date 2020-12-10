@@ -34,7 +34,7 @@ async ngOnInit() {
     await loading.present();
    this.shopListProvider.getShopsByCategory("sd").subscribe(async s =>
     {this.shopListArray = s;
-    await loading.dimiss();
+    await loading.dismiss();
     },
     (error) =>{
        this.presentAlert();
