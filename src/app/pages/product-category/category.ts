@@ -113,7 +113,7 @@ ionViewWillEnter()
    this.basketProvider.getFooterObjForOrder()
   .subscribe(f => {this.basketFooterObj = f;
   
-  console.log("");
+  console.log("ViewWillEnter data received");
   },
   (error) =>{
     this.presentAlert(error,"reloadBasket-ionViewWillEnter-");
