@@ -18,7 +18,7 @@
 <ion-content class="card-background-page">
  <ng-container *ngIf="basketFooterObj.totalItemCount != 0">
       <ion-fab vertical="top" horizontal="end" slot="fixed" >
-    <ion-fab-button color="crimson"><ion-badge color="primary" >{{basketFooterObj.totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
+    <ion-fab-button color="crimson" routerLink="/app/tabs/market/p"><ion-badge color="primary" >{{basketFooterObj.totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
   </ion-fab>
   </ng-container>
 

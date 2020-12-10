@@ -48,7 +48,7 @@ const routes: Routes = [
              ,
               {
                 path:'my-basket',
-                loadChildren:() => import ('../my-basket/basket.module').then(m => m.Baske)
+                loadChildren:() => import ('../my-basket/basket.module').then(m => m.BasketPageModule)
              }
         ]
       },
