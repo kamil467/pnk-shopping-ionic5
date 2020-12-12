@@ -39,9 +39,12 @@
 			<div *ngFor="let item of basketItems.items">
 				<ion-row>
 					<ion-col>
+              <ion-thumbnail slot="start">
+
 						<img
                   src="https://firebasestorage.googleapis.com/v0/b/pnkshop-adb8e.appspot.com/o/supermarket%2Fproduct_category.png?alt=media&token=58b70048-1047-412c-9ca2-43961c347ebd"
                 />
+             
     </ion-col>
 						<ion-col>
 							{{item.name}}

@@ -7,7 +7,7 @@
 <ion-header>
   <ion-toolbar color="crimson">
     <ion-buttons slot="start">
-      <ion-back-button [defaultHref]="defaultHref"></ion-back-button>
+      <ion-button (click)="backButton()"><ion-icon name="arrow-back"></ion-icon></ion-button>
     </ion-buttons>
    <ion-title>
       Product Category
@@ -16,10 +16,12 @@
 </ion-header>
 
 <ion-content class="card-background-page">
-    <ng-container *ngIf="newB | async as basketData"  >
+    <ng-container *ngIf="basketFooterObj"  >
+       <ng-container *ngIf="basketFooterObj.totalItemCount != 0">
         <ion-fab vertical="top" horizontal="end" slot="fixed" >
-    <ion-fab-button color="crimson" routerLink="/app/tabs/market/my-basket"><ion-badge color="primary" >{{basketData.totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
+    <ion-fab-button color="crimson" routerLink="/app/tabs/market/my-basket"><ion-badge color="primary" >{{basketFooterObj.totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
   </ion-fab>
+       </ng-container>
     </ng-container>
      
 	<ion-grid>

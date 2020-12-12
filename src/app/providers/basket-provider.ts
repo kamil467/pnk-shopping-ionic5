@@ -151,4 +151,8 @@ export class BasketProvider {
     );
     this.myBasket.items.splice(itemToRemovedIndex, 1);
   }
+  getTotalItemCount():number
+  { 
+  return this.footerObj.totalItemCount;
+  }
 }

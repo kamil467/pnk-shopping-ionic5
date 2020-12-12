@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AlertController, LoadingController, Platform } from "@ionic/angular";
+import { AlertController, LoadingController, NavController,  NavController, Platform } from "@ionic/angular";
 import { concat, from,  Observable, of, throwError } from "rxjs";
 import { catchError, concatMap } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
@@ -32,13 +32,14 @@ export class CategoryListPage implements OnInit {
   defaultHref='';
   shopObj:Shop;
   newB:Observable<BasketFooterObj>;
+  counter:number;
   constructor(
-    public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController, public basketProvider: BasketProvider,public shopProvider:ShopListProvider,public platform:Platform
+    public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController, public basketProvider: BasketProvider,public shopProvider:ShopListProvider,public platform:Platform,public navCtrl: NavController
   ) {
  this.platform.backButton.subscribeWithPriority(10, () => {
     console.log('Handler was called!');
   });
-  
+ this.counter =0;
   }
   
 async ngOnInit(){
@@ -69,32 +70,28 @@ const shopSubscribe = this.shopProvider.getShopByCode("1234");
 const basketShopSubscribe = shopSubscribe.pipe(concatMap(b =>this.basketProvider.initiateBasket(b)),
 catchError(error => throwError(error))
 );
-basketShopSubscribe.subscribe(b => {this.basketObj = b},(error)=>{
+basketShopSubscribe.subscribe(b => {
+  this.basketObj = b;
+  this.counter++;
+  },(error)=>{
   this.presentAlert(error,"basket-loader");
-}); 
+});
 }
 
 ionViewWillEnter()
 {
   console.log("ViewWillEnter");
+  if(this.counter != 0){
+    console.log("counter is :"+this.counter);
  this.getBasketFromMemory();
+  }
 }
 
   ionViewDidEnter() {
       console.log("ViewDidEnter");
     this.defaultHref = `/app/tabs/market/shoplist`;
-     this.getBasketFromMemory();
+    // this.getBasketFromMemory();
   }
- getBasketFromMemory()
-{
-  this.newB = this.basketProvider.getFooterObjForOrder();
-  /**this.basketProvider.getFooterObjForOrder()
-  .subscribe(f => {this.basketFooterObj = f},
-  (error) =>{
-    this.presentAlert(error,"reloadBasket-ionViewWillEnter-");
-  });
-  **/
-}
   async presentAlert(errorMessage:any,componenet:string) {
     const alert = await this.alert.create({
       cssClass: 'my-custom-class',
@@ -105,4 +102,51 @@ ionViewWillEnter()
     });
     await alert.present();
   }
+  async backButton()
+  {
+    this.basketProvider.getFooterObjForOrder().subscribe(async x =>{
+      if(x == undefined){
+        this.navCtrl.pop();
+      }else if(x.totalItemCount == 0){
+        this.navCtrl.pop();
+      } else if(x.totalItemCount !=0)
+       await this.presentConfirm();
+    });
+  }
+
+   getBasketFromMemory()
+{
+const basketObjObser = this.basketProvider.getBasketObj("storecode");
+const footerObser = basketObjObser.pipe(concatMap(b => this.basketProvider.getFooterObj(b.items)),
+catchError(err => throwError(err)));
+footerObser.subscribe(f => {this.basketFooterObj=f},
+async (error) =>{
+ await this.presentAlert(error,"getBasketFromMemory");
+}
+);
+}
+
+ async presentConfirm() {
+  let alert = await this.alert.create({
+    title: 'Confirm to Shop Home',
+    message: 'This will delete the items in your cart?',
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      },
+      {
+        text: 'Ok',
+        handler: () => {
+          console.log('Ok clicked');
+          this.navCtrl.pop();
+        }
+      }
+    ]
+  });
+  await alert.present();
+}
 }
