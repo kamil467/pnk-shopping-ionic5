@@ -13,6 +13,7 @@ import { SpeakerDetailModule } from '../speaker-detail/speaker-detail.module';
 import { SpeakerListModule } from '../speaker-list/speaker-list.module';
 
 import {MarketplaceModule} from '../marketplace/marketplace.module';
+import { OrderPageModule } from '../my-order/order.module';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import {MarketplaceModule} from '../marketplace/marketplace.module';
     SpeakerDetailModule,
     SpeakerListModule,
     TabsPageRoutingModule,
-    MarketplaceModule
+    MarketplaceModule,
+    OrderPageModule
   ],
   declarations: [
     TabsPage,

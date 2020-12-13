@@ -4,6 +4,7 @@ import { TabsPage } from './tabs-page';
 import { SchedulePage } from '../schedule/schedule';
 import { MarketplacePage } from '../marketplace/marketplace';
 import { CategoryListPage } from '../product-category/category';
+import { MyOrderPage } from '../my-order/order';
 
 
 const routes: Routes = [
@@ -87,6 +88,16 @@ const routes: Routes = [
           }
         ]
       },
+     {
+        path: 'myorder',
+        children: [
+          {
+            path: '',
+            component: MyOrderPage,
+          }
+        ]
+      },
+    
       {
         path: '',
         redirectTo: '/app/tabs/schedule',
