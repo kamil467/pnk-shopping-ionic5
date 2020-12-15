@@ -18,7 +18,7 @@ export class MyOrderPage {
     console.log("loader stopped");
   }
 async  presentError() {
- /* let alert = await this.alertController.create({
+ /** let alert = await this.alertController.create({
     title: 'Error Occurred',
     message: 'Please check your internet connection or restart app.',
     buttons: [
