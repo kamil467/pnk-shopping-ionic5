@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { AlertController, LoadingController, NavController,  NavController, Platform } from "@ionic/angular";
+import { AlertController, LoadingController,  NavController, Platform } from "@ionic/angular";
 import { concat, from,  Observable, of, throwError } from "rxjs";
 import { catchError, concatMap } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
@@ -34,7 +34,9 @@ export class CategoryListPage implements OnInit {
   newB:Observable<BasketFooterObj>;
   counter:number;
   constructor(
-    public categoryListProvider: CategoryListProvider,public alert:AlertController,public loadingController:LoadingController, public basketProvider: BasketProvider,public shopProvider:ShopListProvider,public platform:Platform,public navCtrl: NavController
+    public categoryListProvider: CategoryListProvider,public alert:AlertController,
+    public loadingController:LoadingController, public basketProvider: BasketProvider,
+    public shopProvider:ShopListProvider,public platform:Platform,public navCtrl: NavController
   ) {
  this.platform.backButton.subscribeWithPriority(10, () => {
     console.log('Handler was called!');
@@ -127,7 +129,7 @@ async (error) =>{
 }
 
  async presentConfirm() {
-  let alert = await this.alert.create({
+/*  let alert = await this.alert.create({
     title: 'Confirm to Shop Home',
     message: 'This will delete the items in your cart?',
     buttons: [
@@ -148,5 +150,6 @@ async (error) =>{
     ]
   });
   await alert.present();
+  */
 }
 }

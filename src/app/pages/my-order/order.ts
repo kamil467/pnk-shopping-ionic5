@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
 import { AlertController, LoadingController } from "@ionic/angular";
-import { NavParams } from "@ionic/angular/directives/navigation/nav-params";
-import { NavController } from "@ionic/angular/providers/nav-controller";
+
 
 @Component({
   selector: "page-myorder",
@@ -11,7 +10,7 @@ import { NavController } from "@ionic/angular/providers/nav-controller";
 export class MyOrderPage {
   orders:any;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,private loader:LoadingController,private alertController:AlertController) {
+  constructor(private loader:LoadingController,private alertController:AlertController) {
 
 
   }
@@ -19,7 +18,7 @@ export class MyOrderPage {
     console.log("loader stopped");
   }
 async  presentError() {
-  let alert = await this.alertController.create({
+ /* let alert = await this.alertController.create({
     title: 'Error Occurred',
     message: 'Please check your internet connection or restart app.',
     buttons: [
@@ -33,5 +32,5 @@ async  presentError() {
     ]
   });
   await alert.present();
-}
+*/}
 }
