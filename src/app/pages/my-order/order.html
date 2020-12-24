@@ -1,10 +1,10 @@
 <ion-header translucent="true">
-  <ion-toolbar>
-    <ion-segment>
-      <ion-segment-button value="all">
+  <ion-toolbar color="crimson">
+    <ion-segment (ionChange)="segmentChanged($event)" value="active">
+      <ion-segment-button value="active" color="light" mode="md">
         Active 
       </ion-segment-button>
-      <ion-segment-button value="favorites">
+      <ion-segment-button value="history">
         History
       </ion-segment-button>
     </ion-segment>

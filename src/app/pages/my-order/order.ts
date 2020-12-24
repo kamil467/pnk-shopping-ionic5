@@ -33,4 +33,11 @@ async  presentError() {
   });
   await alert.present();
 */}
+
+segmentChanged(event:any)
+{
+  
+  console.log("Value is:"+event);
+}
+
 }
