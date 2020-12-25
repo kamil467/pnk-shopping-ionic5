@@ -73,4 +73,11 @@ getActiveOrder(customerId:string):Observable<OrderSummaryToBeDisplayed[]>
  return of(orderSummaryArray);
 }
 
+getHistoryOrder(customerId:string):Observable<OrderSummaryToBeDisplayed[]>
+{
+  // seperate call to get order summary - single item
+  // seperate call to get orderItems - multiple itmes
+
+}
+
 }
