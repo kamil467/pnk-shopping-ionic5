@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { map } from 'rxjs/operators';
+import { ExpandableObject, OrderSummaryToBeDisplayed } from '../../interfaces/order-interface';
 import { OrderProvider } from '../../providers/order-provider';
 
 @Component({
@@ -7,16 +9,24 @@ import { OrderProvider } from '../../providers/order-provider';
   styleUrls: ['./order-histroy.component.scss'],
 })
 export class OrderHistroyComponent implements OnInit {
-  @Input("customerId") expanded: string = null; // get the customerId passed from parent component.
+  @Input("customerId") customerId: string = null; // get the customerId passed from parent component.
+
+  expandableObjs:ExpandableObject[];
 
 constructor(private orderProvider: OrderProvider)
 {
   
 }
   ngOnInit(): void {
-  this.orderProvider.
+  this.orderProvider.getHistoryOrderByOrderSummaryId("summary-id").pipe(map(m =>{
+    this.expandableObjs.push(
+      {
+        expanded:false,
+        orderSummary:m
+      }
+    )
+  }));
   }
-
 
 /*8
   public items: any = [];
@@ -39,7 +49,7 @@ constructor(private orderProvider: OrderProvider)
     if (item.expanded) {
       item.expanded = false;
     } else {
-      this.items.map(listItem => {
+      this.expandableObjs.map(listItem => {
         if (item == listItem) {
           listItem.expanded = !listItem.expanded;
         } else {

@@ -17,3 +17,9 @@ export interface OrderSummaryToBeDisplayed {
   orderSummary: OrderSummary;
   orderItems: OrderItem[];
 }
+
+export interface ExpandableObject
+{
+  expanded:boolean,
+  orderSummary:OrderSummaryToBeDisplayed,
+}

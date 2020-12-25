@@ -8,7 +8,9 @@ export const environment = {
   productCategoryListAPI:"https://run.mocky.io/v3/4069d7f0-509c-47bb-98ae-ef2654efba57",
   productListAPI:"https://run.mocky.io/v3/93fc0914-208a-4c5d-9db2-b70b5a576ea1",
   shopAPI:"https://run.mocky.io/v3/da231523-d7c7-4562-9be4-ea66bd95e82a",
-  
+  orderHistorySummaryAPI:"https://37113081-af1d-41a5-8667-b55b887516cd.mock.pstmn.io/historyordersummary",
+  orderedItemsAPI:"https://ebcf8759-6d7c-4206-9f2b-f4ac8750a37b.mock.pstmn.io/orderedItems",
+
 };
 
 /*
