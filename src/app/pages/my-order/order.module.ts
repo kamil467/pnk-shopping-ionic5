@@ -6,10 +6,12 @@ import { MyOrderPage } from "./order";
 import { OrderPageRoutingModule } from "./order-routing.module";
 import { OrderHistroyComponent } from "../../components/order-histroy/order-histroy.component";
 import { ExpandableComponent } from "../../components/expandable/expandable.component";
+import { OrderProvider } from "../../providers/order-provider";
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, OrderPageRoutingModule],
   declarations: [MyOrderPage,OrderHistroyComponent,ExpandableComponent],
-  entryComponents: [MyOrderPage]
+  entryComponents: [MyOrderPage],
+  providers:[OrderProvider]
 })
 export class OrderPageModule {}

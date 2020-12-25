@@ -9,7 +9,10 @@ export const environment = {
   productListAPI:"https://run.mocky.io/v3/93fc0914-208a-4c5d-9db2-b70b5a576ea1",
   shopAPI:"https://run.mocky.io/v3/da231523-d7c7-4562-9be4-ea66bd95e82a",
   orderHistorySummaryAPI:"https://37113081-af1d-41a5-8667-b55b887516cd.mock.pstmn.io/historyordersummary",
-  orderedItemsAPI:"https://ebcf8759-6d7c-4206-9f2b-f4ac8750a37b.mock.pstmn.io/orderedItems",
+  
+ //orderHistorySummaryAPI:"https://run.mocky.io/v3/3e067097-25c1-4ba3-ba95-710e67fc9df9",
+ orderedItemsAPI:"https://ebcf8759-6d7c-4206-9f2b-f4ac8750a37b.mock.pstmn.io/orderedItems",
+ customerDeliveryInfoAPI:"https://9dd126a1-4426-4b8a-9977-a9dfd8bd7c69.mock.pstmn.io/deliveryLocation" // pass orderSummaryId
 
 };
 

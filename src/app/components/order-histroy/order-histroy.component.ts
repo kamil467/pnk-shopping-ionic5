@@ -11,21 +11,22 @@ import { OrderProvider } from '../../providers/order-provider';
 export class OrderHistroyComponent implements OnInit {
   @Input("customerId") customerId: string = null; // get the customerId passed from parent component.
 
-  expandableObjs:ExpandableObject[];
+  expandableObjs:Array<ExpandableObject>;
 
 constructor(private orderProvider: OrderProvider)
 {
-  
+  this.expandableObjs = new Array<ExpandableObject>();
 }
   ngOnInit(): void {
-  this.orderProvider.getHistoryOrderByOrderSummaryId("summary-id").pipe(map(m =>{
-    this.expandableObjs.push(
-      {
-        expanded:false,
-        orderSummary:m
-      }
-    )
-  }));
+    console.log("Program is here");
+  this.orderProvider.getHistoryOrderByOrderSummaryId("summary-id").subscribe(
+   result => { 
+    console.log("Shop code:"+result.customerDeliveryInfo.landmark); 
+    this.expandableObjs.push({
+     expanded:false,
+     orderSummary:result
+   }) }
+  );
   }
 
 /*8

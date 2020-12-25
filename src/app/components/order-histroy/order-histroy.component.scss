@@ -1,0 +1,75 @@
+
+  
+  crimson {
+    color: crimson;
+  }
+  .card-background-page {
+
+    ion-card-header
+    {
+        background-color: #b94545;
+
+        ion-card-title,ion-card-subtitle
+        {
+            color:white;
+        }
+        ion-chip
+        {
+            background-color: green;
+            color:white;
+        }
+    }
+
+    background-color: #b94545;
+    font-size: 5px;
+    ion-card {
+      position: relative;
+      text-align: center;
+    }
+    .card-header {
+      background-color: brown;
+      h2 {
+        color: white;
+      }
+      h6 {
+        color: white;
+        text-align: end;
+        font-size: xx-small;
+      }
+      .order-id {
+        text-align: left;
+      }
+      margin-bottom: -15px;
+    }
+    .card-title {
+      position: absolute;
+  
+      font-size: 2em;
+      width: 100%;
+      font-weight: bold;
+      color: #fff;
+    }
+  
+    .card-subtitle {
+      font-size: 1em;
+      position: absolute;
+  
+      width: 100%;
+      color: #fff;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .card-footer {
+      border-top: 2px solid #b94545;
+      width: 308px;
+    }
+    ion-card-content{
+      background-color: bisque;
+    }
+  }
+  
+  ion-segment-button
+  {
+      --background-checked:white;
+  }

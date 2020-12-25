@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
-import { of, Observable,throwError  } from "rxjs";
-import { catchError, concatMap, map, retry } from 'rxjs/operators';
+import { of, Observable,throwError, concat  } from "rxjs";
+import { catchError, concatMap, map, mergeMap, retry } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { OrderSummary, OrderSummaryToBeDisplayed } from "../interfaces/order-interface";
+import { CustomerDeliveryPersonalInfo, OrderSummary, OrderSummaryToBeDisplayed } from "../interfaces/order-interface";
 import { BasketFooterObj, BasketObj, OrderItem } from "../interfaces/basket-interface";
 import { BasketProvider } from "./basket-provider";
 import { environment } from '../../environments/environment';
@@ -29,21 +29,29 @@ getHistoryOrderByOrderSummaryId(orderSummaryId:string):Observable<OrderSummaryTo
   let orderSummary :OrderSummary;
   let orderedItems:OrderItem[];
   let summaryToBeDisplayed:OrderSummaryToBeDisplayed;
+  let personalDeliveryInfo:CustomerDeliveryPersonalInfo;
  const orderSummaryOb = this.httpClient.get<OrderSummary>(environment.orderHistorySummaryAPI);
 const orderedItemsOb = orderSummaryOb.pipe(map(m => orderSummary = m),concatMap(
   summary => 
-  this.httpClient.get<OrderItem[]>(environment.orderedItemsAPI+ summary.customerId).pipe(map(oItem => orderedItems = oItem)) 
+  this.httpClient.get<OrderItem[]>(environment.orderedItemsAPI).pipe(map(oItem => orderedItems = oItem)) 
   ),
 retry(3),
 catchError(err => this.handleError(err))
 ); 
- orderedItemsOb.subscribe(()=>{
-  summaryToBeDisplayed = {
+const deliveryInfo = orderedItemsOb.pipe(concatMap(c => 
+ this.httpClient.get<CustomerDeliveryPersonalInfo>(environment.customerDeliveryInfoAPI).pipe(map(personalInfo => 
+  personalDeliveryInfo = personalInfo))),
+retry(3),
+catchError(err => this.handleError(err)));
+let result = deliveryInfo.pipe(map( m => {
+  console.log("Shop Name:"+m.deliveryLocation);
+  return summaryToBeDisplayed = {
     orderItems:orderedItems,
-    orderSummary : orderSummary,
+    orderSummary:orderSummary,
+    customerDeliveryInfo:m
   }
-});
-return of(summaryToBeDisplayed);
+}));
+return result;
 }
 
 private handleError(error: HttpErrorResponse) {
