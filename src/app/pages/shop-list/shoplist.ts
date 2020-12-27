@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { AlertController, LoadingController } from "@ionic/angular";
 import { from, merge, Observable, throwError } from "rxjs";
 import { catchError, concatMap, concatMapTo, map, mergeMap, switchMap, toArray } from "rxjs/operators";
@@ -22,12 +23,12 @@ import { ShopListProvider } from "../../providers/shoplist-provider";
 export class ShoplistPage implements OnInit {
   shopCategoryCode: string;
    
-  shopListObservable:Observable<Shop1[]>
+  shopListObservable:Observable<Shop[]>
 
   shopListArray: Shop[];
    defaultHref = '';
   constructor(
-    public shopListProvider: ShopListProvider,public alert:AlertController,public loading:LoadingController
+    public shopListProvider: ShopListProvider,public alert:AlertController,public loading:LoadingController, private route: ActivatedRoute
   ) {
 
   }
@@ -47,7 +48,8 @@ async ngOnInit() {
   
   //   );
   // firebase code
- this.shopListObservable =  this.shopListProvider.getActiveShopsByCategoryFirebase("fdrst");
+  const categoryCode = this.route.snapshot.paramMap.get('categoryCode'); //get the shopcode from params
+ this.shopListObservable =  this.shopListProvider.getActiveShopsByCategoryFirebase(categoryCode);
 // this.shopListProvider.getActiveShopsByCategoryFirebase("fdrst").subscribe((d)=>{
 //   console.log("subscroibed");
 //   d.forEach(f =>{

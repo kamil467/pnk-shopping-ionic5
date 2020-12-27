@@ -1,19 +1,19 @@
 
-<ion-header>
+<ion-header translucent="true">
   <ion-toolbar color="crimson">
     Market Place
   </ion-toolbar>
 </ion-header>
 <ion-content class="card-background-page">
-  <ion-card routerLink="/app/tabs/market/shoplist/">
-    <img src="https://firebasestorage.googleapis.com/v0/b/pnkshop-adb8e.appspot.com/o/supermarket%2FsupermarketTile.jpg?alt=media&token=8d3b3eb8-dc5d-461e-93df-647752f10561" />
+  <ion-card [routerLink]="['/app/tabs/market/shoplist','fdrst']">
+    <img src="../../../assets/img/supermarketTile.jpg" />
     <div class="card-title">Super Markets</div>
     <div class="card-subtitle">41 Listings</div>
   </ion-card>
 
-  <ion-card (click)="cardClicked('fdrst')">
+  <ion-card [routerLink]="['/app/tabs/market/shoplist','fdrst']">
     <img
-      src="https://firebasestorage.googleapis.com/v0/b/pnkshop-adb8e.appspot.com/o/food%2FfoodRestTile.jpg?alt=media&token=b6d3163b-3f0d-47ed-8da6-63dde3c237ab"
+      src="../../../assets/img/foodRestTile.jpg"
     />
     <div class="card-title">Food Restaurants</div>
     <div class="card-subtitle">64 Listings</div>

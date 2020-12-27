@@ -42,14 +42,14 @@ getShopByCode(shopCode:string):Observable<Shop>
 }
 // Firebase integration
 
- getActiveShopsByCategoryFirebase(categoryCode:string):Observable<Shop1[]>
+ getActiveShopsByCategoryFirebase(categoryCode:string):Observable<Shop[]>
 {
   console.log("code inside shopList: category code is:"+categoryCode);
   const shopValueChangeRef = this.angularFireCloudStore
 .collection<Shop1>(environment.SHOP_LIST_COLLECTION, ref => ref.where("categoryCode","==",categoryCode).where("status","==","a"))
 .valueChanges()
 .pipe(
-  mergeMap((shopLiArray:Shop1[]) => 
+  mergeMap((shopLiArray:Shop[]) => 
   // load shop[]
   from(shopLiArray).pipe(
     // foreach shop

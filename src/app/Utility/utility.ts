@@ -2,10 +2,10 @@ export function BuildGridArray<T>(
   arg1: Array<T>,
   gridColCount: number
 ): Array<Array<T>> {
-  console.log("utility invoked");
+  console.log("utility invoked:len="+arg1.length);
   let len = arg1.length;
   let newRowSize = 0;
-  if (len % 3 != 0) {
+  if (len % gridColCount != 0) {
     newRowSize = Math.round(len / gridColCount) + 1;
   } else {
     newRowSize = Math.round(len / gridColCount);

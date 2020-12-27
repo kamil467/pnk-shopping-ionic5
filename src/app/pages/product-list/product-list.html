@@ -18,7 +18,9 @@
 <ion-content class="card-background-page">
  <ng-container *ngIf="basketFooterObj.totalItemCount != 0">
       <ion-fab vertical="top" horizontal="end" slot="fixed" >
-    <ion-fab-button color="crimson" routerLink="/app/tabs/market/my-basket"><ion-badge color="primary" >{{basketFooterObj.totalItemCount }}</ion-badge><ion-icon name="basket"></ion-icon></ion-fab-button>
+	<ion-fab-button color="crimson" routerLink="/app/tabs/market/my-basket"><ion-badge color="primary" >{{basketFooterObj.totalItemCount }}</ion-badge><ion-icon  name="basket"></ion-icon>
+	
+	</ion-fab-button>
   </ion-fab>
   </ng-container>
 
@@ -36,7 +38,7 @@
               </ng-template>
 								<ng-template #defaultImage>
 									<img
-                  src="https://firebasestorage.googleapis.com/v0/b/pnkshop-adb8e.appspot.com/o/default%2Fdefault.jpg?alt=media&token=a4c659c5-cc60-4ab2-8f69-16e12f2d580e"
+                  src="../../../assets/img/default.jpg"
                 />
               </ng-template>
 									<ion-row>

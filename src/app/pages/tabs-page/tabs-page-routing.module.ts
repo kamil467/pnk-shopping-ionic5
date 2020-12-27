@@ -33,7 +33,7 @@ const routes: Routes = [
             component: MarketplacePage,
           },
           {
-            path:'shoplist',
+            path:'shoplist/:categoryCode',
             loadChildren:() => import('../shop-list/shoplist.module').then(m=> m.ShopListModule)
          
           },
