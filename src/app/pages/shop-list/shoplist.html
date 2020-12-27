@@ -17,7 +17,9 @@
 </ion-header>
 
 <ion-content class="card-background-page">
- <div *ngFor="let shop of shopListArray ">
+
+  <div *ngIf="shopListObservable | async ; else loadingErrorTemplate">
+ <div *ngFor="let shop of shopListObservable | async ">
     <ion-card routerLink="/app/tabs/market/product-category-list">
       <ion-item>
         <!--
@@ -63,7 +65,7 @@
       <hr class="card-footer" />
       <ion-row padding>
         <p>Our Service Available at</p>
-        <div *ngFor="let area of shop.serviceArea">
+        <div *ngFor="let area of shop.serviceArea ">
           <ion-col>
             <ion-badge color="primary">{{area.cityName}}</ion-badge>
           </ion-col>
@@ -71,4 +73,10 @@
       </ion-row>
     </ion-card>
   </div>
+</div>
+<ng-template #loadingErrorTemplate>
+  <div class="spin"> <ion-spinner name="bubbles"></ion-spinner>
+    </div>
+    
+</ng-template>
 </ion-content>

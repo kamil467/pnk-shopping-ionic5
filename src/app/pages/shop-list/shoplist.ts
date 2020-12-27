@@ -1,7 +1,9 @@
+import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { AlertController, LoadingController } from "@ionic/angular";
-import { Observable } from "rxjs";
-import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
+import { from, merge, Observable, throwError } from "rxjs";
+import { catchError, concatMap, concatMapTo, map, mergeMap, switchMap, toArray } from "rxjs/operators";
+import { Shop, Shop1, StoreServiceArea } from "../../interfaces/shop-list";
 import { ShopListProvider } from "../../providers/shoplist-provider";
 
 
@@ -19,6 +21,9 @@ import { ShopListProvider } from "../../providers/shoplist-provider";
 })
 export class ShoplistPage implements OnInit {
   shopCategoryCode: string;
+   
+  shopListObservable:Observable<Shop1[]>
+
   shopListArray: Shop[];
    defaultHref = '';
   constructor(
@@ -27,20 +32,31 @@ export class ShoplistPage implements OnInit {
 
   }
 async ngOnInit() {
-   const loading =  await this.loading.create({
-      cssClass: 'my-custom-class',
-      message: 'Please wait...',
-    });
-    await loading.present();
-   this.shopListProvider.getShopsByCategory("sd").subscribe(async s =>
-    {this.shopListArray = s;
-    await loading.dismiss();
-    },
-    (error) =>{
-       this.presentAlert();
-    }
+  //  const loading =  await this.loading.create({
+  //     cssClass: 'my-custom-class',
+  //     message: 'Please wait...',
+  //   });
+  //   await loading.present();
+  //  this.shopListProvider.getShopsByCategory("sd").subscribe(async s =>
+  //   {this.shopListArray = s;
+  //   await loading.dismiss();
+  //   },
+  //   (error) =>{
+  //      this.presentAlert();
+  //   }
   
-    );
+  //   );
+  // firebase code
+ this.shopListObservable =  this.shopListProvider.getActiveShopsByCategoryFirebase("fdrst");
+// this.shopListProvider.getActiveShopsByCategoryFirebase("fdrst").subscribe((d)=>{
+//   console.log("subscroibed");
+//   d.forEach(f =>{
+//     console.log(f.shopContactNumber1);
+//   })
+// })
+
+
+
 }
   async presentAlert() {
     const alert = await this.alert.create({
@@ -50,10 +66,20 @@ async ngOnInit() {
       message: 'Please try again later.',
       buttons: ['OK']
     });
-
     await alert.present();
   }
    ionViewDidEnter() {
     this.defaultHref = `/app/tabs/market`;
   }
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      console.error('An error occurred:', error.error.message);
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong.
+      console.error("Error occurred:"+error);
+        
+    }
+}
 }

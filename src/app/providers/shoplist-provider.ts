@@ -1,15 +1,16 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { of, Observable,throwError  } from "rxjs";
-import { catchError, retry } from 'rxjs/operators';
+import { of, Observable,throwError, merge, from  } from "rxjs";
+import { catchError, first, mergeMap, retry, toArray } from 'rxjs/operators';
 import { map } from "rxjs/operators";
-import { Shop, StoreServiceArea } from "../interfaces/shop-list";
+import { Shop, Shop1, StoreServiceArea } from "../interfaces/shop-list";
 import { environment } from '../../environments/environment'
+import { AngularFirestore } from "@angular/fire/firestore";
 @Injectable({ providedIn: "root" })
 export class ShopListProvider {
   
   /* Data Initialization */
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient, private angularFireCloudStore: AngularFirestore) {}
 
   getShopsByCategory(shopTypeCode: string):Observable<Shop[]> {
     return this.http.get<Shop[]>(
@@ -25,9 +26,8 @@ export class ShopListProvider {
   } else {
     // The backend returned an unsuccessful response code.
     // The response body may contain clues as to what went wrong.
-    console.error(
-      `Backend returned code ${error.status}, ` +
-      `body was: ${error.error}`);
+    console.error("Error occurred:"+error);
+      
   }
   // Return an observable with a user-facing error message.
   return throwError(
@@ -40,4 +40,46 @@ getShopByCode(shopCode:string):Observable<Shop>
     catchError(this.handleError)
   );
 }
+// Firebase integration
+
+ getActiveShopsByCategoryFirebase(categoryCode:string):Observable<Shop1[]>
+{
+  console.log("code inside shopList: category code is:"+categoryCode);
+  const shopValueChangeRef = this.angularFireCloudStore
+.collection<Shop1>(environment.SHOP_LIST_COLLECTION, ref => ref.where("categoryCode","==",categoryCode).where("status","==","a"))
+.valueChanges()
+.pipe(
+  mergeMap((shopLiArray:Shop1[]) => 
+  // load shop[]
+  from(shopLiArray).pipe(
+    // foreach shop
+mergeMap(
+  shop =>
+  this.getActiveShopServiceArea(shop.storeCode,shop)
+  .pipe(map(seerviceArea => ({...shop, serviceArea:seerviceArea})),first()
+  ),) ,
+   toArray()),
+   ));
+  
+//.pipe(catchError(err => this.handleError(err)));
+return shopValueChangeRef;
+}
+
+getActiveShopServiceArea(shopCode:string,shopObj:Shop):Observable<StoreServiceArea[]>
+{
+  //this.testMethod();
+  console.log("code is here::"+shopCode);
+  const serviceArea = this.angularFireCloudStore
+                      .collection(environment.SHOP_LIST_COLLECTION)
+                      .doc(shopCode)
+                      .collection<StoreServiceArea>(environment.SHOP_SERVICE_AREA)
+                      .valueChanges()
+                      .pipe(catchError( c => this.handleError(c)));                    
+                    
+                      console.log("Area code is executed");
+                      return serviceArea;
+}
+
+
+
 }

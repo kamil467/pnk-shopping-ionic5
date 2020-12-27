@@ -12,8 +12,23 @@ export const environment = {
   
  //orderHistorySummaryAPI:"https://run.mocky.io/v3/3e067097-25c1-4ba3-ba95-710e67fc9df9",
  orderedItemsAPI:"https://ebcf8759-6d7c-4206-9f2b-f4ac8750a37b.mock.pstmn.io/orderedItems",
- customerDeliveryInfoAPI:"https://9dd126a1-4426-4b8a-9977-a9dfd8bd7c69.mock.pstmn.io/deliveryLocation" // pass orderSummaryId
+ customerDeliveryInfoAPI:"https://9dd126a1-4426-4b8a-9977-a9dfd8bd7c69.mock.pstmn.io/deliveryLocation", // pass orderSummaryId
+ 
+ SHOP_LIST_COLLECTION:"shop_list",
+ SHOP_SERVICE_AREA:"service_area"
 
+
+};
+
+export const firebaseConfig ={
+  apiKey: "AIzaSyCW-NoLT7fu2dS_WGsbPYrWNabEdDElcF8",
+  authDomain: "pnkshop-adb8e.firebaseapp.com",
+  databaseURL: "https://pnkshop-adb8e.firebaseio.com",
+  projectId: "pnkshop-adb8e",
+  storageBucket: "pnkshop-adb8e.appspot.com",
+  messagingSenderId: "858321314978",
+  appId: "1:858321314978:web:9f649c995b8a3b98ce23fb",
+  measurementId: "G-Y6LVPT1C5Y"
 };
 
 /*
@@ -22,4 +37,4 @@ export const environment = {
  * import the following file, but please comment it out in production mode
  * because it will have performance impact when throw error
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+// import 'zone.js/dist/zone-error';  // Included with Angular CL
