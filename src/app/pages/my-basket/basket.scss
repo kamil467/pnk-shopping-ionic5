@@ -2,21 +2,29 @@
 {
   background-color: crimson;
   color:white;
-
+}
  .hr-divider
  {
-   border-top: 2px solid white;
+   border-top: 2px solid crimson;
     width: 800px;
  }
 .order-now
 {
-  background-color: white;
-  color:crimson;
+  color:white;
   font-weight: bold;
-  text-align: right;
 }
 .text-center
 {
   text-align: center;
 }
+
+ion-card-header
+{
+  background-color: #b94545;
+  color:white;
+}
+
+ion-toolbar
+{
+    color:white;
 }

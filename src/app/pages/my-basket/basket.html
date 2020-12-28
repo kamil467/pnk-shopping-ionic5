@@ -1,15 +1,18 @@
+
 <ion-header>
-  <ion-toolbar color="crimson">
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-   <ion-title>
-      My Basket
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+	<ion-toolbar color="crimson">
+	  <ion-buttons slot="start">
+		<ion-button (click)="backButton()"><ion-icon name="arrow-back"></ion-icon></ion-button>
+	  </ion-buttons>
+	 <ion-title>
+	My Basket
+	  </ion-title>
+	</ion-toolbar>
+  </ion-header>
 
 <ion-content class="basket-content">
+	<ion-card>
+		<ion-card-header class="card-header">Cart Summary</ion-card-header>
 	<ng-container *ngIf="basketItems.items == undefined || basketItems.items.length==0;then emptyCart;else itemCart;">
 
 	</ng-container>
@@ -39,18 +42,23 @@
 			<div *ngFor="let item of basketItems.items">
 				<ion-row>
 					<ion-col>
-          
-
-						<img
-                  src="https://firebasestorage.googleapis.com/v0/b/pnkshop-adb8e.appspot.com/o/supermarket%2Fproduct_category.png?alt=media&token=58b70048-1047-412c-9ca2-43961c347ebd"
-                />
+						<ng-container *ngIf="item.productImageUrl != null; then customImage;else defaultImage">
+						</ng-container>
+						<ng-template #customImage>
+							<img [src]="item.productImageUrl" />
+		  </ng-template>
+							<ng-template #defaultImage>
+								<img
+			  src="../../../assets/img/default.jpg"
+			/>
+		  </ng-template>
              
     </ion-col>
 						<ion-col>
 							{{item.name}}
 						</ion-col>
 						<ion-col col-3>
-							Rs.{{item.pricePerQuantity}}
+							{{item.pricePerQuantity  | currency:'INR'}}
 						</ion-col>
 						<ion-col col-3>
 							<ion-row>
@@ -70,7 +78,7 @@
 							</ion-row>
 						</ion-col>
 						<ion-col col-2>
-							{{item.totalPrice}}
+							{{item.totalPrice  | currency:'INR'}}
 							
 						</ion-col>
             <ion-col col-1>
@@ -86,16 +94,23 @@
 					Total
 				</ion-col>
 				<ion-col col style="font-weight:Bold">
-					Rs.{{basketTotalAmount}}.00
+					{{basketTotalAmount | currency:'INR'}}
 				</ion-col>
 				<ion-col col-1>
 				</ion-col>
 			</ion-row>
 		</ion-grid>
-<div class="row">
-   <div class="col text-center">
-		<button ion-button round class="order-now"> Order Now</button>
-   </div>
-</div>
+
 	</ng-template>
+	</ion-card>
+
+	
+	<div class="text-center">
+		<ion-button class="order-now" fill="outline" round color="crimson"> Order Now</ion-button>
+   </div>
+
+   <div class="text-center">
+	<ion-button class="order-now" fill="outline" round color="crimson">Login to Check out </ion-button>
+</div>
+
 </ion-content>

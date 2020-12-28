@@ -16,13 +16,17 @@
 </ion-header>
 
 <ion-content class="card-background-page">
- <ng-container *ngIf="basketFooterObj.totalItemCount != 0">
-      <ion-fab vertical="top" horizontal="end" slot="fixed" >
-	<ion-fab-button color="crimson" routerLink="/app/tabs/market/my-basket"><ion-badge color="primary" >{{basketFooterObj.totalItemCount }}</ion-badge><ion-icon  name="basket"></ion-icon>
-	
-	</ion-fab-button>
-  </ion-fab>
-  </ng-container>
+	<div *ngIf="basketObjObservable | async as myBasket">
+		<div *ngIf = "myBasket.totalItemsCount != 0">
+
+		
+		<ion-fab vertical="top" horizontal="end" slot="fixed" >
+			<ion-fab-button color="crimson" routerLink="/app/tabs/market/my-basket">
+				<ion-badge color="primary" >{{myBasket.totalItemsCount}}</ion-badge>
+				<ion-icon name="basket"></ion-icon></ion-fab-button>
+		  </ion-fab>
+	</div>
+</div>
   <div *ngIf="allProductsAbservable | async as allProductOb; else loadingErrorTemplate ">
   <ion-grid>
 	
@@ -71,11 +75,11 @@
 										<ng-container *ngIf="product.price != 0; then displayOld;"></ng-container>
 										<ng-template #displayOld>
 											<ion-col>
-												<strong><del>Rs.{{product.price}}</del></strong>
+												<strong><del>{{product.price  | currency:'INR'}}</del></strong>
 											</ion-col>
 										</ng-template>
 										<ion-col class="newprice">
-											<strong><ins>Rs.{{product.offeredPrice}}</ins></strong>
+											<strong><ins>{{product.offeredPrice  | currency:'INR'}}</ins></strong>
 										</ion-col>
 									</ion-row>
 

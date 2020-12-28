@@ -6,6 +6,7 @@ export interface BasketObj {
   storeName: string;
   storeCode: string;
   serviceArea: StoreServiceArea[];
+  totalItemsCount:number;
 }
 
 export interface OrderItem {

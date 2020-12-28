@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { of, Observable,throwError  } from "rxjs";
+import { of, Observable,throwError, from  } from "rxjs";
 import { BasketFooterObj, BasketObj, OrderItem } from "../interfaces/basket-interface";
 import { Product } from "../interfaces/product-category";
 import { Shop } from "../interfaces/shop-list";
@@ -15,6 +15,7 @@ export class BasketProvider {
         storeName: shop.name,
         serviceArea: shop.serviceArea,
         storeCode: shop.storeCode,
+        totalItemsCount:0,
         items:new Array<OrderItem>(),
       };
       return of(this.myBasket);
@@ -138,6 +139,7 @@ export class BasketProvider {
   }
 
   getBasketForOrder(): Observable<BasketObj> {
+    console.log("Basket Code  for norder");
     return of(this.myBasket);
   }
 

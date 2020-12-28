@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AlertController, LoadingController,  NavController, Platform } from "@ionic/angular";
 import { concat, from,  Observable, of, throwError } from "rxjs";
-import { catchError, concatMap } from "rxjs/operators";
+import { catchError, concatMap, map } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
 import { ProductCategory  } from "../../interfaces/product-category";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
@@ -26,14 +26,8 @@ import { BuildGridArray } from "../../Utility/utility";
 })
 export class CategoryListPage implements OnInit {
   productCatgeoryListObservable:Observable<ProductCategory[]>
-
-  shopCode: string;
-  basketFooterObj: BasketFooterObj;
-  basketObj: BasketObj;
-  defaultHref='';
-  shopObj:Shop;
-  newB:Observable<BasketFooterObj>;
-  counter:number;
+  basketObjObservable:Observable<BasketObj>;
+  defaultHref='';;
 
   constructor(
     public categoryListProvider: CategoryListProvider,public alert:AlertController,
@@ -44,87 +38,106 @@ export class CategoryListPage implements OnInit {
  this.platform.backButton.subscribeWithPriority(10, () => {
     console.log('Handler was called!');
   });
- this.counter =0;
   }
   
-async ngOnInit(){
+ ngOnInit(){
   const storeCode = this.route
                     .snapshot
                     .paramMap
                     .get('storeCode'); //get the shopcode from params
 
-    /** firebase implementation started */
-    /* Responsive Grid implementation */     
+   // load product category.
     this.productCatgeoryListObservable =  this.categoryListProvider
                                           .getActiveProductCategoryListByShopCode(storeCode);
-/***Firebase implementation ended. */
-  /*End of Grid Events */
-   await this.loadBasket();
-}
 
- async loadBasket()
-{
-const shopSubscribe = this.shopProvider.getShopByCode("1234");
-const basketShopSubscribe = shopSubscribe.pipe(concatMap(b =>this.basketProvider.initiateBasket(b)),
-catchError(error => throwError(error))
-);
-basketShopSubscribe.subscribe(b => {
-  this.basketObj = b;
-  this.counter++;
-  },(error)=>{
-  this.presentAlert(error,"basket-loader");
-});
-}
+   // initiate the basket. (load shop data and then initaite basket)                                      
+  this.basketObjObservable = this.shopProvider
+                             .getActiveShopByStoreCode(storeCode)
+                             .pipe(
+                              concatMap(
+                                s => this.basketProvider.initiateBasket(s)
+                                     .pipe(map( basket => {
+                                      
+                                        let totalItemsCount =  0;
+                                      basket.items.forEach(item => 
+                                        {
+                                         totalItemsCount = totalItemsCount+ item.quantity;
+                                        });
+                                        console.log("Count is :"+totalItemsCount);
+                                      return ({...basket,totalItemsCount:totalItemsCount})
 
-ionViewWillEnter()
-{
-  console.log("ViewWillEnter");
-  if(this.counter != 0){
-    console.log("counter is :"+this.counter);
- this.getBasketFromMemory();
-  }
+                                     } ))
+                              ));   
 }
 
   ionViewDidEnter() {
       console.log("ViewDidEnter");
     this.defaultHref = `/app/tabs/market/shoplist`;
-    // this.getBasketFromMemory();
+
+    // refresh basket on everytime view loaded.
+   this.basketObjObservable = this.basketProvider
+                              .getBasketForOrder()
+                              .pipe(map( basket => {                                    
+                                let totalItemsCount =  0;
+                                 basket.items.forEach(item => 
+                               {
+                              totalItemsCount = totalItemsCount+ item.quantity;
+                                   });
+  return ({...basket,totalItemsCount:totalItemsCount})
+  } ))
   }
-  async presentAlert(errorMessage:any,componenet:string) {
+
+   backButton()
+  {
+   console.log("back button clicked");
+   this.basketProvider.getBasketForOrder()
+                              .pipe(map( basket => {                                    
+                                let totalItemsCount =  0;
+                                 basket.items.forEach(item => 
+                               {
+                              totalItemsCount = totalItemsCount+ item.quantity;
+                                   });
+  return ({...basket,totalItemsCount:totalItemsCount})
+  } )).subscribe(async data =>{
+    if(data.totalItemsCount == 0)
+    {
+      // navigate to page
+      console.log("allow to navigate");
+      this.navCtrl.pop();
+    }
+    else{
+     await this.presentAlert();
+      console.log("Display popup");
+    }
+  })
+
+
+  }
+  async presentAlert() {
     const alert = await this.alert.create({
       cssClass: 'my-custom-class',
       header: 'Alert',
-      subHeader: 'Error Occurred:'+errorMessage,
-      message: 'Error:'+componenet,
-      buttons: ['OK']
+      subHeader: 'Back to Market?',
+      message: 'you have items in your cart. Cart will be empty if you press Ok.',
+      buttons: [
+      {
+        text:'Ok',
+        handler:()=>{
+       // this.basketProvider.emptyBasket();  system automatically clear the basket.
+        this.navCtrl.pop();
+        }
+      },
+      {
+        text:'Cancel',
+        handler:()=>{
+          console.log("do nothing");
+        }
+
+      }
+      
+      ]
+
     });
     await alert.present();
   }
-  async backButton()
-  {
-    this.basketProvider.getFooterObjForOrder().subscribe(async x =>{
-      if(x == undefined){
-        this.navCtrl.pop();
-      }else if(x.totalItemCount == 0){
-        this.navCtrl.pop();
-      } else if(x.totalItemCount !=0)
-       await this.presentConfirm();
-    });
-  }
-
-   getBasketFromMemory()
-{
-const basketObjObser = this.basketProvider.getBasketObj("storecode");
-const footerObser = basketObjObser.pipe(concatMap(b => this.basketProvider.getFooterObj(b.items)),
-catchError(err => throwError(err)));
-footerObser.subscribe(f => {this.basketFooterObj=f},
-async (error) =>{
- await this.presentAlert(error,"getBasketFromMemory");
-}
-);
-}
-
- async presentConfirm() {
-
-}
 }

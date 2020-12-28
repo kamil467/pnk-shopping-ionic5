@@ -1,14 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AlertController, LoadingController } from "@ionic/angular";
-import { Observable, throwError } from "rxjs";
-import { catchError, concatMap } from "rxjs/operators";
-import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import {  BasketObj } from "../../interfaces/basket-interface";
 import { Product } from "../../interfaces/product-category";
-import { Shop } from "../../interfaces/shop-list";
 import { BasketProvider } from "../../providers/basket-provider";
 import { ProductListProvider } from "../../providers/product-list.provider";
-import { BuildGridArray } from "../../Utility/utility";
 
 /**
  * Generated class for the ShoplistPage page.
@@ -24,12 +22,7 @@ import { BuildGridArray } from "../../Utility/utility";
 })
 export class ProductListPage implements OnInit {
 allProductsAbservable:Observable<Product[]>
-
-  allProducts: Product[];
-  rowItems: Array<Product[]>;
-   shop: Shop;
-  basketObj: BasketObj;
-  basketFooterObj: BasketFooterObj;
+basketObjObservable:Observable<BasketObj>
   defaultHref='';
 constructor(public productListProvider:ProductListProvider,public basketProvider: BasketProvider,
 public loader:LoadingController,public alert:AlertController,
@@ -39,8 +32,11 @@ private route: ActivatedRoute)
 }
    ionViewDidEnter() {
     this.defaultHref = `/app/tabs/market/product-category-list`;
+    this.getBasketFromMemory();
   }
-async ngOnInit() { 
+
+  // call product-list API to load active products. 
+ ngOnInit() { 
 const storeCode = this.route
                  .snapshot
                  .paramMap
@@ -52,23 +48,23 @@ const productCategoryCode = this.route
                             
  this.allProductsAbservable=  this.productListProvider
                              .getActiveProductList(productCategoryCode,storeCode); // observable will be called on template  
-    this.basketFooterObj = {
-  storecode:"storecode",
-  totalBasket:0,
-  totalItemCount:0
-}
     this.getBasketFromMemory();
 }
+
+// get latest basket from in-memory.
  getBasketFromMemory()
 {
-const basketObjObser = this.basketProvider.getBasketObj("storecode");
-const footerObser = basketObjObser.pipe(concatMap(b => this.basketProvider.getFooterObj(b.items)),
-catchError(err => throwError(err)));
-footerObser.subscribe(f => {this.basketFooterObj=f},
-async (error) =>{
- await this.presentAlert(error,"getBasketFromMemory");
-}
-);
+  this.basketObjObservable = this.basketProvider
+  .getBasketForOrder()
+  .pipe(map( basket => {                                    
+    let totalItemsCount =  0;
+     basket.items.forEach(item => 
+   {
+  totalItemsCount = totalItemsCount+ item.quantity;
+       });
+return ({...basket,totalItemsCount:totalItemsCount})
+} ))
+
 }
   async presentAlert(errorMessage:any,componenet:string) {
     const alert = await this.alert.create({
@@ -88,8 +84,5 @@ async (error) =>{
      this.getBasketFromMemory();
   // refresh the basket everytim.// local call - no expensive service call.
   }
-  ionViewWillEnter()
-  {
-    this.getBasketFromMemory();
-  }
+
 }

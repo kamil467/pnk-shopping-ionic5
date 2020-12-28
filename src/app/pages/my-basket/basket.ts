@@ -67,4 +67,9 @@ public navParams = new NavParams();
     });
     await alert.present();
   }
+
+   backButton()
+   {
+     this.navCtrl.pop();
+   }
 }
