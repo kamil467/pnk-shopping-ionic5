@@ -21,44 +21,23 @@ import { ShopListProvider } from "../../providers/shoplist-provider";
     styleUrls: ["shoplist.scss"]
 })
 export class ShoplistPage implements OnInit {
-  shopCategoryCode: string;
-   
+
   shopListObservable:Observable<Shop[]>
 
-  shopListArray: Shop[];
    defaultHref = '';
   constructor(
-    public shopListProvider: ShopListProvider,public alert:AlertController,public loading:LoadingController, private route: ActivatedRoute
+    public shopListProvider: ShopListProvider,
+    public alert:AlertController,
+    public loading:LoadingController, 
+    private route: ActivatedRoute
   ) {
 
   }
 async ngOnInit() {
-  //  const loading =  await this.loading.create({
-  //     cssClass: 'my-custom-class',
-  //     message: 'Please wait...',
-  //   });
-  //   await loading.present();
-  //  this.shopListProvider.getShopsByCategory("sd").subscribe(async s =>
-  //   {this.shopListArray = s;
-  //   await loading.dismiss();
-  //   },
-  //   (error) =>{
-  //      this.presentAlert();
-  //   }
-  
-  //   );
+
   // firebase code
-  const categoryCode = this.route.snapshot.paramMap.get('categoryCode'); //get the shopcode from params
+  const categoryCode = this.route.snapshot.paramMap.get('categoryCode'); //get the shop catgeory code from params
  this.shopListObservable =  this.shopListProvider.getActiveShopsByCategoryFirebase(categoryCode);
-// this.shopListProvider.getActiveShopsByCategoryFirebase("fdrst").subscribe((d)=>{
-//   console.log("subscroibed");
-//   d.forEach(f =>{
-//     console.log(f.shopContactNumber1);
-//   })
-// })
-
-
-
 }
   async presentAlert() {
     const alert = await this.alert.create({

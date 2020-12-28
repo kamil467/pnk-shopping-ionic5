@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { AlertController, LoadingController } from "@ionic/angular";
 import { Observable, throwError } from "rxjs";
 import { catchError, concatMap } from "rxjs/operators";
@@ -29,7 +30,8 @@ export class ProductListPage implements OnInit {
   basketFooterObj: BasketFooterObj;
   defaultHref='';
 constructor(public productListProvider:ProductListProvider,public basketProvider: BasketProvider,
-public loader:LoadingController,public alert:AlertController)
+public loader:LoadingController,public alert:AlertController,
+private route: ActivatedRoute)
 {
 
 }
@@ -37,6 +39,9 @@ public loader:LoadingController,public alert:AlertController)
     this.defaultHref = `/app/tabs/market/product-category-list`;
   }
 async ngOnInit() { 
+const storeCode = this.route.snapshot.paramMap.get('storeCode'); //get the shopcode from params
+console.log("Store code is inside product catgeory list:"+storeCode);
+  
     this.basketFooterObj = {
   storecode:"storecode",
   totalBasket:0,

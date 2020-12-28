@@ -20,7 +20,7 @@
 
   <div *ngIf="shopListObservable | async ; else loadingErrorTemplate">
  <div *ngFor="let shop of shopListObservable | async ">
-    <ion-card routerLink="/app/tabs/market/product-category-list">
+    <ion-card [routerLink]="['/app/tabs/market/product-category-list',shop.storeCode]">
       <ion-item>
         <!--
       <ion-avatar item-start>

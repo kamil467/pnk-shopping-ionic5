@@ -6,6 +6,16 @@ export interface ProductCategory {
   imageURL: string;
 }
 
+export interface ProductCategory1 {
+  id: string; // to be populated from Firebase's doc.id
+  name: string;
+  status: string;
+  imageURL: string;
+}
+
+
+
+
 export interface Product {
   id: string;
   status: string;

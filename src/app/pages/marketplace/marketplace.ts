@@ -13,9 +13,4 @@ import { Component } from "@angular/core";
 })
 export class MarketplacePage {
 
-
-  cardClicked(storeCategory: string) {
-    // navigate to shoplist page with super market parameter.
-   // this.navCtrl.push(ShoplistPage, { category: storeCategory });
-  }
 }

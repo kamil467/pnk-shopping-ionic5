@@ -1,9 +1,10 @@
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { AlertController, LoadingController,  NavController, Platform } from "@ionic/angular";
 import { concat, from,  Observable, of, throwError } from "rxjs";
 import { catchError, concatMap } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
-import { ProductCategory } from "../../interfaces/product-category";
+import { ProductCategory, ProductCategory1 } from "../../interfaces/product-category";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
 import { BasketProvider } from "../../providers/basket-provider";
 import { CategoryListProvider } from "../../providers/product-category-provider";
@@ -24,6 +25,8 @@ import { BuildGridArray } from "../../Utility/utility";
     styleUrls: ["category.scss"]
 })
 export class CategoryListPage implements OnInit {
+  productCatgeoryListObservable:Observable<ProductCategory1[]>
+
   shopCode: string;
   categoryList: ProductCategory[];
   rowCount: Array<ProductCategory[]>;
@@ -36,7 +39,8 @@ export class CategoryListPage implements OnInit {
   constructor(
     public categoryListProvider: CategoryListProvider,public alert:AlertController,
     public loadingController:LoadingController, public basketProvider: BasketProvider,
-    public shopProvider:ShopListProvider,public platform:Platform,public navCtrl: NavController
+    public shopProvider:ShopListProvider,public platform:Platform,public navCtrl: NavController,
+    private route: ActivatedRoute
   ) {
  this.platform.backButton.subscribeWithPriority(10, () => {
     console.log('Handler was called!');
@@ -45,13 +49,24 @@ export class CategoryListPage implements OnInit {
   }
   
 async ngOnInit(){
+  const storeCode = this.route.snapshot.paramMap.get('storeCode'); //get the shopcode from params
+console.log("Store code is inside product catgeory list:"+storeCode);
 
    const loading =  await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
     });
     loading.present();    
-    /* Load Grid Items */                                         
+
+    /** firebase implementation started */
+    /* Responsive Grid implementation */   
+    
+    this.productCatgeoryListObservable =  this.categoryListProvider.getActiveProductCategoryListByShopCode(storeCode);
+
+/***Firebase implementation ended. */
+
+
+
  this.categoryListProvider.getProductCategoryList("shopCode")
  .subscribe( c => {
    this.categoryList = c;

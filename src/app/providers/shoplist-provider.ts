@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { of, Observable,throwError, merge, from  } from "rxjs";
 import { catchError, first, mergeMap, retry, toArray } from 'rxjs/operators';
 import { map } from "rxjs/operators";
-import { Shop, Shop1, StoreServiceArea } from "../interfaces/shop-list";
+import { Shop,  StoreServiceArea } from "../interfaces/shop-list";
 import { environment } from '../../environments/environment'
 import { AngularFirestore } from "@angular/fire/firestore";
 @Injectable({ providedIn: "root" })
@@ -46,7 +46,7 @@ getShopByCode(shopCode:string):Observable<Shop>
 {
   console.log("code inside shopList: category code is:"+categoryCode);
   const shopValueChangeRef = this.angularFireCloudStore
-.collection<Shop1>(environment.SHOP_LIST_COLLECTION, ref => ref.where("categoryCode","==",categoryCode).where("status","==","a"))
+.collection<Shop>(environment.SHOP_LIST_COLLECTION, ref => ref.where("categoryCode","==",categoryCode).where("status","==","a"))
 .valueChanges()
 .pipe(
   mergeMap((shopLiArray:Shop[]) => 

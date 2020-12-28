@@ -24,25 +24,3 @@ export interface StoreServiceArea {
     storecode:string,
 
 }
-
-export interface Shop1{
-    id:string, // This will be  the storecode
-    name:string,
-    location:string,
-    tileImageUrl:string,
-    deliverySpeed:string,
-    operationHours:string,
-    description:string,
-    status:string,
-    serviceArea:StoreServiceArea[],
-    storeCode:string,
-    categoryCode:string,
-    shopContactNumber1:number,
-    shopContactNumber2:number,
-   }
-
-   export interface ShopWrapper
-   {
-       shopObj:Observable<Shop>;
-       serviceArea:Observable<StoreServiceArea>;
-   }

@@ -15,8 +15,10 @@ export const environment = {
  customerDeliveryInfoAPI:"https://9dd126a1-4426-4b8a-9977-a9dfd8bd7c69.mock.pstmn.io/deliveryLocation", // pass orderSummaryId
  
  SHOP_LIST_COLLECTION:"shop_list",
- SHOP_SERVICE_AREA:"service_area"
-
+ SHOP_SERVICE_AREA:"service_area",
+ PRODUCT_CATEGORY:"product_category",
+ PRODUCT_LIST:"product_list",
+ PRODUCT_CATEGORY_MAPPING:"product_category_product_mapping"
 
 };
 
