@@ -80,6 +80,16 @@ getActiveShopServiceArea(shopCode:string,shopObj:Shop):Observable<StoreServiceAr
                       return serviceArea;
 }
 
+//Get Active shop from firebase -- at this stage func receive only active shop code.
+getActiveShopByStoreCode(storeCode:string):Observable<Shop>
+{
 
+  const shop = this.angularFireCloudStore           
+               .collection<Shop>(environment.SHOP_LIST_COLLECTION)
+               .doc(storeCode)
+               .valueChanges()
+               .pipe(catchError(err => this.handleError(err)));
+               return shop;
+}
 
 }
