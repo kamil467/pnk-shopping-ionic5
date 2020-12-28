@@ -23,11 +23,11 @@
 	</ion-fab-button>
   </ion-fab>
   </ng-container>
-
+  <div *ngIf="allProductsAbservable | async as allProductOb; else loadingErrorTemplate ">
   <ion-grid>
-		<div *ngFor="let row of rowItems">
+	
 			<ion-row>
-				<ion-col col-6 *ngFor="let product of row">
+				<ion-col col-6 *ngFor="let product of allProductOb" size="6">
 					<ng-container *ngIf="product != undefined; then productcard;"></ng-container>
 					<ng-template #productcard>
 						<ion-card>
@@ -99,6 +99,11 @@
 					</ng-template>
 				</ion-col>
 			</ion-row>
-		</div>
 	</ion-grid>
+</div>
+<ng-template #loadingErrorTemplate>
+	<div class="spin"> <ion-spinner name="bubbles"></ion-spinner>
+	  </div>
+	  
+  </ng-template>
 </ion-content>

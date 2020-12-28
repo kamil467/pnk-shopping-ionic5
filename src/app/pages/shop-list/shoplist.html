@@ -18,8 +18,8 @@
 
 <ion-content class="card-background-page">
 
-  <div *ngIf="shopListObservable | async ; else loadingErrorTemplate">
- <div *ngFor="let shop of shopListObservable | async ">
+  <div *ngIf="shopListObservable | async as sList; else loadingErrorTemplate">
+ <div *ngFor="let shop of sList ">
     <ion-card [routerLink]="['/app/tabs/market/product-category-list',shop.storeCode]">
       <ion-item>
         <!--

@@ -23,6 +23,8 @@ import { BuildGridArray } from "../../Utility/utility";
     styleUrls: ["product-list.scss"]
 })
 export class ProductListPage implements OnInit {
+allProductsAbservable:Observable<Product[]>
+
   allProducts: Product[];
   rowItems: Array<Product[]>;
    shop: Shop;
@@ -39,29 +41,22 @@ private route: ActivatedRoute)
     this.defaultHref = `/app/tabs/market/product-category-list`;
   }
 async ngOnInit() { 
-const storeCode = this.route.snapshot.paramMap.get('storeCode'); //get the shopcode from params
-console.log("Store code is inside product catgeory list:"+storeCode);
-  
+const storeCode = this.route
+                 .snapshot
+                 .paramMap
+                 .get('storeCode'); //get the shopcode from params
+const productCategoryCode = this.route
+                            .snapshot
+                            .paramMap
+                            .get('productCategoryCode');  // get the productcategoryCode.
+                            
+ this.allProductsAbservable=  this.productListProvider
+                             .getActiveProductList(productCategoryCode,storeCode); // observable will be called on template  
     this.basketFooterObj = {
   storecode:"storecode",
   totalBasket:0,
   totalItemCount:0
 }
-  const loading =  await this.loader.create({
-      cssClass: 'my-custom-class',
-      message: 'Please wait...',
-    });
-    await loading.present();
-  this.productListProvider.getProductsByCategory("categoryCode")
-  .subscribe(async pl => {
-    this.allProducts = pl;
-   this.rowItems= BuildGridArray(this.allProducts,2);
-    await loading.dismiss();
-  },
-  async (error) =>  {
-    await this.presentAlert(error,"getProductsByCategory");
-  }
-  )
     this.getBasketFromMemory();
 }
  getBasketFromMemory()

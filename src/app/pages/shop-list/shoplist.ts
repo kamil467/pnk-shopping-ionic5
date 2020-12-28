@@ -4,7 +4,7 @@ import { ActivatedRoute } from "@angular/router";
 import { AlertController, LoadingController } from "@ionic/angular";
 import { from, merge, Observable, throwError } from "rxjs";
 import { catchError, concatMap, concatMapTo, map, mergeMap, switchMap, toArray } from "rxjs/operators";
-import { Shop, Shop1, StoreServiceArea } from "../../interfaces/shop-list";
+import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
 import { ShopListProvider } from "../../providers/shoplist-provider";
 
 

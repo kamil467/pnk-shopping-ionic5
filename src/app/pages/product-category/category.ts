@@ -4,7 +4,7 @@ import { AlertController, LoadingController,  NavController, Platform } from "@i
 import { concat, from,  Observable, of, throwError } from "rxjs";
 import { catchError, concatMap } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
-import { ProductCategory, ProductCategory1 } from "../../interfaces/product-category";
+import { ProductCategory  } from "../../interfaces/product-category";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
 import { BasketProvider } from "../../providers/basket-provider";
 import { CategoryListProvider } from "../../providers/product-category-provider";
@@ -25,17 +25,16 @@ import { BuildGridArray } from "../../Utility/utility";
     styleUrls: ["category.scss"]
 })
 export class CategoryListPage implements OnInit {
-  productCatgeoryListObservable:Observable<ProductCategory1[]>
+  productCatgeoryListObservable:Observable<ProductCategory[]>
 
   shopCode: string;
-  categoryList: ProductCategory[];
-  rowCount: Array<ProductCategory[]>;
-   basketFooterObj: BasketFooterObj;
+  basketFooterObj: BasketFooterObj;
   basketObj: BasketObj;
   defaultHref='';
   shopObj:Shop;
   newB:Observable<BasketFooterObj>;
   counter:number;
+
   constructor(
     public categoryListProvider: CategoryListProvider,public alert:AlertController,
     public loadingController:LoadingController, public basketProvider: BasketProvider,
@@ -49,34 +48,16 @@ export class CategoryListPage implements OnInit {
   }
   
 async ngOnInit(){
-  const storeCode = this.route.snapshot.paramMap.get('storeCode'); //get the shopcode from params
-console.log("Store code is inside product catgeory list:"+storeCode);
-
-   const loading =  await this.loadingController.create({
-      cssClass: 'my-custom-class',
-      message: 'Please wait...',
-    });
-    loading.present();    
+  const storeCode = this.route
+                    .snapshot
+                    .paramMap
+                    .get('storeCode'); //get the shopcode from params
 
     /** firebase implementation started */
-    /* Responsive Grid implementation */   
-    
-    this.productCatgeoryListObservable =  this.categoryListProvider.getActiveProductCategoryListByShopCode(storeCode);
-
+    /* Responsive Grid implementation */     
+    this.productCatgeoryListObservable =  this.categoryListProvider
+                                          .getActiveProductCategoryListByShopCode(storeCode);
 /***Firebase implementation ended. */
-
-
-
- this.categoryListProvider.getProductCategoryList("shopCode")
- .subscribe( c => {
-   this.categoryList = c;
-    this.rowCount = BuildGridArray(this.categoryList,3);
-   loading.dismiss();
-   },
-  (error) =>{
-    this.presentAlert(error,"categoryList");
-  },
-  );
   /*End of Grid Events */
    await this.loadBasket();
 }
@@ -144,27 +125,6 @@ async (error) =>{
 }
 
  async presentConfirm() {
-/*  let alert = await this.alert.create({
-    title: 'Confirm to Shop Home',
-    message: 'This will delete the items in your cart?',
-    buttons: [
-      {
-        text: 'Cancel',
-        role: 'cancel',
-        handler: () => {
-          console.log('Cancel clicked');
-        }
-      },
-      {
-        text: 'Ok',
-        handler: () => {
-          console.log('Ok clicked');
-          this.navCtrl.pop();
-        }
-      }
-    ]
-  });
-  await alert.present();
-  */
+
 }
 }

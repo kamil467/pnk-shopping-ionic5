@@ -5,7 +5,7 @@ import { of, Observable,throwError  } from "rxjs";
 import { catchError, first, retry, toArray } from 'rxjs/operators';
 import { map } from "rxjs/operators";
 import { environment } from '../../environments/environment'
-import { ProductCategory, ProductCategory1 } from "../interfaces/product-category";
+import { ProductCategory } from "../interfaces/product-category";
 @Injectable({ providedIn: "root" })
 export class CategoryListProvider {
   
@@ -24,18 +24,18 @@ return this.http.get<ProductCategory[]>(environment.productCategoryListAPI)
 }
 
 //Get active product catgeory for the given shopCode.
-getActiveProductCategoryListByShopCode(shopCode:string):Observable<ProductCategory1[]>
+getActiveProductCategoryListByShopCode(shopCode:string):Observable<ProductCategory[]>
 {
 
 const productCategoryRef = this.angularFireCloudStore
                             .collection(environment.SHOP_LIST_COLLECTION)
                             .doc(shopCode)
-                            .collection<ProductCategory1>(environment.PRODUCT_CATEGORY, ref => ref.where("status","==","a"))
+                            .collection<ProductCategory>(environment.PRODUCT_CATEGORY, ref => ref.where("status","==","a"))
                             .snapshotChanges()
                             .pipe(
                               map(data =>{
                                 return data.map(finalData =>{
-                                    const propdCatObj = finalData.payload.doc.data() as ProductCategory1
+                                    const propdCatObj = finalData.payload.doc.data() as ProductCategory
                                     const id  = finalData.payload.doc.id
 
                                     return {id, ...propdCatObj}
@@ -46,23 +46,7 @@ const productCategoryRef = this.angularFireCloudStore
                             
                             return productCategoryRef;
 
-
 }
-
-fireBaseToProductCategoryConverter(payload: DocumentChangeAction<ProductCategory1>):ProductCategory1
-{
-
-  const productCat:ProductCategory1 ={
-    id:payload.payload.doc.id,
-    imageURL:payload.payload.doc.data().imageURL,
-    name:payload.payload.doc.data().name,
-    status:payload.payload.doc.data().status 
-  }
-  return productCat;
-}
-
-
-
 
   private handleError(error: HttpErrorResponse) {
   if (error.error instanceof ErrorEvent) {
