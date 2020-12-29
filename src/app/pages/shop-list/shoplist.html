@@ -21,18 +21,15 @@
   <div *ngIf="shopListObservable | async as sList; else loadingErrorTemplate">
  <div *ngFor="let shop of sList ">
     <ion-card [routerLink]="['/app/tabs/market/product-category-list',shop.storeCode]">
-      <ion-item>
-        <!--
-      <ion-avatar item-start>
-        <img src="img/marty-avatar.png">
-      </ion-avatar> -->
-        <h2>{{shop.name}}</h2>
-        <p>
+      <ion-card-header>
+        <ion-card-title> {{shop.name}}</ion-card-title>
+        <ion-card-subtitle>
           <ion-note>
+            <ion-icon name="location"></ion-icon>
             {{shop.location}}
           </ion-note>
-        </p>
-      </ion-item>
+        </ion-card-subtitle>
+      </ion-card-header>
       <ng-container
         *ngIf="shop.tileImageUrl!=null; then customImage;else defaultImage"
       ></ng-container>
@@ -46,31 +43,47 @@
       </ng-template>
 
       <ion-card-content>
-        <p>{{shop.description}}</p>
+        {{shop.description}}
       </ion-card-content>
+     <ion-grid>
       <ion-row>
-        <ion-col>
-          <ion-icon name="bicycle"></ion-icon>
-          <div>{{shop.deliverySpeed}}</div>
+        <ion-col col-4 size="4">
+          <ion-chip color="crimson">
+            <ion-icon name="bicycle"></ion-icon>
+            <ion-label >{{shop.deliverySpeed}}</ion-label>
+          </ion-chip>
         </ion-col>
-        <ion-col>
+        <ion-col col-4 size="4">
+        <ion-chip color="crimson">
           <ion-icon name="alarm"></ion-icon>
-          <div>{{shop.operationHours}}</div>
+          <ion-label >{{shop.operationHours}}</ion-label>
+        </ion-chip>
         </ion-col>
-        <ion-col>
-          <ion-icon name="call"></ion-icon>
-          <div>{{shop.shopContactNumber1}},{{shop.shopContactNumber2}}</div>
+        <ion-col  col-4 size="4">
+          <ion-chip color="crimson">
+            <ion-icon name="call"></ion-icon>
+            <ion-label >  {{shop.shopContactNumber1}}</ion-label>
+        </ion-chip>
         </ion-col>
-      </ion-row>
-      <hr class="card-footer" />
-      <ion-row padding>
-        <p>Our Service Available at</p>
-        <div *ngFor="let area of shop.serviceArea ">
-          <ion-col>
-            <ion-badge color="primary">{{area.cityName}}</ion-badge>
-          </ion-col>
+
+        <div *ngIf="shop.deliveryOrderConfig">
+          <ion-chip color="crimson">
+            <ion-icon name="pricetag"></ion-icon>      <ion-label >   DeliveryCharge:{{shop.deliveryOrderConfig.deliveryCharge |currency:'INR' }}</ion-label>
+          </ion-chip>
+          <ion-chip color="crimson">
+            <ion-icon name="pricetag"></ion-icon>  <ion-label >minimumOrder:{{shop.deliveryOrderConfig.minimumOrderValue| currency:'INR'}}</ion-label>
+          </ion-chip>
         </div>
+    
+        <ion-chip color="crimson">
+          <ion-icon name="location"></ion-icon>
+          <ion-label *ngFor="let area of shop.serviceArea ">
+          {{area.cityName}},
+      </ion-label>
+        </ion-chip>
       </ion-row>
+     </ion-grid>
+      
     </ion-card>
   </div>
 </div>

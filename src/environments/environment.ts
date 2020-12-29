@@ -18,7 +18,8 @@ export const environment = {
  SHOP_SERVICE_AREA:"service_area",
  PRODUCT_CATEGORY:"product_category",
  PRODUCT_LIST:"product_list",
- PRODUCT_CATEGORY_MAPPING:"product_category_product_mapping"
+ PRODUCT_CATEGORY_MAPPING:"product_category_product_mapping",
+ DELIVERY_ORDER_CONFIG:"delivery_order_config"
 
 };
 

@@ -18,6 +18,7 @@ export class OrderProvider {
   
 placeOrder():Observable<number>
 {
+  
   //make calls to firebase and update the order.
  return of(1); // 1- success
 }
@@ -53,6 +54,7 @@ let result = deliveryInfo.pipe(map( m => {
 }));
 return result;
 }
+
 
 private handleError(error: HttpErrorResponse) {
   if (error.error instanceof ErrorEvent) {

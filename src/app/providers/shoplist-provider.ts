@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { of, Observable,throwError, merge, from  } from "rxjs";
 import { catchError, first, mergeMap, retry, toArray } from 'rxjs/operators';
 import { map } from "rxjs/operators";
-import { Shop,  StoreServiceArea } from "../interfaces/shop-list";
+import { DeliveryOrderConfig, Shop,  StoreServiceArea } from "../interfaces/shop-list";
 import { environment } from '../../environments/environment'
 import { AngularFirestore } from "@angular/fire/firestore";
 @Injectable({ providedIn: "root" })
@@ -58,6 +58,8 @@ mergeMap(
   this.getActiveShopServiceArea(shop.storeCode,shop)
   .pipe(map(seerviceArea => ({...shop, serviceArea:seerviceArea})),first()
   ),) ,
+  mergeMap(shop => this.getDeliveryOrderConfig(shop.storeCode).pipe(map(deliveryConfig => ({...shop,deliveryOrderConfig:deliveryConfig})),first(),
+  ),),
    toArray()),
    ));
   
@@ -90,6 +92,22 @@ getActiveShopByStoreCode(storeCode:string):Observable<Shop>
                .valueChanges()
                .pipe(catchError(err => this.handleError(err)));
                return shop;
+}
+
+getDeliveryOrderConfig(shopCode:string):Observable<DeliveryOrderConfig>
+{
+  const deliveryOrder = this.angularFireCloudStore
+                        .collection(environment.SHOP_LIST_COLLECTION)
+                        .doc(shopCode)
+                        .collection<DeliveryOrderConfig>(environment.DELIVERY_ORDER_CONFIG)
+                        .valueChanges()
+                        .pipe(map(data =>{
+                          return data[0];
+                        }),  
+                          catchError(err =>this.handleError(err)));
+
+                          return deliveryOrder;
+
 }
 
 }

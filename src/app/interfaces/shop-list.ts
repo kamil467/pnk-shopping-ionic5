@@ -14,6 +14,7 @@ export interface Shop{
  categoryCode:string,
  shopContactNumber1:number,
  shopContactNumber2:number,
+ deliveryOrderConfig:DeliveryOrderConfig
 }
 
 export interface StoreServiceArea {
@@ -23,4 +24,13 @@ export interface StoreServiceArea {
     pincode:number,
     storecode:string,
 
+}
+
+export interface DeliveryOrderConfig
+{
+    id:string,
+    deliveryCharge:number,
+    minimumOrderValue:number,
+    maximumOrderValue:number,
+    maximumQuantity:number,
 }
