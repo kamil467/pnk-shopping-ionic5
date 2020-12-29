@@ -37,9 +37,19 @@
         <img [src]="shop.tileImageUrl" />
       </ng-template>
       <ng-template #defaultImage>
+        <ng-container *ngIf="shop.categorCode=='fdrst'; then superMarketImage; else restImage">
+
+        </ng-container>
+      <ng-template #superMarketImage>
         <img
-          src="https://firebasestorage.googleapis.com/v0/b/pnkshop-adb8e.appspot.com/o/supermarket%2FsupermarketTile.jpg?alt=media&token=8d3b3eb8-dc5d-461e-93df-647752f10561"
+        src="../../../assets/img/supermarket.jpg"
         />
+      </ng-template>
+      <ng-template #restImage>
+        <img
+        src="../../../assets/img/foodRestTile.jpg"
+        />
+      </ng-template>
       </ng-template>
 
       <ion-card-content>
