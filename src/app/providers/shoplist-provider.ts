@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { of, Observable,throwError, merge, from  } from "rxjs";
-import { catchError, first, mergeMap, retry, toArray } from 'rxjs/operators';
+import { catchError, concatMap, first, mergeMap, retry, toArray } from 'rxjs/operators';
 import { map } from "rxjs/operators";
 import { DeliveryOrderConfig, Shop,  StoreServiceArea } from "../interfaces/shop-list";
 import { environment } from '../../environments/environment'
@@ -90,7 +90,12 @@ getActiveShopByStoreCode(storeCode:string):Observable<Shop>
                .collection<Shop>(environment.SHOP_LIST_COLLECTION)
                .doc(storeCode)
                .valueChanges()
-               .pipe(catchError(err => this.handleError(err)));
+               .pipe(concatMap(shop => this.getDeliveryOrderConfig(shop.storeCode)
+               .pipe(map(deliveryConfig => {
+                 return ({...shop,deliveryOrderConfig:deliveryConfig})
+               }))
+               ),
+                catchError(err => this.handleError(err)));
                return shop;
 }
 

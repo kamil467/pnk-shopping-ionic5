@@ -11,12 +11,14 @@ export class BasketProvider {
 
   initiateBasket(shop: Shop): Observable<BasketObj> {
     if (shop != null) {
+      console.log(shop.deliveryOrderConfig.deliveryCharge);
       this.myBasket = {
         storeName: shop.name,
         serviceArea: shop.serviceArea,
         storeCode: shop.storeCode,
         totalItemsCount:0,
         items:new Array<OrderItem>(),
+        deliveryOrderConfig:shop.deliveryOrderConfig
       };
       return of(this.myBasket);
     }

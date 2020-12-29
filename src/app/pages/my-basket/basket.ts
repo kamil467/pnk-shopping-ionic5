@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { AlertController, NavController, NavParams } from "@ionic/angular";
+import { Observable } from "rxjs";
 import { BasketObj, OrderItem } from "../../interfaces/basket-interface";
 import { BasketProvider } from "../../providers/basket-provider";
 
@@ -9,8 +10,9 @@ import { BasketProvider } from "../../providers/basket-provider";
   templateUrl: "basket.html",
   styleUrls: ["basket.scss"]
 })
-export class BasketPage {
-  basketItems: BasketObj;
+export class BasketPage   implements OnInit {
+  showOrderNowButton:boolean = true;
+  basketItems: Observable<BasketObj>;
   storecode: string;
   basketTotalAmount: number = 0;
 public navParams = new NavParams();
@@ -18,21 +20,20 @@ public navParams = new NavParams();
     public navCtrl: NavController,
     public basketProvider: BasketProvider,public alert:AlertController
   ) {
-   // this.storecode = this.navParams.get("storecode");
-    this.basketProvider
-      .getBasketObj("storecode")
-      .subscribe(b => (this.basketItems = b));
-
-    if (this.basketItems.items != undefined) {
-      this.basketTotalAmount = this.caluclateTotalAmount(
-        this.basketItems.items
-      );
-    }
+   
   }
+
+  ngOnInit(){
+  this.basketItems  = this.basketProvider.getBasketForOrder();  // load basket Items
+  this.updateTotal();
+  }
+
+
+
   addQuantity(item: OrderItem) {
     console.log("Item id is:" + item.productId);
     this.basketProvider.addItemToBasketOverload(item);
-    this.basketTotalAmount = this.caluclateTotalAmount(this.basketItems.items);
+    this.updateTotal();
   }
 
   caluclateTotalAmount(items: OrderItem[]): number {
@@ -44,13 +45,13 @@ public navParams = new NavParams();
   }
   removeQuantity(item: OrderItem) {
     this.basketProvider.removeItemFromBasket(item);
-    this.basketTotalAmount = this.caluclateTotalAmount(this.basketItems.items);
+    this.updateTotal();
   }
 
   removeEntireProduct(item:OrderItem)
   {
      this.basketProvider.emptyProductAllQuantity(item);
-    this.basketTotalAmount = this.caluclateTotalAmount(this.basketItems.items);
+     this.updateTotal();
   }
 
   emptyWholeBasket()
@@ -72,4 +73,11 @@ public navParams = new NavParams();
    {
      this.navCtrl.pop();
    }
+updateTotal()
+{
+  this.basketProvider.getBasketForOrder().subscribe(result=>{
+    this.basketTotalAmount =  this.caluclateTotalAmount(result.items);    // perform total
+    });
+}
+
 }

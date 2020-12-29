@@ -11,106 +11,170 @@
   </ion-header>
 
 <ion-content class="basket-content">
+	<div *ngIf="basketItems | async as myBasket">
 	<ion-card>
 		<ion-card-header class="card-header">Cart Summary</ion-card-header>
-	<ng-container *ngIf="basketItems.items == undefined || basketItems.items.length==0;then emptyCart;else itemCart;">
 
-	</ng-container>
+			<ion-grid class="text-center">
+				<ion-row class="text-center">
+					<ion-col col-3>
+						Product Name
+					</ion-col>
+					<ion-col col-3>
+						Price
+					</ion-col>
+					<ion-col col-3>
+						Qty
+					</ion-col>
+					<ion-col col-2>
+						Total
+					</ion-col>
+			<ion-col col-1>
+			</ion-col>
+				</ion-row>
+				<hr class="hr-divider" />
+				<div *ngFor="let item of myBasket.items">
+					<ion-row>
+						<ion-col>
+							<ng-container *ngIf="item.productImageUrl != null; then customImage;else defaultImage">
+							</ng-container>
+							<ng-template #customImage>
+								<img [src]="item.productImageUrl" />
+			  </ng-template>
+								<ng-template #defaultImage>
+									<img
+				  src="../../../assets/img/default.jpg"
+				/>
+			  </ng-template>
+				 
+		</ion-col>
+							<ion-col>
+								{{item.name}}
+							</ion-col>
+							<ion-col col-3>
+								{{item.pricePerQuantity  | currency:'INR'}}
+							</ion-col>
+							<ion-col col-3>
+								<ion-row>
+									<ion-col >
+										qty:{{item.quantity}}
+									</ion-col>
+									<ion-col>
+										<ion-row>
+											<ion-icon name="add-circle" style="margin-bottom:8px;"
+												(click)="addQuantity(item)">
+											</ion-icon>
+										</ion-row>
+										<ion-row>
+											<ion-icon name="remove-circle" (click)="removeQuantity(item)"></ion-icon>
+										</ion-row>
+									</ion-col>
+								</ion-row>
+							</ion-col>
+							<ion-col col-2>
+								{{item.totalPrice  | currency:'INR'}}
+								
+							</ion-col>
+				<ion-col col-1>
+				  <ion-icon name="trash" (click)="removeEntireProduct(item)"></ion-icon>
+				</ion-col>
+	
+					</ion-row>
+	
+					<hr class="hr-divider" />
+				</div>
+				<ion-row>
+					<ion-col col-6>
+						Total
+					</ion-col>
+					<ion-col col style="font-weight:Bold">
+				   {{basketTotalAmount | currency:'INR'}}
+					</ion-col>
+					<ion-col col-1>
+					</ion-col>
+				</ion-row>
+				<ion-row>
+					<ion-col col-6>
+					
+					</ion-col>
+					<ion-col col style="font-weight:Bold">
+				         +
+					</ion-col>
+					<ion-col col-1>
+					</ion-col>
+				</ion-row>
+				<ion-row>
+					<ion-col col-6>
+						Delivery fee
+					</ion-col>
+					<ion-col col style="font-weight:Bold">
+							{{myBasket.deliveryOrderConfig.deliveryCharge | currency:'INR'}}
+					
+					</ion-col>
+					<ion-col col-1>
+					</ion-col>
+				</ion-row>
+			
+				<ion-row>
+					<ion-col col-6>
+						Net Total
+					</ion-col>
+					<ion-col col style="font-weight:Bold">
+				   {{(basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) | currency:'INR'}}
+					</ion-col>
+					<ion-col col-1>
+					</ion-col>
+				</ion-row>
+
+			</ion-grid>
+
+		
+
 
 	<ng-template #emptyCart>
 		Your cart is empty. Please add product into your cart.
 	</ng-template>
-	<ng-template #itemCart>
-		<ion-grid class="text-center">
-			<ion-row class="text-center">
-				<ion-col col-3>
-					Product Name
-				</ion-col>
-				<ion-col col-3>
-					Price
-				</ion-col>
-				<ion-col col-3>
-					Qty
-				</ion-col>
-				<ion-col col-2>
-					Total
-				</ion-col>
-        <ion-col col-1>
-        </ion-col>
-			</ion-row>
-			<hr class="hr-divider" />
-			<div *ngFor="let item of basketItems.items">
-				<ion-row>
-					<ion-col>
-						<ng-container *ngIf="item.productImageUrl != null; then customImage;else defaultImage">
-						</ng-container>
-						<ng-template #customImage>
-							<img [src]="item.productImageUrl" />
-		  </ng-template>
-							<ng-template #defaultImage>
-								<img
-			  src="../../../assets/img/default.jpg"
-			/>
-		  </ng-template>
-             
-    </ion-col>
-						<ion-col>
-							{{item.name}}
-						</ion-col>
-						<ion-col col-3>
-							{{item.pricePerQuantity  | currency:'INR'}}
-						</ion-col>
-						<ion-col col-3>
-							<ion-row>
-								<ion-col >
-									qty:{{item.quantity}}
-								</ion-col>
-								<ion-col>
-									<ion-row>
-										<ion-icon name="add-circle" style="margin-bottom:8px;"
-											(click)="addQuantity(item)">
-										</ion-icon>
-									</ion-row>
-									<ion-row>
-										<ion-icon name="remove-circle" (click)="removeQuantity(item)"></ion-icon>
-									</ion-row>
-								</ion-col>
-							</ion-row>
-						</ion-col>
-						<ion-col col-2>
-							{{item.totalPrice  | currency:'INR'}}
-							
-						</ion-col>
-            <ion-col col-1>
-              <ion-icon name="trash" (click)="removeEntireProduct(item)"></ion-icon>
-            </ion-col>
-
-				</ion-row>
-
-				<hr class="hr-divider" />
-			</div>
-			<ion-row>
-				<ion-col col-6>
-					Total
-				</ion-col>
-				<ion-col col style="font-weight:Bold">
-					{{basketTotalAmount | currency:'INR'}}
-				</ion-col>
-				<ion-col col-1>
-				</ion-col>
-			</ion-row>
-		</ion-grid>
-
-	</ng-template>
 	</ion-card>
 
+	<ion-card >
+		<ion-card-header class="card-header">Checkout 	<ion-icon name="checkmark-circle"></ion-icon></ion-card-header>
+		<ion-card-content>
+			<div  *ngIf="((basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) < myBasket.deliveryOrderConfig.minimumOrderValue); let lessTrue">
+				<ion-chip color="crimson" >
+					<ion-icon name="close-circle"></ion-icon>
+					<ion-label>Minimum Order value : <strong> {{myBasket.deliveryOrderConfig.minimumOrderValue | currency :'INR'}} </strong></ion-label>
+				</ion-chip>
+               
+            
+			</div>
+			<div *ngIf="(myBasket.totalItemsCount > myBasket.deliveryOrderConfig.maximumQuantity) let maxQuantityTrue">
+				<ion-chip color="crimson" >
+					<ion-icon name="close-circle"></ion-icon>
+					<ion-label>Maximum Item Count : <strong> {{myBasket.deliveryOrderConfig.maximumQuantity }} </strong></ion-label>
+				</ion-chip>
+			   </div>
+			<div *ngIf="((basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) > myBasket.deliveryOrderConfig.maximumOrderValue) let maxOrderTrue">
+				<ion-chip color="crimson" >
+					<ion-icon name="close-circle"></ion-icon>
+					<ion-label>Maximum Order value : <strong> {{myBasket.deliveryOrderConfig.maximumOrderValue | currency :'INR'}} </strong></ion-label>
+				</ion-chip>
+			</div>
 	
-	<div class="text-center">
-		<ion-button class="order-now" fill="outline" round color="crimson"> Order Now</ion-button>
-   </div>
+			<div *ngIf="((basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) > myBasket.deliveryOrderConfig.minimumOrderValue) 
+				&& ((basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) < myBasket.deliveryOrderConfig.maximumOrderValue)
+			">
 
-   <div class="text-center">
-	<ion-button class="order-now" fill="outline" round color="crimson">Login to Check out </ion-button>
+		
+			<div class="text-center" *ngIf="showOrderNowButton">
+				<ion-button class="order-now" fill="outline" round color="crimson"> Order Now</ion-button>
+		   </div>
+		
+		   <div class="text-center">
+			<ion-button class="order-now" fill="outline" round color="crimson">Login to Check out </ion-button>
+		</div>
+	</div>
+		</ion-card-content>
+	 </ion-card>
+	
 </div>
-
 </ion-content>
