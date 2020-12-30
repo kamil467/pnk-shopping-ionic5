@@ -10,31 +10,50 @@
   (signInFailure)="errorCallback($event)"
   (uiShown)="uiShownCallback()">
 </firebase-ui>
-
-<ion-card *ngIf="isSuccess">
+<div *ngIf="isLoggedIn">
+<ion-card  *ngIf="customerObj | async as cObj" >
+  
   <ion-card-header class="card-header">Account Information</ion-card-header>
   <ion-card-content>
+    <form [formGroup]="form">
     <ion-item>
       <ion-label position="stacked">Name(*)</ion-label>
-      <ion-input value="Readonly" readonly></ion-input>
+      <ion-input     [value] ="cObj.name" name="name" readonly></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">Phone Number(*)</ion-label>
-      <ion-input value="Readonly" readonly></ion-input>
+      <ion-input     [value]="cObj.phoneNumber"  readonly></ion-input>   <!--not updating phone number for now-->
     </ion-item>
     <ion-item>
       <ion-label position="stacked">Address(*)</ion-label>
-      <ion-input value="Readonly" readonly></ion-input>
+      <ion-input    [value]="cObj.address" name="address" readonly></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">Landmark(*)</ion-label>
-      <ion-input value="Readonly" readonly></ion-input>
+      <ion-input     [value]="cObj.landmark" name="landmark" readonly></ion-input>
     </ion-item>
     <ion-item>
       <ion-label position="stacked">Postal Code(*)</ion-label>
-      <ion-input value="623522" type="number" readonly></ion-input>
+      <ion-input     [value]="cObj.postCode" type="number" name="postCode" readonly></ion-input>
     </ion-item>
-    <ion-button color="crimson" fill="outline" round>Edit</ion-button>
+    <ion-item>
+      <ion-label position="stacked">Alternative Contact</ion-label>
+      <ion-input  [value]="cObj.alternativeContact" name="alternativeContact" readonly></ion-input>
+    </ion-item>
+    <div class="logOut">
+    <ion-button color="crimson" fill="outline" round (click)="editDetails()">
+      
+      <ion-icon name="create"></ion-icon>Edit</ion-button>
+</div>
+    </form>
   </ion-card-content>
   </ion-card>
+  <div class="logOut">
+    <ion-button color="crimson"  fill="outline" round  (click)="logOutButtonClicked()">
+      <ion-icon name="log-out"></ion-icon>Logout</ion-button>
+  </div>
+  
+</div>
+
+
 </ion-content>

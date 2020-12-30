@@ -164,14 +164,21 @@
 				&& ((basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) < myBasket.deliveryOrderConfig.maximumOrderValue)
 			">
 
-		
-			<div class="text-center" *ngIf="showOrderNowButton">
-				<ion-button class="order-now" fill="outline" round color="crimson"> Order Now</ion-button>
-		   </div>
-		
-		   <div class="text-center">
-			<ion-button class="order-now" fill="outline" round color="crimson">Login to Check out </ion-button>
-		</div>
+		    <ng-container *ngIf="isLoggedIn; then showOrderNow; else showLogin">
+
+			</ng-container>
+			<ng-template #showOrderNow>
+				<div class="text-center" *ngIf="showOrderNowButton">
+					<ion-button class="order-now" fill="outline" round color="crimson"> Order Now</ion-button>
+			   </div>
+			</ng-template>
+	<!--Below button should take the user to login -->		
+		<ng-template #showLogin>
+			<div class="text-center">
+				<ion-button class="order-now" fill="outline" routerLink="/app/tabs/login" round color="crimson">Login to Check out </ion-button>
+			</div>
+		</ng-template>
+		 
 	</div>
 		</ion-card-content>
 	 </ion-card>
