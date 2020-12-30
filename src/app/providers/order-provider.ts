@@ -56,7 +56,7 @@ return result;
 }
 
 
-private handleError(error: HttpErrorResponse) {
+private handleError(error: HttpErrorResponse,caller:string= null) {
   if (error.error instanceof ErrorEvent) {
     // A client-side or network error occurred. Handle it accordingly.
     console.error('An error occurred:', error.error.message);
@@ -66,6 +66,7 @@ private handleError(error: HttpErrorResponse) {
     console.error(
       `Backend returned code ${error.status}, ` +
       `body was: ${error.error}`);
+      console.error("Detailed error is :"+error +"and caller is:"+caller);
   }
   // Return an observable with a user-facing error message.
   return throwError(

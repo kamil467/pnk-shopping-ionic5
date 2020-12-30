@@ -1,6 +1,9 @@
 // The file contents for the current environment will overwrite these during build.
 // The build system defaults to the dev environment which uses `environment.ts`, but if you do
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
+
+import * as firebase from "firebase";
+
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 export const environment = {
   production: false,
@@ -19,7 +22,8 @@ export const environment = {
  PRODUCT_CATEGORY:"product_category",
  PRODUCT_LIST:"product_list",
  PRODUCT_CATEGORY_MAPPING:"product_category_product_mapping",
- DELIVERY_ORDER_CONFIG:"delivery_order_config"
+ DELIVERY_ORDER_CONFIG:"delivery_order_config",
+ CUSTOMER_COLLECTION:"customer"
 
 };
 
@@ -33,6 +37,8 @@ export const firebaseConfig ={
   appId: "1:858321314978:web:9f649c995b8a3b98ce23fb",
   measurementId: "G-Y6LVPT1C5Y"
 };
+
+
 
 /*
  * In development mode, to ignore zone related error stack frames such as

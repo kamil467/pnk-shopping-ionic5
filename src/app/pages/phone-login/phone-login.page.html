@@ -1,0 +1,40 @@
+
+<ion-header translucent="true">
+  <ion-toolbar color="crimson">
+   Account
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <firebase-ui  (signInSuccessWithAuthResult)="successCallback($event)"
+  (signInFailure)="errorCallback($event)"
+  (uiShown)="uiShownCallback()">
+</firebase-ui>
+
+<ion-card *ngIf="isSuccess">
+  <ion-card-header class="card-header">Account Information</ion-card-header>
+  <ion-card-content>
+    <ion-item>
+      <ion-label position="stacked">Name(*)</ion-label>
+      <ion-input value="Readonly" readonly></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Phone Number(*)</ion-label>
+      <ion-input value="Readonly" readonly></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Address(*)</ion-label>
+      <ion-input value="Readonly" readonly></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Landmark(*)</ion-label>
+      <ion-input value="Readonly" readonly></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Postal Code(*)</ion-label>
+      <ion-input value="623522" type="number" readonly></ion-input>
+    </ion-item>
+    <ion-button color="crimson" fill="outline" round>Edit</ion-button>
+  </ion-card-content>
+  </ion-card>
+</ion-content>

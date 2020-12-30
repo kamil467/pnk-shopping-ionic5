@@ -80,6 +80,15 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'login',
+        children: [
+          {
+            path: '',
+            loadChildren: () => import('../phone-login/phone-login.module').then(m => m.PhoneLoginPageModule)
+          }
+        ]
+      },
+      {
         path: 'about',
         children: [
           {
