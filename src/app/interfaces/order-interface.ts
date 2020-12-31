@@ -3,7 +3,7 @@ import { OrderItem } from "./basket-interface";
 export interface OrderSummary {
   id: string;  // from firebase
   shopName: string;  // from basket
-  storeCode: number;    // from basket
+  storeCode: string;    // from basket
   customerId: string; //fromauthenticated user
   totalOrderValue: number;   // from basket + delivery charge
   totalItems: number;   // from basket
@@ -32,6 +32,6 @@ export interface CustomerDeliveryPersonalInfo
   deliveryLocation:string,
   landmark:string,
   contactNo:string,
-  pincode:number
+  postCode:number
 }
 

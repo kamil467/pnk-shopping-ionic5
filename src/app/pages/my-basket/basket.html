@@ -169,7 +169,22 @@
 			</ng-container>
 			<ng-template #showOrderNow>
 				<div class="text-center" *ngIf="showOrderNowButton">
-					<ion-button class="order-now" fill="outline" round color="crimson"> Order Now</ion-button>
+					<!-- check customer postal code and shop service area postal code-->
+					<div *ngIf="isServiceAvailable | async as isAvailable ; else noService">
+						<ion-button class="order-now" fill="outline" *ngIf="isAvailable" round color="crimson" (click)="createOrderButtonClicked()"> Order Now</ion-button>
+					</div>
+					<ng-template #noService>
+						<ion-card>
+							<ion-card-header color="crimson">
+							 No Service  <ion-icon name="alert"></ion-icon>
+							</ion-card-header>
+							<ion-card-content>
+								<ion-label><strong>Sorry this store doesn't have delivery service at your pincode. 
+									We are expanding our service, soon we will cover your location.</strong> </ion-label>
+							</ion-card-content>
+						</ion-card>
+					</ng-template>
+					
 			   </div>
 			</ng-template>
 	<!--Below button should take the user to login -->		

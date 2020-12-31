@@ -11,39 +11,48 @@
   (uiShown)="uiShownCallback()">
 </firebase-ui>
 <div *ngIf="isLoggedIn">
-<ion-card  *ngIf="customerObj | async as cObj" >
+<ion-card >
   
   <ion-card-header class="card-header">Account Information</ion-card-header>
   <ion-card-content>
-    <form [formGroup]="form">
+    <form [formGroup]="accountInfoForm" (ngSubmit)="submit(accountInfoForm.value)">
+      <ion-input formControlName="customerId"  hidden></ion-input>
     <ion-item>
-      <ion-label position="stacked">Name(*)</ion-label>
-      <ion-input     [value] ="cObj.name" name="name" readonly></ion-input>
+      <ion-label  color="crimson" position="stacked">Name(*)</ion-label>
+      <ion-input    placeholder="enter your name"   formControlName="name" ></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Phone Number(*)</ion-label>
-      <ion-input     [value]="cObj.phoneNumber"  readonly></ion-input>   <!--not updating phone number for now-->
+      <ion-label color="crimson" position="stacked">Phone Number(*)</ion-label>
+      <ion-input     formControlName="phoneNumber"  ></ion-input>   <!--not updating phone number for now-->
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Address(*)</ion-label>
-      <ion-input    [value]="cObj.address" name="address" readonly></ion-input>
+      <ion-label color="crimson" position="stacked">Address(*)</ion-label>
+      <ion-textarea    placeholder="enter your address"  formControlName="address" ></ion-textarea>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Landmark(*)</ion-label>
-      <ion-input     [value]="cObj.landmark" name="landmark" readonly></ion-input>
+      <ion-label color="crimson" position="stacked">Landmark(*)</ion-label>
+      <ion-input    placeholder="enter nearest landmark"   formControlName="landmark" ></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Postal Code(*)</ion-label>
-      <ion-input     [value]="cObj.postCode" type="number" name="postCode" readonly></ion-input>
+      <ion-label color="crimson" position="stacked">Postal Code(*)</ion-label>
+      <ion-input     placeholder="enter your area's postal code"     type="number" formControlName="postCode" ></ion-input>
     </ion-item>
     <ion-item>
-      <ion-label position="stacked">Alternative Contact</ion-label>
-      <ion-input  [value]="cObj.alternativeContact" name="alternativeContact" readonly></ion-input>
+      <ion-label  color="crimson" position="stacked">Alternative Contact</ion-label>
+      <ion-input  placeholder="enter alternative contact no"    type="number" formControlName="alternativeContact" ></ion-input>
     </ion-item>
     <div class="logOut">
-    <ion-button color="crimson" fill="outline" round (click)="editDetails()">
-      
+    <ion-button color="crimson" fill="outline"  *ngIf="showEdit" round (click)="editDetails();showUpdate=true;showEdit=false;">
       <ion-icon name="create"></ion-icon>Edit</ion-button>
+      <div  *ngIf="showUpdate">
+
+      <ion-button color="crimson" fill="outline" type="submit"  [disabled]="accountInfoForm.invalid" round >
+        <ion-icon name="create"></ion-icon>Update</ion-button>
+
+        <ion-button color="crimson" fill="outline" type="button"  round (click)="cancel();showEdit=true;showUpdate=false">
+          <ion-icon name="create"></ion-icon>Cancel</ion-button>
+      </div>
+      
 </div>
     </form>
   </ion-card-content>

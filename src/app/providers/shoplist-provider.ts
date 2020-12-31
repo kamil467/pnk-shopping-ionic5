@@ -55,7 +55,7 @@ getShopByCode(shopCode:string):Observable<Shop>
     // foreach shop
 mergeMap(
   shop =>
-  this.getActiveShopServiceArea(shop.storeCode,shop)
+  this.getActiveShopServiceArea(shop.storeCode)
   .pipe(map(seerviceArea => ({...shop, serviceArea:seerviceArea})),first()
   ),) ,
   mergeMap(shop => this.getDeliveryOrderConfig(shop.storeCode).pipe(map(deliveryConfig => ({...shop,deliveryOrderConfig:deliveryConfig})),first(),
@@ -67,7 +67,7 @@ mergeMap(
 return shopValueChangeRef;
 }
 
-getActiveShopServiceArea(shopCode:string,shopObj:Shop):Observable<StoreServiceArea[]>
+getActiveShopServiceArea(shopCode:string):Observable<StoreServiceArea[]>
 {
   //this.testMethod();
   console.log("code is here::"+shopCode);
@@ -94,7 +94,9 @@ getActiveShopByStoreCode(storeCode:string):Observable<Shop>
                .pipe(map(deliveryConfig => {
                  return ({...shop,deliveryOrderConfig:deliveryConfig})
                }))
-               ),
+               ),mergeMap(shop => this.getActiveShopServiceArea(shop.storeCode).pipe(map(serviceArea =>{
+                 return ({...shop,serviceArea:serviceArea})
+               }))),
                 catchError(err => this.handleError(err)));
                return shop;
 }

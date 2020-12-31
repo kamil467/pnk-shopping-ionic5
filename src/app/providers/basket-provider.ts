@@ -11,7 +11,7 @@ export class BasketProvider {
 
   initiateBasket(shop: Shop): Observable<BasketObj> {
     if (shop != null) {
-      console.log(shop.deliveryOrderConfig.deliveryCharge);
+      console.log(shop);
       this.myBasket = {
         storeName: shop.name,
         serviceArea: shop.serviceArea,

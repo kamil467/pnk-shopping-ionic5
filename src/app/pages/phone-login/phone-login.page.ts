@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AlertController } from '@ionic/angular';
+import { FormBuilder, FormControl,FormGroup, Validators } from '@angular/forms';
+import { AlertController, ToastController } from '@ionic/angular';
 import { FirebaseUISignInFailure, FirebaseUISignInSuccessWithAuthResult } from 'firebaseui-angular';
 import { Observable, of, Subscription } from 'rxjs';
 import { first, take } from 'rxjs/operators';
@@ -21,16 +22,47 @@ export class PhoneLoginPage  {
   userLoggedSubscription:Subscription;
   customerObj :Observable<Customer>;
   tobeUpdatedCustomerObj:Customer
+  formSettingSubscription:Subscription;
+  tempObj:Customer;
+
+
+
+  accountInfoForm:FormGroup;
+  //buttons
+  showEdit:boolean= true;
+  showUpdate:boolean=false;
 
   constructor(public angularFireAuth: AngularFireAuth,
     private accountProvider:AccountProvider,
-    private alertController:AlertController) { }
+    private alertController:AlertController,
+    public formBuilder: FormBuilder,
+    public toastController: ToastController
+    ) { }
+
+ ngOnInit()
+ {
+
+this.accountInfoForm = this.formBuilder.group(
+  {
+     name:[{value:'',disabled:true},Validators.required],
+     address:[{value:'',disabled:true},Validators.required],
+     phoneNumber:[{value:'',disabled:true}],
+    alternativeContact:[{value:'',disabled:true},Validators.required],
+    landmark:[{value:'',disabled:true},Validators.required],
+    postCode:[{value:'',disabled:true},Validators.required],
+    customerId:[{value:''}]
+  }
+);
+ }
+
+
 
  ngOnDestroy()
  {
    /**It is important to unsubscribe subscribtion if not using async pipe. */
  this.customerCreationObservableSubsc.unsubscribe();
  this.userLoggedSubscription.unsubscribe();
+ this.formSettingSubscription.unsubscribe();
  }
  ionViewWillEnter()
  {
@@ -68,7 +100,7 @@ export class PhoneLoginPage  {
                 if(result.customerId != undefined)
                 {
                   console.log("User Id is :"+result.customerId);
-                  this.customerObj = of(result as Customer);
+                  this.tempObj = (result as Customer);
                 }
         },
         ).catch(
@@ -105,7 +137,8 @@ uiShownCallback() {
 editDetails()
 {
  // build tobeUpdatedCustomerObj.
- 
+ this.accountInfoForm.enable();
+ this.accountInfoForm.controls['phoneNumber'].disable();
 
 }
 
@@ -116,7 +149,19 @@ getLoggedInUser()
     if(user)
     {
       this.isLoggedIn = true;
-      this.customerObj = this.accountProvider.getCustomer(user.phoneNumber);
+    this.formSettingSubscription = this.accountProvider.getCustomer(user.phoneNumber).subscribe(customer =>{
+      this.tempObj = customer;
+      this.accountInfoForm.setValue({
+      name:customer.name,
+      address:customer.address,
+      phoneNumber:customer.phoneNumber,
+      alternativeContact:customer.alternativeContact,
+      landmark:customer.landmark,
+      postCode:customer.postCode,
+      customerId:customer.customerId,
+      })
+     });
+     //formSettingSubscription.unsubscribe();
     }
     else{
       this.isLoggedIn = false;
@@ -184,5 +229,65 @@ async presentErrorAlert() {
   });
 
   await alert.present();
+}
+
+submit(formValue)
+{
+  // build customer Obj.
+    
+  const updatedCustomerObj:Customer = 
+  {
+   name:this.accountInfoForm.controls['name'].value,
+   alternativeContact:this.accountInfoForm.controls['alternativeContact'].value,
+   landmark:this.accountInfoForm.controls['landmark'].value,
+   address: this.accountInfoForm.controls['address'].value,
+   customerId: this.accountInfoForm.controls['customerId'].value,
+   postCode: this.accountInfoForm.controls['postCode'].value,
+   phoneNumber: this.accountInfoForm.controls['phoneNumber'].value,
+  }
+   this.accountProvider.updateCustomer(updatedCustomerObj).then(async (result)=>{
+     if(result){
+     await this.presentCustomerDataUpdateToast();
+     // disable form
+     this.accountInfoForm.disable();
+     this.showEdit= true;
+     this.showUpdate= false;
+     this.tempObj = updatedCustomerObj;
+     }
+     else{
+      this.presentErrorAlert();
+     }
+     // display edit button
+     // hide update and cancel button
+   })
+   .catch(err => {
+     console.error(err);
+     this.presentErrorAlert();
+   })
+  // call the api to update the document.
+
+}
+
+async presentCustomerDataUpdateToast() {
+  const toast = await this.toastController.create({
+    message: 'Your account information have been saved.',
+    duration: 2000,
+    position:'top',
+    color:"success"
+  });
+  toast.present();
+}
+cancel()
+{
+  this.accountInfoForm.disable();
+  this.accountInfoForm.setValue({
+    name:this.tempObj.name,
+    address:this.tempObj.address,
+    phoneNumber:this.tempObj.phoneNumber,
+    alternativeContact:this.tempObj.alternativeContact,
+    landmark:this.tempObj.landmark,
+    postCode:this.tempObj.postCode,
+    customerId:this.tempObj.customerId,
+    })
 }
 }

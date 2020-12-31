@@ -23,7 +23,11 @@ export const environment = {
  PRODUCT_LIST:"product_list",
  PRODUCT_CATEGORY_MAPPING:"product_category_product_mapping",
  DELIVERY_ORDER_CONFIG:"delivery_order_config",
- CUSTOMER_COLLECTION:"customer"
+ CUSTOMER_COLLECTION:"customer",
+ ORDER_SUMMARY:"order_summary",
+ CUSTOMER_DELIVERY_PERSONAL_INFO:"customer_delivery_personal_info",
+ ORDERED_ITEMS:"ordered_items"
+
 
 };
 

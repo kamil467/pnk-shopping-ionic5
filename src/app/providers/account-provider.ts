@@ -59,6 +59,24 @@ export class AccountProvider {
 
     }
 
+   updateCustomer(customer:Customer):Promise<any>
+   {
+       const customerRef = this.angularFireStore      
+                           .collection<Customer>(environment.CUSTOMER_COLLECTION)
+                           .doc(customer.customerId)
+                           .set(customer)
+                           .then(()=>{
+                               return true;
+                           })
+                           .catch(err =>{
+                               this.handleError(err);
+                           })
+                           return customerRef;
+
+   }
+
+
+
 
     private handleError(error: HttpErrorResponse,caller:string= null) {
         if (error.error instanceof ErrorEvent) {
