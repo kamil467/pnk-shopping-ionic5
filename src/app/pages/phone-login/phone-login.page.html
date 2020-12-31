@@ -16,10 +16,10 @@
   <ion-card-header class="card-header">Account Information</ion-card-header>
   <ion-card-content>
     <form [formGroup]="accountInfoForm" (ngSubmit)="submit(accountInfoForm.value)">
-      <ion-input formControlName="customerId"  hidden></ion-input>
+      <ion-input   formControlName="customerId"  hidden></ion-input>
     <ion-item>
       <ion-label  color="crimson" position="stacked">Name(*)</ion-label>
-      <ion-input    placeholder="enter your name"   formControlName="name" ></ion-input>
+      <ion-input   [value] ="name"   placeholder="enter your name"   formControlName="name" ></ion-input>
     </ion-item>
     <ion-item>
       <ion-label color="crimson" position="stacked">Phone Number(*)</ion-label>

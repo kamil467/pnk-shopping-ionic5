@@ -20,7 +20,6 @@ export class PhoneLoginPage  {
   user:Observable<any>;
   isLoggedIn:boolean = false;
   userLoggedSubscription:Subscription;
-  customerObj :Observable<Customer>;
   tobeUpdatedCustomerObj:Customer
   formSettingSubscription:Subscription;
   tempObj:Customer;
@@ -86,11 +85,11 @@ this.accountInfoForm = this.formBuilder.group(
         console.log("Customer not found");
         const customer:Customer = 
         {
-          customerId:null,
-          address:null,
-          alternativeContact:null,
-          landmark:null,
-          name:null,
+          customerId:'',
+          address:'',
+          alternativeContact:'',
+          landmark:'',
+          name:'',
           phoneNumber:phoneNumber,
           postCode:null
 
@@ -101,6 +100,15 @@ this.accountInfoForm = this.formBuilder.group(
                 {
                   console.log("User Id is :"+result.customerId);
                   this.tempObj = (result as Customer);
+                  this.accountInfoForm.setValue({
+                    name: result.name,
+                    address:result.address,
+                    phoneNumber:result.phoneNumber,
+                    alternativeContact:result.alternativeContact,
+                    landmark:result.landmark,
+                    postCode:result.postCode,
+                    customerId:result.customerId,
+                    })
                 }
         },
         ).catch(
@@ -112,17 +120,23 @@ this.accountInfoForm = this.formBuilder.group(
       }
       else{
         console.log("user record already present");
-        this.customerObj = of(result);
+        this.accountInfoForm.setValue({
+          name:result.name,
+          address:result.address,
+          phoneNumber:result.phoneNumber,
+          alternativeContact:result.alternativeContact,
+          landmark:result.landmark,
+          postCode:result.postCode,
+          customerId:result.customerId,
+          })
       }
+this.isLoggedIn = true;
     },
     async error => {
       console.error("error occurred while sigining the user"+error);
       await this.presentErrorAlert();
     }
     );
-
-    // display success message on completion of observable and display  pop for error 
-    this.getLoggedInUser();
 }
  
   async errorCallback(errorData: FirebaseUISignInFailure) {
@@ -132,7 +146,7 @@ this.accountInfoForm = this.formBuilder.group(
 }
  
 uiShownCallback() {
-  console.log("uiShownCallback called");
+  this.isLoggedIn = false;
 }
 editDetails()
 {
@@ -149,17 +163,20 @@ getLoggedInUser()
     if(user)
     {
       this.isLoggedIn = true;
-    this.formSettingSubscription = this.accountProvider.getCustomer(user.phoneNumber).subscribe(customer =>{
+    this.formSettingSubscription = this.accountProvider.getCustomer(user.phoneNumber).pipe(first()).subscribe(customer =>{
+      if(customer != null){
       this.tempObj = customer;
+      console.log(customer);
       this.accountInfoForm.setValue({
-      name:customer.name,
-      address:customer.address,
-      phoneNumber:customer.phoneNumber,
-      alternativeContact:customer.alternativeContact,
-      landmark:customer.landmark,
-      postCode:customer.postCode,
-      customerId:customer.customerId,
+      name:customer?.name,
+      address:customer?.address,
+      phoneNumber:customer?.phoneNumber,
+      alternativeContact:customer?.alternativeContact,
+      landmark:customer?.landmark,
+      postCode:customer?.postCode,
+      customerId:customer?.customerId,
       })
+    }
      });
      //formSettingSubscription.unsubscribe();
     }
