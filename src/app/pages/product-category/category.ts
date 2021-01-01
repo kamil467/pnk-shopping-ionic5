@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AlertController, LoadingController,  NavController, Platform } from "@ionic/angular";
 import { concat, from,  Observable, of, throwError } from "rxjs";
-import { catchError, concatMap, map } from "rxjs/operators";
+import { catchError, concatMap, delay, map } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
 import { ProductCategory  } from "../../interfaces/product-category";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
@@ -48,7 +48,7 @@ export class CategoryListPage implements OnInit {
 
    // load product category.
     this.productCatgeoryListObservable =  this.categoryListProvider
-                                          .getActiveProductCategoryListByShopCode(storeCode);
+                                          .getActiveProductCategoryListByShopCode(storeCode)
 
    // initiate the basket. (load shop data and then initaite basket)                                      
   this.basketObjObservable = this.shopProvider

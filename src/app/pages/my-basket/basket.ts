@@ -1,7 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AlertController, NavController, NavParams } from "@ionic/angular";
-import { createReadStream } from "fs";
 import { Observable, Subscription } from "rxjs";
 import { catchError, concatMap, first, map } from "rxjs/operators";
 import { BasketObj, OrderItem } from "../../interfaces/basket-interface";

@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { of, Observable,throwError, merge, from  } from "rxjs";
+import { of, Observable,throwError, merge, from, BehaviorSubject  } from "rxjs";
 import { catchError, concatMap, first, mergeMap, retry, toArray } from 'rxjs/operators';
 import { map } from "rxjs/operators";
 import { DeliveryOrderConfig, Shop,  StoreServiceArea } from "../interfaces/shop-list";
@@ -8,6 +8,11 @@ import { environment } from '../../environments/environment'
 import { AngularFirestore } from "@angular/fire/firestore";
 @Injectable({ providedIn: "root" })
 export class ShopListProvider {
+  public loading:BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  
+  public isLoading(state:boolean):void{
+    this.loading.next(state);
+  }
   
   /* Data Initialization */
   constructor(public http: HttpClient, private angularFireCloudStore: AngularFirestore) {}

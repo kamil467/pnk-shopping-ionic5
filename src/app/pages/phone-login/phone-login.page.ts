@@ -4,9 +4,10 @@ import { FormBuilder, FormControl,FormGroup, Validators } from '@angular/forms';
 import { AlertController, ToastController } from '@ionic/angular';
 import { FirebaseUISignInFailure, FirebaseUISignInSuccessWithAuthResult } from 'firebaseui-angular';
 import { Observable, of, Subscription } from 'rxjs';
-import { first, take } from 'rxjs/operators';
+import { delay, finalize, first, shareReplay, take } from 'rxjs/operators';
 import { Customer } from '../../interfaces/account-interface';
 import { AccountProvider } from '../../providers/account-provider';
+import { AppService } from '../../providers/app.service';
 
 @Component({
   selector: 'app-phone-login',
@@ -23,7 +24,7 @@ export class PhoneLoginPage  {
   tobeUpdatedCustomerObj:Customer
   formSettingSubscription:Subscription;
   tempObj:Customer;
-
+  public loading$ = this.appService.loading.asObservable();   // get the subject value.
 
 
   accountInfoForm:FormGroup;
@@ -35,7 +36,8 @@ export class PhoneLoginPage  {
     private accountProvider:AccountProvider,
     private alertController:AlertController,
     public formBuilder: FormBuilder,
-    public toastController: ToastController
+    public toastController: ToastController,
+    public appService:AppService
     ) { }
 
  ngOnInit()
@@ -78,7 +80,8 @@ this.accountInfoForm = this.formBuilder.group(
   // create a customer document with userId from auth obj.
   // prompt the user to fill account details such as (name, landmark, address, alternative contact no amnd pincode.)
   // if not a new user - make the form as readonly and display edit button
-  this.customerCreationObservableSubsc = this.accountProvider.getCustomer(phoneNumber).pipe(take(1)).subscribe(result =>
+  this.customerCreationObservableSubsc = this.accountProvider.getCustomer(phoneNumber).pipe(take(1)).pipe((finalize(()=>this.appService.isLoading(false)),shareReplay()),)
+  .subscribe(result =>
     {
       if(result == null) // no user data found for given phonenumber.
       {
@@ -158,7 +161,7 @@ editDetails()
 
 getLoggedInUser()
 {
- this.userLoggedSubscription = this.angularFireAuth.authState.pipe(first()).subscribe(user =>
+ this.userLoggedSubscription = this.angularFireAuth.authState.pipe(first(),finalize(()=> this.appService.isLoading(false)),shareReplay()).subscribe(user =>
   {
     if(user)
     {
@@ -248,6 +251,7 @@ async presentErrorAlert() {
   await alert.present();
 }
 
+// spinner perfectly working and tested.
 submit(formValue)
 {
   // build customer Obj.
@@ -262,8 +266,12 @@ submit(formValue)
    postCode: this.accountInfoForm.controls['postCode'].value,
    phoneNumber: this.accountInfoForm.controls['phoneNumber'].value,
   }
-   this.accountProvider.updateCustomer(updatedCustomerObj).then(async (result)=>{
+  // show loader 
+  this.appService.isLoading(true);
+   this.accountProvider.updateCustomer(updatedCustomerObj).then( async (result)=> 
+     {
      if(result){
+       
      await this.presentCustomerDataUpdateToast();
      // disable form
      this.accountInfoForm.disable();
@@ -274,13 +282,15 @@ submit(formValue)
      else{
       this.presentErrorAlert();
      }
+     this.appService.isLoading(false);
      // display edit button
      // hide update and cancel button
-   })
-   .catch(err => {
+   }).catch(err => {
      console.error(err);
+     this.appService.isLoading(false);
      this.presentErrorAlert();
-   })
+    
+   });
   // call the api to update the document.
 
 }
