@@ -203,12 +203,15 @@ async logOutButtonClicked()
 logOut()
 {
   // show pop up alert for prompting the user to select 
+  this.appService.isLoading(true);  // show loader
  this.angularFireAuth.signOut().then(() =>
  {
    console.log("successfully loggedout");
+   this.appService.isLoading(false);  // hide loader
    this.getLoggedInUser();
  }).catch(async (err)=>
  {
+  this.appService.isLoading(false);  // hide loader
    console.error("Error occurred while signing out the user."+err);
    await this.presentErrorAlert();
    // show pop alert here.
@@ -267,7 +270,7 @@ submit(formValue)
    phoneNumber: this.accountInfoForm.controls['phoneNumber'].value,
   }
   // show loader 
-  this.appService.isLoading(true);
+  this.appService.isLoading(true);  // show loader
    this.accountProvider.updateCustomer(updatedCustomerObj).then( async (result)=> 
      {
      if(result){
@@ -282,12 +285,12 @@ submit(formValue)
      else{
       this.presentErrorAlert();
      }
-     this.appService.isLoading(false);
+     this.appService.isLoading(false);  // hide loader
      // display edit button
      // hide update and cancel button
    }).catch(err => {
      console.error(err);
-     this.appService.isLoading(false);
+     this.appService.isLoading(false);  // hide loader
      this.presentErrorAlert();
     
    });

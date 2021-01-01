@@ -1,10 +1,12 @@
 import { Component, OnInit } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/auth";
-import { AlertController, NavController, NavParams } from "@ionic/angular";
+import { ActivatedRoute,Router } from "@angular/router";
+import { AlertController, NavController, NavParams, ToastController } from "@ionic/angular";
 import { Observable, Subscription } from "rxjs";
-import { catchError, concatMap, first, map } from "rxjs/operators";
+import { catchError, concatMap, finalize, first, map, shareReplay } from "rxjs/operators";
 import { BasketObj, OrderItem } from "../../interfaces/basket-interface";
 import { AccountProvider } from "../../providers/account-provider";
+import { AppService } from "../../providers/app.service";
 import { BasketProvider } from "../../providers/basket-provider";
 import { OrderProvider } from "../../providers/order-provider";
 
@@ -21,8 +23,9 @@ export class BasketPage   implements OnInit {
   basketTotalAmount: number = 0;
   userLoggedSubscription:Subscription;
   isLoggedIn:boolean= false;
-  isServiceAvailable:Observable<boolean>
+  isServiceAvailable:Observable<string>
   orderRef:Subscription;
+  public loading$ = this.appService.loading.asObservable();   // get the subject value.
 
 public navParams = new NavParams();
   constructor(
@@ -30,7 +33,11 @@ public navParams = new NavParams();
     public basketProvider: BasketProvider,public alert:AlertController,
    public angularFireAuth: AngularFireAuth,
    public accountProvider:AccountProvider,
-   private orderProvider:OrderProvider
+   private orderProvider:OrderProvider,
+   public appService:AppService,
+   public toastController: ToastController,
+   public activatedRoute:ActivatedRoute,
+   public router:Router
   ) {
    
   }
@@ -115,13 +122,13 @@ getLoggedInUser()
     this.accountProvider.getCustomer(user.phoneNumber)
     .pipe(first(),
   concatMap(customer => this.basketProvider.getBasketForOrder().pipe(first(),map(result =>  {
-      let isFound = false;
+      let isFound = "false";
       console.log(result);
      const re =  result.serviceArea.forEach(serviceArea =>{
                   if(serviceArea.pincode==customer.postCode)
                   {
-                    isFound = true;
-                    return ;
+                    isFound = "true";
+                    return;
                   }
                       
     })
@@ -132,8 +139,13 @@ getLoggedInUser()
 }
 ngOnDestroy()
 {
-  this.userLoggedSubscription.unsubscribe();
-  this.orderRef.unsubscribe();
+  if( this.userLoggedSubscription != undefined){
+   // this.userLoggedSubscription.unsubscribe();
+  }
+ if(  this.orderRef != undefined)
+ {
+  //this.orderRef.unsubscribe();
+ }
 }
 
 async presentConfirmOrderAlert() {
@@ -166,7 +178,7 @@ async createOrderButtonClicked()
  await this.presentConfirmOrderAlert();
 }
 
-createOrder()
+async createOrder()
 {
   const createOrderRef = this.angularFireAuth.authState.pipe(first(),
   concatMap(user => 
@@ -174,19 +186,50 @@ createOrder()
     .pipe(first(),
   concatMap(customer => this.basketProvider.getBasketForOrder().pipe(first(),concatMap(basket =>
     this.orderProvider.placeOrder(basket,customer)))))));  
+    // prsent pop
+
+    const processingOrder = await this.alert.create({
+      cssClass: 'my-custom-class',
+      header: 'Placing your order!',
+      message: '<strong>Please kindly wait...!!!</strong>',
+    });
+    processingOrder.present();
+
 
    this.orderRef= createOrderRef.subscribe(result =>{
       if(result){
       // order successfully placed.
+       // show toast
       console.log("Order success:"+result);
+
+      // dismiss it here
+      processingOrder.dismiss();
+      this.presentCustomerOrderSuccessToast();
+      // navigate to order page.
+      this.navCtrl.navigateRoot('/app/tabs/market').then(()=>{
+        this.router.navigate(['/app/tabs/myorder']);
+      })
+   
       }
       else{
+      processingOrder.dismiss();
       console.error("Order failed");
       this.presentAlert("Order failed.","createOrder");
       }
 
-    })
+    });
                             
+}
+
+
+async presentCustomerOrderSuccessToast() {
+  const toast = await this.toastController.create({
+    message: 'Your order has been successfully placed.',
+    duration: 2000,
+    position:'top',
+    color:"success"
+  });
+  toast.present();
 }
 
 }

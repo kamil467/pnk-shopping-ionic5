@@ -171,10 +171,8 @@
 				<div class="text-center" *ngIf="showOrderNowButton">
 					<!-- check customer postal code and shop service area postal code-->
 					<div *ngIf="isServiceAvailable | async as isAvailable ; else noService">
-						<ion-button class="order-now" fill="outline" *ngIf="isAvailable" round color="crimson" (click)="createOrderButtonClicked()"> Order Now</ion-button>
-					</div>
-					<ng-template #noService>
-						<ion-card>
+						<ion-button class="order-now" fill="outline" *ngIf="isAvailable=='true'" round color="crimson" (click)="createOrderButtonClicked()"> Order Now</ion-button>
+					    <ion-card  *ngIf="isAvailable=='false'">
 							<ion-card-header color="crimson">
 							 No Service  <ion-icon name="alert"></ion-icon>
 							</ion-card-header>
@@ -183,6 +181,11 @@
 									We are expanding our service, soon we will cover your location.</strong> </ion-label>
 							</ion-card-content>
 						</ion-card>
+					</div>
+					<ng-template #noService>
+						<ion-spinner   name="bubbles" >
+
+						</ion-spinner>
 					</ng-template>
 					
 			   </div>
@@ -199,4 +202,5 @@
 	 </ion-card>
 	
 </div>
+
 </ion-content>
