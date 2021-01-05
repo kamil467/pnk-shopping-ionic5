@@ -1,276 +1,199 @@
-<ion-header translucent="true">
-  <ion-toolbar color="crimson">
-    <ion-segment (ionChange)="segmentChanged($event)" value="active">
-      <ion-segment-button value="active" color="light" mode="md">
-        Active 
-      </ion-segment-button>
-      <ion-segment-button value="history">
-        History
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
-</ion-header>
-<ion-content class="card-background-page">
 
-	<ion-card>
+		<ion-header>
+			<ion-toolbar color="crimson">
+				<ng-container *ngIf="isLoggedInUser; then showLoggedUserHeader; else showDefaultHeader">
 
-		<ion-card-header class="card-header">
-			<h2>ABC Elite Shop</h2>
-			<div class="header-div">
-				<h6>
-					10/01/2020 : 1:00PM
-				</h6>
-				<h6 class="order-id">
-					ID:O1234567
-				</h6>
-			</div>
-		</ion-card-header>
-		<ion-card-content class="card-content">
-			<!-- Add card content here! -->
-			<ion-grid>
-				<ion-row>
-					<ion-col col-6 style="text-align: left;">
-						Order Total:<strong>Rs.500</strong>
-					</ion-col>
-					<ion-col col-6 style="text-align: end;">
-						Status: <strong>Prepared</strong>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col>
-						Delivery Location: <i>D.No:6/986 East Street, Panaikulam,Ramanathapuram</i>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col>
-						Nearest Landmark:<i>Thaika</i>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col>
-						Contact No:<i>8884081427</i>
-					</ion-col>
-				</ion-row>
-				<hr class="card-footer" />
-				<ion-row class="text-center">
-					<ion-col col-4 style="text-align: left;">
-						Product Name
-					</ion-col>
-					<ion-col col-3>
-						Price
-					</ion-col>
-					<ion-col col-3>
-						Qty
-					</ion-col>
-					<ion-col col-2>
-						Total
-					</ion-col>
-				</ion-row>
-				<hr class="card-footer" />
+				</ng-container>
+				<ng-template #showLoggedUserHeader>
+					<ion-segment (ionChange)="segmentChanged($event)"  value="recent">
+						<ion-segment-button value="recent" color="light">
+						  Recent 
+						</ion-segment-button>
+						<ion-segment-button value="history">
+						  History
+						</ion-segment-button>
+					  </ion-segment>
+				</ng-template>
+			  <ng-template #showDefaultHeader> 
+				<ion-title class="header-title">
+					My Order
+					  </ion-title>
+			  </ng-template>
+			</ion-toolbar>
+		  </ion-header>
+	
+		  <ion-content class="card-background-page">
+			<ion-card *ngIf="!isLoggedInUser">
+				<ion-card-header color="crimson">
+				 View Orders  <ion-icon name="alert"></ion-icon>
+				</ion-card-header>
+				<ion-card-content>
+					<ion-label><strong>Please login to view orders
+						</strong> </ion-label>
+				</ion-card-content>
+			</ion-card>
+	<div *ngIf="isLoggedInUser">
+
+			<div *ngIf="orderSummaryToBeDisplayed | async as summarList; else loadingErrorTemplate">
+				 
+			
 				<div>
-					<ion-row>
-						<ion-col col-4>
-							Britani Bisucit Green chococlate
-						</ion-col>
-						<ion-col col-3>
-							Rs.50
-						</ion-col>
-						<ion-col col-3>
+				<ion-card *ngFor="let summary of summarList">
+					<div *ngIf ="summary == undefined; else showSumOrders">
+						<ion-card>
+							<ion-card-header class="no-order" color="crimson">
+							 View Orders  <ion-icon name="alert"></ion-icon>
+							</ion-card-header>
+							<ion-card-content>
+								<ion-label><strong>No orders to show.
+									</strong> </ion-label>
+							</ion-card-content>
+						</ion-card>
+	
+					</div>
+					<ng-template #showSumOrders>
+                <div >
 
-							100
-
-						</ion-col>
-						<ion-col col-2>
-							5000
-						</ion-col>
-
-					</ion-row>
-
-					<hr class="hr-divider" />
-					<ion-row>
-						<ion-col col-4>
-							item.name
-						</ion-col>
-						<ion-col col-3>
-							Rs.50
-						</ion-col>
-						<ion-col col-3>
-
-							100
-
-						</ion-col>
-						<ion-col col-2>
-							5000
-						</ion-col>
-
-					</ion-row>
-					<hr class="hr-divider" />
-					<ion-row>
-						<ion-col col-4>
-							item.name
-						</ion-col>
-						<ion-col col-3>
-							Rs.50
-						</ion-col>
-						<ion-col col-3>
-
-							100
-
-						</ion-col>
-						<ion-col col-2>
-							5000
-						</ion-col>
-
-					</ion-row>
-
+				
+				
+					<ion-card-header class="card-header">
+						<ion-card-title>
+							{{summary.orderSummary.shopName}}
+						</ion-card-title>
+								<ion-card-subtitle>
+									<ion-row>
+										<ion-col>
+										OrderDate::<strong>{{summary.orderSummary.creationTime.toDate() | date : 'medium'}}</strong>
+										</ion-col>
+										<ion-col>
+											OrderID::<strong>{{summary.orderSummary.id}}</strong>
+										</ion-col>
+									</ion-row>
+								
+								</ion-card-subtitle>
+							
+					</ion-card-header>
+					<ion-card-content class="card-content">
+						<!-- Add card content here! -->
+						<ion-grid>
+							<ion-row>
+								<ion-col col-6 style="text-align: left;">
+									Order Total:<strong>{{summary.orderSummary.totalOrderValue | currency: 'INR'}}</strong>
+								</ion-col>
+								<ion-col col-6 style="text-align: end;">
+									Status: <strong>{{summary.orderSummary.status }}</strong>
+								</ion-col>
+							</ion-row>
+							<ion-row>
+								<ion-col col>
+									Delivery Location: <i>{{summary.customerDeliveryInfo.deliveryLocation}}</i>
+								</ion-col>
+							</ion-row>
+							<ion-row>
+								<ion-col col>
+									Nearest Landmark:<i>{{summary.customerDeliveryInfo.landmark}}</i>
+								</ion-col>
+							</ion-row>
+							<ion-row>
+								<ion-col col>
+									Contact No:<i>{{summary.customerDeliveryInfo.contactNo}}</i>
+								</ion-col>
+							</ion-row>
+							<hr class="card-footer" />
+							<ion-row class="text-center">
+								<ion-col col-4 style="text-align: left;">
+									Product Name
+								</ion-col>
+								<ion-col col-3>
+									Price
+								</ion-col>
+								<ion-col col-3>
+									Qty
+								</ion-col>
+								<ion-col col-2>
+									Total
+								</ion-col>
+							</ion-row>
+							<hr class="card-footer" />
+							<div>
+								<div *ngFor="let orderItem of summary.orderItems">
+								<ion-row>
+									<ion-col col-4>
+										{{orderItem.name}}
+									</ion-col>
+									<ion-col col-3>
+										{{orderItem.pricePerQuantity | currency : 'INR'}}
+									</ion-col>
+									<ion-col col-3>
+			
+										{{orderItem.quantity }}
+			
+									</ion-col>
+									<ion-col col-2>
+										{{orderItem.totalPrice | currency : 'INR'}}
+									</ion-col>
+			
+								</ion-row>
+								<hr class="hr-divider" />
+							</div>
+								
+							
+							</div>
+							<ion-row>
+								<ion-col col-6>
+									Total
+								</ion-col>
+								<ion-col col style="font-weight:Bold;text-align: end;">
+									{{summary.orderSummary.totalOrderValue | currency: 'INR' }}
+								</ion-col>
+							</ion-row>
+							<hr class="card-footer" />
+							<ion-row>
+								<ion-col style="text-align: left;">
+									<u> Comments</u>:<i>{{summary.orderSummary.reason  }} </i>
+								</ion-col>
+							</ion-row>
+			
+						</ion-grid>
+					</ion-card-content>
+				
 				</div>
-				<ion-row>
-					<ion-col col-6>
-						Total
-					</ion-col>
-					<ion-col col style="font-weight:Bold;text-align: end;">
-						Rs.15000
-					</ion-col>
-				</ion-row>
-				<hr class="card-footer" />
-				<ion-row>
-					<ion-col style="text-align: left;">
-						<u> Comments</u>:<i> Order handover for delivery</i>
-					</ion-col>
-				</ion-row>
-
-			</ion-grid>
-		</ion-card-content>
-	</ion-card>
-	<ion-card>
-
-		<ion-card-header class="card-header">
-			<h2>ABC Elite Shop</h2>
-			<div class="header-div">
-				<h6>
-					10/01/2020 : 1:00PM
-				</h6>
-				<h6 class="order-id">
-					ID:O1234567
-				</h6>
+			</ng-template>
+				</ion-card>
+		
 			</div>
-		</ion-card-header>
-		<ion-card-content class="card-content">
-			<!-- Add card content here! -->
-			<ion-grid>
-				<ion-row>
-					<ion-col col-6 style="text-align: left;">
-						Order Total:<strong>Rs.500</strong>
-					</ion-col>
-					<ion-col col-6 style="text-align: end;">
-						Status: <strong>Prepared</strong>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col>
-						Delivery Location: <i>D.No:6/986 East Street, Panaikulam,Ramanathapuram</i>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col>
-						Nearest Landmark:<i>Thaika</i>
-					</ion-col>
-				</ion-row>
-				<ion-row>
-					<ion-col col>
-						Contact No:<i>8884081427</i>
-					</ion-col>
-				</ion-row>
-				<hr class="card-footer" />
-				<ion-row class="text-center">
-					<ion-col col-4 style="text-align: left;">
-						Product Name
-					</ion-col>
-					<ion-col col-3>
-						Price
-					</ion-col>
-					<ion-col col-3>
-						Qty
-					</ion-col>
-					<ion-col col-2>
-						Total
-					</ion-col>
-				</ion-row>
-				<hr class="card-footer" />
-				<div>
-					<ion-row>
-						<ion-col col-4>
-							Britani Bisucit Green chococlate
-						</ion-col>
-						<ion-col col-3>
-							Rs.50
-						</ion-col>
-						<ion-col col-3>
+		
+			</div>
+		</div>
 
-							100
+		<ng-template #loadingErrorTemplate>
+			<div class="spin"> <ion-spinner name="bubbles"></ion-spinner>
+			  </div>
+			  
+		  </ng-template>
+		  </ion-content>
 
-						</ion-col>
-						<ion-col col-2>
-							5000
-						</ion-col>
 
-					</ion-row>
 
-					<hr class="hr-divider" />
-					<ion-row>
-						<ion-col col-4>
-							item.name
-						</ion-col>
-						<ion-col col-3>
-							Rs.50
-						</ion-col>
-						<ion-col col-3>
 
-							100
 
-						</ion-col>
-						<ion-col col-2>
-							5000
-						</ion-col>
+<ng-template #showMessage>
+	<ion-header translucent="true">
+		<ion-toolbar color="crimson">
+		 Orders
+		</ion-toolbar>
+	  </ion-header>
 
-					</ion-row>
-					<hr class="hr-divider" />
-					<ion-row>
-						<ion-col col-4>
-							item.name
-						</ion-col>
-						<ion-col col-3>
-							Rs.50
-						</ion-col>
-						<ion-col col-3>
+	  <ion-content class="card-background-page">
+		<ion-card>
+			<ion-card-header color="crimson">
+			 View Orders  <ion-icon name="alert"></ion-icon>
+			</ion-card-header>
+			<ion-card-content>
+				<ion-label><strong>Please login to view orders
+					</strong> </ion-label>
+			</ion-card-content>
+		</ion-card>
+		</ion-content>
 
-							100
-
-						</ion-col>
-						<ion-col col-2>
-							5000
-						</ion-col>
-
-					</ion-row>
-
-				</div>
-				<ion-row>
-					<ion-col col-6>
-						Total
-					</ion-col>
-					<ion-col col style="font-weight:Bold;text-align: end;">
-						Rs.15000
-					</ion-col>
-				</ion-row>
-				<hr class="card-footer" />
-				<ion-row>
-					<ion-col style="text-align: left;">
-						<u> Comments</u>:<i> Order handover for delivery</i>
-					</ion-col>
-				</ion-row>
-
-			</ion-grid>
-		</ion-card-content>
-	</ion-card>
-	<app-order-histroy [customerId]="customer-id"></app-order-histroy>
-</ion-content>
+</ng-template>

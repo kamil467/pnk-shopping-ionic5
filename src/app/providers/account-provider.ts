@@ -19,7 +19,7 @@ export class AccountProvider {
     createCustomer(customerObj:Customer):Promise<any>
     {
     const{ customerId,...rest} = customerObj;  // remove customerId from object as it is doc id of firebase document.
-    const addedTImeStamp = {...rest,timestamp:Date.now()}   // added creation timestamp
+    const addedTImeStamp = {...rest,creationTime:new Date()}   // added creation timestamp
     const customerRef = this.angularFireStore
                         .collection(environment.CUSTOMER_COLLECTION)
                         .add(addedTImeStamp)
@@ -61,10 +61,11 @@ export class AccountProvider {
 
    updateCustomer(customer:Customer):Promise<any>
    {
+       const addLastModifiedTeimStamp  = ({...customer,lastModifiedTimeStamp:new Date()})
        const customerRef = this.angularFireStore      
-                           .collection<Customer>(environment.CUSTOMER_COLLECTION)
+                           .collection(environment.CUSTOMER_COLLECTION)
                            .doc(customer.customerId)
-                           .set(customer)
+                           .update(addLastModifiedTeimStamp)
                            .then(()=>{
                                return true;
                            })

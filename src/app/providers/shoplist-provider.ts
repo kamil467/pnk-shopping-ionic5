@@ -61,9 +61,12 @@ getShopByCode(shopCode:string):Observable<Shop>
 mergeMap(
   shop =>
   this.getActiveShopServiceArea(shop.storeCode)
-  .pipe(map(seerviceArea => ({...shop, serviceArea:seerviceArea})),first()
+  .pipe(map(seerviceArea => ({...shop, serviceArea:seerviceArea})),
+  first()
   ),) ,
-  mergeMap(shop => this.getDeliveryOrderConfig(shop.storeCode).pipe(map(deliveryConfig => ({...shop,deliveryOrderConfig:deliveryConfig})),first(),
+  mergeMap(shop => this.getDeliveryOrderConfig(shop.storeCode)
+  .pipe(map(deliveryConfig => 
+    ({...shop,deliveryOrderConfig:deliveryConfig})),first(),
   ),),
    toArray()),
    ));

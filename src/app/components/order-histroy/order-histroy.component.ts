@@ -18,15 +18,15 @@ constructor(private orderProvider: OrderProvider)
   this.expandableObjs = new Array<ExpandableObject>();
 }
   ngOnInit(): void {
-    console.log("Program is here");
-  this.orderProvider.getHistoryOrderByOrderSummaryId("summary-id").subscribe(
-   result => { 
-    console.log("Shop code:"+result.customerDeliveryInfo.landmark); 
-    this.expandableObjs.push({
-     expanded:false,
-     orderSummary:result
-   }) }
-  );
+  //   console.log("Program is here");
+  // this.orderProvider.getHistoryOrderByOrderSummaryId("summary-id").subscribe(
+  //  result => { 
+  //   console.log("Shop code:"+result.customerDeliveryInfo.landmark); 
+  //   this.expandableObjs.push({
+  //    expanded:false,
+  //    orderSummary:result
+  //  }) }
+  // );
   }
 
 /*8

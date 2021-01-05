@@ -10,7 +10,7 @@ import { OrderProvider } from "../../providers/order-provider";
 
 @NgModule({
   imports: [CommonModule, FormsModule, IonicModule, OrderPageRoutingModule],
-  declarations: [MyOrderPage,OrderHistroyComponent,ExpandableComponent],
+  declarations: [MyOrderPage],
   entryComponents: [MyOrderPage],
   providers:[OrderProvider]
 })

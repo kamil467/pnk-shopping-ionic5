@@ -32,7 +32,7 @@
       text-align: center;
     }
     .card-header {
-      background-color: rgb(99, 97, 97);
+    
       h2 {
         color: white;
       }
@@ -77,4 +77,27 @@
   ion-segment-button
   {
       --background-checked:white;
+  }
+
+  .card-header{
+    background-color: crimson;
+
+  }
+  ion-card-title,ion-card-subtitle
+  {
+    color:white;
+  }
+  .spin
+  {
+    position:fixed;
+    left:50%;
+    top:50%;
+  }
+  .no-order
+  {
+    color:white;
+  }
+  .header-title
+  {
+    color:white;
   }

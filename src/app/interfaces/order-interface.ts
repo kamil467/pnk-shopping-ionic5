@@ -10,8 +10,10 @@ export interface OrderSummary {
   additionalRequest: string;   // from basket
   status: string;  // from firebase  -- levels:Placed/Prepared/Delivered/Cancelled/Not Delivered
   reason: string;  // from firebase
-  lastUpdatedTimeStamp: Date;
+  creationTime:any, // toDate not wokring  so converted the timestamp type into any
+  lastUpdatedTimeStamp: any; // toDate not wokring  so converted the timestamp type into any
   deliveryCharge:number;
+
 }
 export interface OrderSummaryToBeDisplayed {
   orderSummary: OrderSummary;   // doc type

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { of, Observable,throwError, concat  } from "rxjs";
-import { catchError, concatMap, map, mergeMap, retry } from 'rxjs/operators';
+import { of, Observable,throwError, concat, from, merge  } from "rxjs";
+import { catchError, concatMap, first, map, mergeMap, retry, toArray } from 'rxjs/operators';
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { CustomerDeliveryPersonalInfo, OrderSummary, OrderSummaryToBeDisplayed } from "../interfaces/order-interface";
 import { BasketFooterObj, BasketObj, OrderItem } from "../interfaces/basket-interface";
@@ -46,6 +46,7 @@ basketObj.items.forEach(x =>{
   status:"placed",
   additionalRequest:null,
   lastUpdatedTimeStamp:new Date(),
+  creationTime:new Date(),
   totalItems:totalItemCount,
   totalOrderValue:totalOrderValue  // excluding delivery charge.
  }
@@ -79,36 +80,74 @@ const placeOrderRef = this.angularFireStore
                       return placeOrderRef;
 }
 
-getHistoryOrderByOrderSummaryId(orderSummaryId:string):Observable<OrderSummaryToBeDisplayed>
+
+
+getRecentOrdersByCustomerId(customerId:string):Observable<OrderSummaryToBeDisplayed[]>
 {
-  // seperate call to get order summary - single item
-  // seperate call to get orderItems - multiple itmes
-  let orderSummary :OrderSummary;
-  let orderedItems:OrderItem[];
-  let summaryToBeDisplayed:OrderSummaryToBeDisplayed;
-  let personalDeliveryInfo:CustomerDeliveryPersonalInfo;
- const orderSummaryOb = this.httpClient.get<OrderSummary>(environment.orderHistorySummaryAPI);
-const orderedItemsOb = orderSummaryOb.pipe(map(m => orderSummary = m),concatMap(
-  summary => 
-  this.httpClient.get<OrderItem[]>(environment.orderedItemsAPI).pipe(map(oItem => orderedItems = oItem)) 
-  ),
-retry(3),
-catchError(err => this.handleError(err))
-); 
-const deliveryInfo = orderedItemsOb.pipe(concatMap(c => 
- this.httpClient.get<CustomerDeliveryPersonalInfo>(environment.customerDeliveryInfoAPI).pipe(map(personalInfo => 
-  personalDeliveryInfo = personalInfo))),
-retry(3),
-catchError(err => this.handleError(err)));
-let result = deliveryInfo.pipe(map( m => {
-  console.log("Shop Name:"+m.deliveryLocation);
-  return summaryToBeDisplayed = {
-    orderItems:orderedItems,
-    orderSummary:orderSummary,
-    customerDeliveryInfo:m
-  }
-}));
-return result;
+let orderSumData :OrderSummaryToBeDisplayed;
+  const finalOrderRef = this.getOrderSummary(customerId)
+                       .pipe(
+                         concatMap(orderSummary => 
+                          from(orderSummary) .pipe(
+                            mergeMap(
+                              orderSum => 
+                              this.getOrderedItemsBySummaryId(orderSum.id)
+                          .pipe(map(itemsData =>  ({...orderSumData,orderItems:itemsData,orderSummary:orderSum})),first()
+                           )),
+                           mergeMap(deliveryInfo => this.getCustomerDeliveryInfo(deliveryInfo.orderSummary.id)
+                           .pipe(map(deliveryData => ({...deliveryInfo,customerDeliveryInfo:deliveryData})),
+                           first(),
+                           ),),toArray(),
+                           )));          
+return finalOrderRef;
+
+
+}
+
+getOrderedItemsBySummaryId(summaryId:string):Observable<OrderItem[]>
+{
+  console.log("getOrderedItemsBySummaryId called"+summaryId);
+  const orderItemRef = this.angularFireStore
+                       .collection<OrderSummary>(environment.ORDER_SUMMARY)
+                       .doc(summaryId)
+                        .collection<OrderItem>(environment.ORDERED_ITEMS)
+                        .valueChanges();
+
+                        return orderItemRef;
+}
+
+getCustomerDeliveryInfo(summaryId:string):Observable<CustomerDeliveryPersonalInfo>
+{
+  console.log("getCustomerDeliveryInfo called"+summaryId);
+  const customerDeliveryInfoRef = this.angularFireStore
+                       .collection<OrderSummary>(environment.ORDER_SUMMARY)
+                       .doc(summaryId)
+                        .collection<CustomerDeliveryPersonalInfo>(environment.CUSTOMER_DELIVERY_PERSONAL_INFO)
+                        .valueChanges()
+                        .pipe(map(result =>{
+                          return result[0];
+                        }));
+
+                        return customerDeliveryInfoRef;
+}
+
+
+getOrderSummary(customerId:string):Observable<OrderSummary[]>
+{
+  const orderSummaryRef = this.angularFireStore
+  .collection<OrderSummary>(environment.ORDER_SUMMARY,ref => ref.where("customerId","==",customerId))
+  .snapshotChanges()
+  .pipe(map(item =>{
+
+    return item.map(finalData =>{
+      const id = finalData.payload.doc.id;
+      const payloadData = finalData.payload.doc.data() as OrderSummary;
+      console.log(payloadData.creationTime);
+         return  ({...payloadData,id:id})
+    })
+    }))
+return orderSummaryRef;
+
 }
 
 
