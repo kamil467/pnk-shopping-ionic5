@@ -16,19 +16,20 @@
 </ion-header>
 
 <ion-content class="card-background-page">
-   
-	<div *ngIf="basketObjObservable | async as myBasket">
-		<div *ngIf = "myBasket.totalItemsCount != 0">
+	<div *ngIf="basketDirect"> 
+		<div *ngIf = "basketDirect.totalItemsCount != 0">
 
 		
 		<ion-fab vertical="top" horizontal="end" slot="fixed" >
 			<ion-fab-button   outline routerLink="/app/tabs/market/my-basket">
-				<ion-badge >{{myBasket.totalItemsCount}}</ion-badge>
+				<ion-badge >{{basketDirect.totalItemsCount}}</ion-badge>
 				<ion-icon name="cart-sharp"></ion-icon></ion-fab-button>
 		  </ion-fab>
 	</div>
-</div>
+</div> 
+
 	<div *ngIf="productCatgeoryListObservable | async as catList ; else loadingErrorTemplate">
+	  
 	<ion-grid>
 			<ion-row>
 				<ion-col col-4 *ngFor="let category of catList" size="4">

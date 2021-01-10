@@ -32,7 +32,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     AngularFireStorageModule,
-    AngularFirestoreModule,
+    AngularFirestoreModule.enablePersistence(),
     HttpClientJsonpModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),

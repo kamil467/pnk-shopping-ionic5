@@ -1,7 +1,7 @@
-import { Component, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AlertController, LoadingController,  NavController, Platform } from "@ionic/angular";
-import { concat, from,  Observable, of, throwError } from "rxjs";
+import { concat, from,  Observable, of, Subscription, throwError } from "rxjs";
 import { catchError, concatMap, delay, map } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
 import { ProductCategory  } from "../../interfaces/product-category";
@@ -24,20 +24,27 @@ import { BuildGridArray } from "../../Utility/utility";
   templateUrl: "category.html",
     styleUrls: ["category.scss"]
 })
-export class CategoryListPage implements OnInit {
+export class CategoryListPage implements OnInit{
   productCatgeoryListObservable:Observable<ProductCategory[]>
-  basketObjObservable:Observable<BasketObj>;
-  defaultHref='';;
+  defaultHref='';
+  basketDirect:BasketObj;
+  shopSubscription:Subscription;
 
   constructor(
     public categoryListProvider: CategoryListProvider,public alert:AlertController,
     public loadingController:LoadingController, public basketProvider: BasketProvider,
     public shopProvider:ShopListProvider,public platform:Platform,public navCtrl: NavController,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private changeRef: ChangeDetectorRef
   ) {
+    const storeCode = this.route
+                    .snapshot
+                    .paramMap
+                    .get('storeCode'); //get the shopcode from params
  this.platform.backButton.subscribeWithPriority(10, () => {
     console.log('Handler was called!');
   });
+ 
   }
   
  ngOnInit(){
@@ -51,55 +58,38 @@ export class CategoryListPage implements OnInit {
                                           .getActiveProductCategoryListByShopCode(storeCode)
 
    // initiate the basket. (load shop data and then initaite basket)                                      
-  this.basketObjObservable = this.shopProvider
-                             .getActiveShopByStoreCode(storeCode)
-                             .pipe(
-                              concatMap(
-                                s => this.basketProvider.initiateBasket(s)
-                                     .pipe(map( basket => {
-                                      
-                                        let totalItemsCount =  0;
-                                      basket.items.forEach(item => 
-                                        {
-                                         totalItemsCount = totalItemsCount+ item.quantity;
-                                        });
-                                        console.log("Count is :"+totalItemsCount);
-                                      return ({...basket,totalItemsCount:totalItemsCount})
-
-                                     } ))
-                              ));   
+   this.shopSubscription =  this.shopProvider
+   .getActiveShopByStoreCode(storeCode).subscribe(shop =>{
+    if(shop != undefined)
+    {
+      this.basketDirect = this.basketProvider.initiateBasket(shop);  // load basket first time.
+    }
+    else{
+      //could not load basket
+       console.error("Could not load the basket");
+    }
+   });
+   
+}
+ionViewWillEnter()
+{
+  console.log("ViewWillLoad");
+  this.basketDirect = this.basketProvider.getBasketDirect();
 }
 
   ionViewDidEnter() {
-      console.log("ViewDidEnter");
     this.defaultHref = `/app/tabs/market/shoplist`;
-
-    // refresh basket on everytime view loaded.
-   this.basketObjObservable = this.basketProvider
-                              .getBasketForOrder()
-                              .pipe(map( basket => {                                    
-                                let totalItemsCount =  0;
-                                 basket.items.forEach(item => 
-                               {
-                              totalItemsCount = totalItemsCount+ item.quantity;
-                                   });
-  return ({...basket,totalItemsCount:totalItemsCount})
-  } ))
+ 
+   this.basketDirect = this.basketProvider.getBasketDirect();
+   console.log(this.basketDirect);
+    
   }
 
-   backButton()
+  async backButton()
   {
-   console.log("back button clicked");
-   this.basketProvider.getBasketForOrder()
-                              .pipe(map( basket => {                                    
-                                let totalItemsCount =  0;
-                                 basket.items.forEach(item => 
-                               {
-                              totalItemsCount = totalItemsCount+ item.quantity;
-                                   });
-  return ({...basket,totalItemsCount:totalItemsCount})
-  } )).subscribe(async data =>{
-    if(data.totalItemsCount == 0)
+   const updatedBasket = this.basketProvider.getBasketDirect();
+ 
+    if(updatedBasket.totalItemsCount == 0)
     {
       // navigate to page
       console.log("allow to navigate");
@@ -109,9 +99,7 @@ export class CategoryListPage implements OnInit {
      await this.presentAlert();
       console.log("Display popup");
     }
-  })
-
-
+  
   }
   async presentAlert() {
     const alert = await this.alert.create({
@@ -139,5 +127,15 @@ export class CategoryListPage implements OnInit {
 
     });
     await alert.present();
+  }
+
+  ionViewDidLeave()
+  {
+    console.log("ionViewDidLeave called");
+    this.shopSubscription.unsubscribe();
+  }
+  ngOnDestroy()
+  {
+    this.shopSubscription.unsubscribe();
   }
 }

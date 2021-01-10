@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { ActivatedRoute,Router } from "@angular/router";
 import { AlertController, NavController, NavParams, ToastController } from "@ionic/angular";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscriber, Subscription } from "rxjs";
 import { catchError, concatMap, finalize, first, map, shareReplay } from "rxjs/operators";
 import { BasketObj, OrderItem } from "../../interfaces/basket-interface";
 import { AccountProvider } from "../../providers/account-provider";
@@ -18,13 +18,14 @@ import { OrderProvider } from "../../providers/order-provider";
 })
 export class BasketPage   implements OnInit {
   showOrderNowButton:boolean = true;
-  basketItems: Observable<BasketObj>;
+  basketItems: BasketObj;
   storecode: string;
   basketTotalAmount: number = 0;
   userLoggedSubscription:Subscription;
   isLoggedIn:boolean= false;
-  isServiceAvailable:Observable<string>
+  isServiceAvailable:string
   orderRef:Subscription;
+  serviceRed:Subscription;
   public loading$ = this.appService.loading.asObservable();   // get the subject value.
 
 public navParams = new NavParams();
@@ -43,7 +44,7 @@ public navParams = new NavParams();
   }
 
   ngOnInit(){
-  this.basketItems  = this.basketProvider.getBasketForOrder();  // load basket Items
+  this.basketItems  = this.basketProvider.getBasketDirect();  // load basket Items
   this.updateTotal();
   }
   ionViewWillEnter()
@@ -96,9 +97,10 @@ public navParams = new NavParams();
    }
 updateTotal()
 {
-  this.basketProvider.getBasketForOrder().subscribe(result=>{
-    this.basketTotalAmount =  this.caluclateTotalAmount(result.items);    // perform total
-    });
+
+  const updatedBasket = this.basketProvider.getBasketDirect();
+  this.basketTotalAmount =  this.caluclateTotalAmount(updatedBasket.items); 
+
 }
 getLoggedInUser()
 {
@@ -107,6 +109,18 @@ getLoggedInUser()
     if(user)
     {
       this.isLoggedIn = true;
+
+    this.serviceRed =  this.accountProvider.getCustomer(user.phoneNumber)
+    .pipe(first()).subscribe(customer =>{
+      const updatedBasket = this.basketProvider.getBasketDirect();
+       updatedBasket.serviceArea.forEach(serviceArea =>{
+                  if(serviceArea.pincode==customer.postCode)
+                  {
+                 this.isServiceAvailable = "true";
+                    return;
+                  }                
+    })
+    });
       // check for shop service area pincode and customer location pin code.
        
       console.log("Logged in User :"+user.phoneNumber);
@@ -117,25 +131,8 @@ getLoggedInUser()
     }
   });
 
- this.isServiceAvailable = this.angularFireAuth.authState.pipe(first(),
-  concatMap(user => 
-    this.accountProvider.getCustomer(user.phoneNumber)
-    .pipe(first(),
-  concatMap(customer => this.basketProvider.getBasketForOrder().pipe(first(),map(result =>  {
-      let isFound = "false";
-      console.log(result);
-     const re =  result.serviceArea.forEach(serviceArea =>{
-                  if(serviceArea.pincode==customer.postCode)
-                  {
-                    isFound = "true";
-                    return;
-                  }
-                      
-    })
-    return isFound; 
-  }))))),
-  );
 
+  
 }
 ngOnDestroy()
 {
@@ -146,6 +143,7 @@ ngOnDestroy()
  {
   //this.orderRef.unsubscribe();
  }
+ this.serviceRed.unsubscribe();
 }
 
 async presentConfirmOrderAlert() {
@@ -163,9 +161,9 @@ async presentConfirmOrderAlert() {
         }
       }, {
         text: 'Okay',
-        handler: () => {
+        handler: async () => {
           // create order.
-          this.createOrder();
+         await this.createOrder();
         }
       }
     ]
@@ -180,44 +178,40 @@ async createOrderButtonClicked()
 
 async createOrder()
 {
+  const getBasketDirect = this.basketProvider.getBasketDirect();
   const createOrderRef = this.angularFireAuth.authState.pipe(first(),
   concatMap(user => 
     this.accountProvider.getCustomer(user.phoneNumber)
-    .pipe(first(),
-  concatMap(customer => this.basketProvider.getBasketForOrder().pipe(first(),concatMap(basket =>
-    this.orderProvider.placeOrder(basket,customer)))))));  
-    // prsent pop
-
+    .pipe(first())));
+    
     const processingOrder = await this.alert.create({
       cssClass: 'my-custom-class',
       header: 'Placing your order!',
       message: '<strong>Please kindly wait...!!!</strong>',
     });
     processingOrder.present();
+this.orderRef= createOrderRef.subscribe(customer =>{
+      this.orderProvider.placeOrder(getBasketDirect,customer).then(async result  =>
+        {
+          console.log("Order success:"+result);
 
-
-   this.orderRef= createOrderRef.subscribe(result =>{
-      if(result){
-      // order successfully placed.
-       // show toast
-      console.log("Order success:"+result);
-
-      // dismiss it here
-      processingOrder.dismiss();
-      this.presentCustomerOrderSuccessToast();
-      // navigate to order page.
-      this.navCtrl.navigateRoot('/app/tabs/market').then(()=>{
-        this.router.navigate(['/app/tabs/myorder']);
-      })
-   
-      }
-      else{
-      processingOrder.dismiss();
-      console.error("Order failed");
-      this.presentAlert("Order failed.","createOrder");
-      }
-
+          // dismiss it here
+          processingOrder.dismiss();
+         await this.presentCustomerOrderSuccessToast();
+          // navigate to order page.
+          this.navCtrl.navigateRoot('/app/tabs/market').then(()=>{
+            this.router.navigate(['/app/tabs/myorder']);
+          })
+        }).catch(error =>{
+            processingOrder.dismiss();
+            console.error("Order failed");
+            this.presentAlert("Order failed.","createOrder");
+            }
+      
+        )
     });
+    
+  
                             
 }
 

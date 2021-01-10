@@ -22,7 +22,7 @@ import { ProductListProvider } from "../../providers/product-list.provider";
 })
 export class ProductListPage implements OnInit {
 allProductsAbservable:Observable<Product[]>
-basketObjObservable:Observable<BasketObj>
+basketObjObservable:BasketObj
   defaultHref='';
 constructor(public productListProvider:ProductListProvider,public basketProvider: BasketProvider,
 public loader:LoadingController,public alert:AlertController,
@@ -54,16 +54,7 @@ const productCategoryCode = this.route
 // get latest basket from in-memory.
  getBasketFromMemory()
 {
-  this.basketObjObservable = this.basketProvider
-  .getBasketForOrder()
-  .pipe(map( basket => {                                    
-    let totalItemsCount =  0;
-     basket.items.forEach(item => 
-   {
-  totalItemsCount = totalItemsCount+ item.quantity;
-       });
-return ({...basket,totalItemsCount:totalItemsCount})
-} ))
+  this.basketObjObservable = this.basketProvider.getBasketDirect();
 
 }
   async presentAlert(errorMessage:any,componenet:string) {
@@ -80,6 +71,12 @@ return ({...basket,totalItemsCount:totalItemsCount})
   addToBasket(product: Product) {
     console.log("add to basket clicked"+product.name);
     // build orderItem.
+
+    if(!product.inStock)
+    {
+      //do nothing
+      return;
+    }
      this.basketProvider.addItemToBasket(product);
      this.getBasketFromMemory();
   // refresh the basket everytim.// local call - no expensive service call.

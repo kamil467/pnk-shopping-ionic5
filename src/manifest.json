@@ -1,11 +1,11 @@
 {
-  "name": "Ionic Conference",
-  "short_name": "Ionic Conference",
+  "name": "PnkShopping",
+  "short_name": "PnkShopping",
   "start_url": "index.html",
   "display": "standalone",
   "icons": [
     {
-      "src": "assets/img/appicon.png",
+      "src": "assets/img/appicon.svg",
       "sizes": "512x512",
       "type": "image/png"
     }

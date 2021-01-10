@@ -21,6 +21,9 @@ export class MyOrderPage implements OnInit{
   isLoggedInUser:boolean;
   segmentValue:string;
   today:string;
+  ngOnINtLoadCount : number= 0;
+  isRecentOrdersAvailable:boolean
+  isHistoryOrdersAvailable:boolean;
   public loading$ = this.appService.loading.asObservable();
 
   constructor(private loader:LoadingController,private alertController:AlertController,
@@ -34,6 +37,7 @@ export class MyOrderPage implements OnInit{
 
 ngOnInit()
 {
+
   const now = new Date;
 this.today =now.toISOString();
 
@@ -43,6 +47,7 @@ this.today =now.toISOString();
   // load today's date orders.
   // call customer api to get id of the customer
   this.getSummaryList(this.segmentValue);
+  this.ngOnINtLoadCount = 1;
 
 }
 
@@ -58,6 +63,7 @@ segmentChanged(event:any)
 }
 ionViewWillEnter()
 {
+
   this.appService.isLoading(true);
   this.angularFireAuth.authState.pipe(first(), finalize(()=> this.appService.isLoading(false)),shareReplay()).subscribe((result)=>{
     if(result)
@@ -69,6 +75,7 @@ ionViewWillEnter()
     }
 
   })
+
 }
 
 getSummaryList(segmentValue:string)
@@ -86,6 +93,7 @@ getSummaryList(segmentValue:string)
             if(segmentValue =='recent'){
              if(orderCreationDate == nowDateFormat)
              {
+               this.isRecentOrdersAvailable = true;
                return x;
              }
             }
@@ -93,6 +101,7 @@ getSummaryList(segmentValue:string)
             {
               if(orderCreationDate != nowDateFormat)
              {
+              this.isHistoryOrdersAvailable = true;
                return x;
              }
             }

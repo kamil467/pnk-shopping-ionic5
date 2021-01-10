@@ -26,7 +26,8 @@ placeOrder(basketObj:BasketObj,customer:Customer):Promise<boolean>
   // build 
   // order summary
 // caluclate totalOrderValue
-
+console.log("Basket obj before order");
+console.log(basketObj);
 // orderedItems already present in basketOBj.
 let totalOrderValue = 0;
 let totalItemCount = 0;

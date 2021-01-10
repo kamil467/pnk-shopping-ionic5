@@ -11,7 +11,7 @@
   </ion-header>
 
 <ion-content class="basket-content">
-	<div *ngIf="basketItems | async as myBasket">
+	<div *ngIf="basketItems">
 	<ion-card>
 		<ion-card-header class="card-header">Cart Summary</ion-card-header>
 
@@ -33,7 +33,7 @@
 			</ion-col>
 				</ion-row>
 				<hr class="hr-divider" />
-				<div *ngFor="let item of myBasket.items">
+				<div *ngFor="let item of basketItems.items">
 					<ion-row>
 						<ion-col>
 							<ng-container *ngIf="item.productImageUrl != null; then customImage;else defaultImage">
@@ -108,7 +108,7 @@
 						Delivery fee
 					</ion-col>
 					<ion-col col style="font-weight:Bold">
-							{{myBasket.deliveryOrderConfig.deliveryCharge | currency:'INR'}}
+							{{basketItems.deliveryOrderConfig.deliveryCharge | currency:'INR'}}
 					
 					</ion-col>
 					<ion-col col-1>
@@ -120,7 +120,7 @@
 						Net Total
 					</ion-col>
 					<ion-col col style="font-weight:Bold">
-				   {{(basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) | currency:'INR'}}
+				   {{(basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) | currency:'INR'}}
 					</ion-col>
 					<ion-col col-1>
 					</ion-col>
@@ -139,29 +139,29 @@
 	<ion-card >
 		<ion-card-header class="card-header">Checkout 	<ion-icon name="checkmark-circle"></ion-icon></ion-card-header>
 		<ion-card-content>
-			<div  *ngIf="((basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) < myBasket.deliveryOrderConfig.minimumOrderValue); let lessTrue">
+			<div  *ngIf="((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) < basketItems.deliveryOrderConfig.minimumOrderValue); let lessTrue">
 				<ion-chip color="crimson" >
 					<ion-icon name="close-circle"></ion-icon>
-					<ion-label>Minimum Order value : <strong> {{myBasket.deliveryOrderConfig.minimumOrderValue | currency :'INR'}} </strong></ion-label>
+					<ion-label>Minimum Order value : <strong> {{basketItems.deliveryOrderConfig.minimumOrderValue | currency :'INR'}} </strong></ion-label>
 				</ion-chip>
                
             
 			</div>
-			<div *ngIf="(myBasket.totalItemsCount > myBasket.deliveryOrderConfig.maximumQuantity) let maxQuantityTrue">
+			<div *ngIf="(basketItems.totalItemsCount > basketItems.deliveryOrderConfig.maximumQuantity) let maxQuantityTrue">
 				<ion-chip color="crimson" >
 					<ion-icon name="close-circle"></ion-icon>
-					<ion-label>Maximum Item Count : <strong> {{myBasket.deliveryOrderConfig.maximumQuantity }} </strong></ion-label>
+					<ion-label>Maximum Item Count : <strong> {{basketItems.deliveryOrderConfig.maximumQuantity }} </strong></ion-label>
 				</ion-chip>
 			   </div>
-			<div *ngIf="((basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) > myBasket.deliveryOrderConfig.maximumOrderValue) let maxOrderTrue">
+			<div *ngIf="((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) > basketItems.deliveryOrderConfig.maximumOrderValue) let maxOrderTrue">
 				<ion-chip color="crimson" >
 					<ion-icon name="close-circle"></ion-icon>
-					<ion-label>Maximum Order value : <strong> {{myBasket.deliveryOrderConfig.maximumOrderValue | currency :'INR'}} </strong></ion-label>
+					<ion-label>Maximum Order value : <strong> {{basketItems.deliveryOrderConfig.maximumOrderValue | currency :'INR'}} </strong></ion-label>
 				</ion-chip>
 			</div>
 	
-			<div *ngIf="((basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) > myBasket.deliveryOrderConfig.minimumOrderValue) 
-				&& ((basketTotalAmount + myBasket.deliveryOrderConfig.deliveryCharge) < myBasket.deliveryOrderConfig.maximumOrderValue)
+			<div *ngIf="((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) > basketItems.deliveryOrderConfig.minimumOrderValue) 
+				&& ((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) < basketItems.deliveryOrderConfig.maximumOrderValue)
 			">
 
 		    <ng-container *ngIf="isLoggedIn; then showOrderNow; else showLogin">
@@ -170,9 +170,9 @@
 			<ng-template #showOrderNow>
 				<div class="text-center" *ngIf="showOrderNowButton">
 					<!-- check customer postal code and shop service area postal code-->
-					<div *ngIf="isServiceAvailable | async as isAvailable ; else noService">
-						<ion-button class="order-now" fill="outline" *ngIf="isAvailable=='true'" round color="crimson" (click)="createOrderButtonClicked()"> Order Now</ion-button>
-					    <ion-card  *ngIf="isAvailable=='false'">
+					<div *ngIf="isServiceAvailable">
+						<ion-button class="order-now" fill="outline" *ngIf="isServiceAvailable=='true'" round color="crimson" (click)="createOrderButtonClicked()"> Order Now</ion-button>
+					    <ion-card  *ngIf="isServiceAvailable=='false'">
 							<ion-card-header color="crimson">
 							 No Service  <ion-icon name="alert"></ion-icon>
 							</ion-card-header>

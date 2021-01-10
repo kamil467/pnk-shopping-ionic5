@@ -2,7 +2,7 @@
   "index": "/index.html",
   "assetGroups": [
     {
-      "name": "app",
+      "name": "PnkShopping",
       "installMode": "prefetch",
       "resources": {
         "files": [

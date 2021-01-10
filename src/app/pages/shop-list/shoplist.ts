@@ -3,7 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AlertController, LoadingController } from "@ionic/angular";
 import { from, merge, Observable, throwError } from "rxjs";
-import { catchError, concatMap, concatMapTo, finalize, map, mergeMap, shareReplay, switchMap, toArray } from "rxjs/operators";
+import { catchError, concatMap, concatMapTo, finalize, first, map, mergeMap, shareReplay, switchMap, toArray } from "rxjs/operators";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
 import { ShopListProvider } from "../../providers/shoplist-provider";
 
@@ -37,7 +37,7 @@ async ngOnInit() {
 
   // firebase code
   const categoryCode = this.route.snapshot.paramMap.get('categoryCode'); //get the shop catgeory code from params
- this.shopListObservable =  this.shopListProvider.getActiveShopsByCategoryFirebase(categoryCode);
+ this.shopListObservable =  this.shopListProvider.getActiveShopsByCategoryFirebase(categoryCode).pipe(first());
 
 
 }
@@ -64,5 +64,9 @@ async ngOnInit() {
       console.error("Error occurred:"+error);
         
     }
+}
+ngOnDestroy()
+{
+
 }
 }

@@ -9,7 +9,8 @@ export class BasketProvider {
   public myBasket: BasketObj;
   public footerObj: BasketFooterObj;
 
-  initiateBasket(shop: Shop): Observable<BasketObj> {
+  initiateBasket(shop: Shop): BasketObj {
+    console.log("Inititaing the basket");
     if (shop != null) {
       console.log(shop);
       this.myBasket = {
@@ -20,11 +21,12 @@ export class BasketProvider {
         items:new Array<OrderItem>(),
         deliveryOrderConfig:shop.deliveryOrderConfig
       };
-      return of(this.myBasket);
+      return this.myBasket;
     }
     return null;
   }
   addItemToBasketOverload(item: OrderItem) {
+    if(this.myBasket != undefined){
     if (this.myBasket.items == undefined || this.myBasket.items.length == 0) {
       this.myBasket.items = new Array();
       this.myBasket.items.push(item);
@@ -42,8 +44,11 @@ export class BasketProvider {
       }
     }
   }
+  }
 
   addItemToBasket(item: Product) {
+    console.log("Inside add basket");
+    if(this.myBasket != undefined){
     console.log("basket code 1");
     // check for existing productId.
     if (this.myBasket.items == undefined || this.myBasket.items.length == 0) {
@@ -85,38 +90,39 @@ export class BasketProvider {
       }
     }
   }
-  getBasketObj(storeCode: string): Observable<BasketObj> {
-    console.log("console.is here...............");
-    return of(this.myBasket);
   }
+  // getBasketObj(storeCode: string): Observable<BasketObj> {
+  //   console.log("console.is here...............");
+  //   return of(this.myBasket);
+  // }
 
-  getFooterObj(orderItems: OrderItem[]): Observable<BasketFooterObj> {
-    console.log("code is here");
-    let footerBasket: BasketFooterObj;
-    let totalItemCount: number = 0;
-    let totalBasketAmount: number = 0;
-    if (orderItems != undefined) {
-      if (orderItems.length > 0) {
-        orderItems.forEach(i => {
-          totalItemCount = totalItemCount + i.quantity;
-          totalBasketAmount = totalBasketAmount + i.totalPrice;
-        });
-      } else {
-        // array initialized but empty.
-        console.log("array is empty")
-      }
-    } else {
-      // array not initialized yet.
-    }
-    footerBasket = {
-      storecode: "storecode",
-      totalBasket: totalBasketAmount,
-      totalItemCount: totalItemCount
-    };
-    console.log(footerBasket.totalItemCount);
-    this.footerObj = footerBasket;
-    return of(footerBasket);
-  }
+  // getFooterObj(orderItems: OrderItem[]): Observable<BasketFooterObj> {
+  //   console.log("code is here");
+  //   let footerBasket: BasketFooterObj;
+  //   let totalItemCount: number = 0;
+  //   let totalBasketAmount: number = 0;
+  //   if (orderItems != undefined) {
+  //     if (orderItems.length > 0) {
+  //       orderItems.forEach(i => {
+  //         totalItemCount = totalItemCount + i.quantity;
+  //         totalBasketAmount = totalBasketAmount + i.totalPrice;
+  //       });
+  //     } else {
+  //       // array initialized but empty.
+  //       console.log("array is empty")
+  //     }
+  //   } else {
+  //     // array not initialized yet.
+  //   }
+  //   footerBasket = {
+  //     storecode: "storecode",
+  //     totalBasket: totalBasketAmount,
+  //     totalItemCount: totalItemCount
+  //   };
+  //   console.log(footerBasket.totalItemCount);
+  //   this.footerObj = footerBasket;
+  //   return of(footerBasket);
+  // }
 
   removeItemFromBasket(item: OrderItem) {
     let isFound = this.myBasket.items.find(i => i.productId == item.productId);
@@ -136,17 +142,17 @@ export class BasketProvider {
       // fatal error. display popup alert.
     }
   }
-  getFooterObjForOrder(): Observable<BasketFooterObj> {
-    return of(this.footerObj);
-  }
+  // getFooterObjForOrder(): Observable<BasketFooterObj> {
+  //   return of(this.footerObj);
+  // }
 
-  getBasketForOrder(): Observable<BasketObj> {
-    console.log("Basket Code  for norder");
-    return of(this.myBasket);
-  }
+  // getBasketForOrder(): Observable<BasketObj> {
+  //   console.log("Basket Code  for norder");
+  //   return of(this.myBasket);
+  // }
 
   emptyBasket() {
-    this.myBasket.items = undefined;
+   // this.myBasket.items = undefined;
   }
 
   emptyProductAllQuantity(item: OrderItem) {
@@ -158,5 +164,23 @@ export class BasketProvider {
   getTotalItemCount():number
   { 
   return this.footerObj.totalItemCount;
+  }
+
+  getBasketDirect():BasketObj
+  {
+    let bObj = this.myBasket;
+    if(bObj != undefined)
+    {
+      if(bObj.items != undefined)
+      {
+      let tCount = 0
+      bObj.items.map(item =>{
+       tCount = tCount+item.quantity;
+      })
+      console.log("TCount is :"+tCount);
+      bObj.totalItemsCount = tCount;
+      }
+    }
+    return bObj;
   }
 }
