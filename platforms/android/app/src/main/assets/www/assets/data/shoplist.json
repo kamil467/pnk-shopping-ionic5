@@ -1,0 +1,60 @@
+
+[
+{
+    "id":"autoId",
+    "name":"ABC Elite Shop",
+ "location":"Near East Bus stop",
+ "tileImageUrl":null,
+ "deliverySpeed":"10 to 15 mins",
+ "operationHours":"10Am to 8PM",
+  "description":"We are offering best quality grocery products",
+  "status":"a",
+  "serviceArea":[
+      {
+    "id":"autoId",
+    "cityName":"Panaikulam",
+    "pincode":623522,
+    "storecode":"1993"
+  },
+  {
+    "id":"autoId",
+    "cityName":"Puduvalasai",
+    "pincode":623522,
+    "storecode":"1993"
+  }
+  ], 
+  "storeCode":"1993",
+  "categoryCode":"sprmrk" ,
+  "shopContactNumber1":9042810232,
+  "shopContactNumber2":8884081427
+  },
+
+  {
+     "id":"autoId",
+     "name":"XYZ Premium Shop",
+  "location":"Near West Bus stop",
+  "tileImageUrl":null,
+  "deliverySpeed":"15 to 30 mins",
+  "operationHours":"6PM to 10PM",
+  "description":"We are offering best quality fresh vegetables and nuts.",
+  "status":"a",
+"serviceArea":[
+      {
+    "id":"autoId",
+    "cityName":"Panaikulam",
+    "pincode":623522,
+    "storecode":"1993"
+  },
+  {
+    "id":"autoId",
+    "cityName":"Puduvalasai",
+    "pincode":623522,
+    "storecode":"1993"
+  }
+  ], 
+  "storeCode":"1999",
+  "categoryCode":"fdrst",
+  "shopContactNumber1":9042810232,
+  "shopContactNumber2":8884081427
+  }
+  ]

@@ -156,6 +156,9 @@ export class BasketProvider {
   }
 
   emptyProductAllQuantity(item: OrderItem) {
+    console.log("Remove entire quantity.");
+    console.log(this.myBasket);
+    console.log(item);
     let itemToRemovedIndex = this.myBasket.items.findIndex(
       i => i.productId == item.productId
     );

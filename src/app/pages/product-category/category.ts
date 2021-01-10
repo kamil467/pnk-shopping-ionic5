@@ -87,8 +87,10 @@ ionViewWillEnter()
 
   async backButton()
   {
+    console.log("Back button clicked");
    const updatedBasket = this.basketProvider.getBasketDirect();
  
+   console.log(updatedBasket);
     if(updatedBasket.totalItemsCount == 0)
     {
       // navigate to page

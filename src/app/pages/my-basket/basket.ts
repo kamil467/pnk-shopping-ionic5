@@ -23,7 +23,7 @@ export class BasketPage   implements OnInit {
   basketTotalAmount: number = 0;
   userLoggedSubscription:Subscription;
   isLoggedIn:boolean= false;
-  isServiceAvailable:string
+  isServiceAvailable:string="false";
   orderRef:Subscription;
   serviceRed:Subscription;
   public loading$ = this.appService.loading.asObservable();   // get the subject value.
@@ -118,7 +118,8 @@ getLoggedInUser()
                   {
                  this.isServiceAvailable = "true";
                     return;
-                  }                
+                  }
+                                  
     })
     });
       // check for shop service area pincode and customer location pin code.
@@ -143,7 +144,7 @@ ngOnDestroy()
  {
   //this.orderRef.unsubscribe();
  }
- this.serviceRed.unsubscribe();
+ //this.serviceRed.unsubscribe();
 }
 
 async presentConfirmOrderAlert() {

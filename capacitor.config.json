@@ -1,6 +1,6 @@
 {
   "appId": "com.kstech.pnkshopping",
-  "appName": "com.kstech.pnkshopping",
+  "appName": "PnkShopping",
   "webDir": "www",
   "npmClient": "npm",
   "cordova": {
