@@ -37,19 +37,18 @@
         <img [src]="shop.tileImageUrl" />
       </ng-template>
       <ng-template #defaultImage>
-        <ng-container *ngIf="shop.categorCode=='fdrst'; then superMarketImage; else restImage">
-
+        <ng-container *ngIf="shop.categoryCode=='fdrst'">
+          <img
+    src="../../../assets/img/foodRestTile.jpg"
+    />
+         
         </ng-container>
-      <ng-template #superMarketImage>
-        <img
-        src="../../../assets/img/supermarket.jpg"
-        />
-      </ng-template>
-      <ng-template #restImage>
-        <img
-        src="../../../assets/img/foodRestTile.jpg"
-        />
-      </ng-template>
+   <ng-container  *ngIf="shop.categoryCode=='suprmrkt'">
+    <img
+          src="../../../assets/img/supermarket.jpg"
+          />
+   </ng-container>
+     
       </ng-template>
 
       <ion-card-content>

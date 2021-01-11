@@ -39,7 +39,7 @@
 			
 				<div>
 
-				<ion-card *ngFor="let summary of summarList">
+				<ion-card *ngFor="let summary of summarList | sortBy :'desc'">
 				
 				
                 <div *ngIf="summary != undefined">
