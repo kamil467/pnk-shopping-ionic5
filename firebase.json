@@ -1,10 +1,22 @@
 {
-  "hosting": {
+  "hosting":
+ {
     "public": "www",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ]
-  }
+ ,
+
+ "redirects": [ {
+    "source": "/.well-known/assetlinks.json",
+        "destination": "/well-known/assetlinks.json",
+    "type": 301
+  } ] 
+
+
+}
+
+
 }

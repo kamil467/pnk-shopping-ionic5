@@ -21,8 +21,8 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
       whitelistedCountries:['IN','+91'],
       buttonColor:'crimson',
       
-    },
-    firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+    }
+    // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
   ],
   
   privacyPolicyUrl: '<your-privacyPolicyUrl-link>',
