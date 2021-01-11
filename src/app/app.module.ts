@@ -17,7 +17,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 
 
@@ -34,9 +34,10 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
     AngularFireStorageModule,
     AngularFirestoreModule.enablePersistence(),
     HttpClientJsonpModule,
+    AngularFireMessagingModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
-    ServiceWorkerModule.register('ngsw-worker.js', {
+    ServiceWorkerModule.register('combined-sw.js', {
       enabled: environment.production
     })
   ],

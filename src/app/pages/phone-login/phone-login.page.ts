@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFireMessaging } from '@angular/fire/messaging';
 import { FormBuilder, FormControl,FormGroup, Validators } from '@angular/forms';
 import { AlertController, ToastController } from '@ionic/angular';
 import { FirebaseUISignInFailure, FirebaseUISignInSuccessWithAuthResult } from 'firebaseui-angular';
@@ -37,7 +38,8 @@ export class PhoneLoginPage  {
     private alertController:AlertController,
     public formBuilder: FormBuilder,
     public toastController: ToastController,
-    public appService:AppService
+    public appService:AppService,
+    public afMessaging:AngularFireMessaging
     ) { }
 
  ngOnInit()
@@ -319,5 +321,48 @@ cancel()
     postCode:this.tempObj.postCode,
     customerId:this.tempObj.customerId,
     })
+}
+
+
+async presentRequestNotificationPermissionAlert() {
+  const alert = await this.alertController.create({
+    cssClass: 'my-custom-class',
+    header: 'Enable Notification?',
+    message: 'Please grant permission for enable notification',
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+         // do nothing.
+        }
+      }, {
+        text: 'Okay',
+        handler: async () => {
+          this.requestUserPermission();
+          // create order.
+        // await this.createOrder();
+        }
+      }
+    ]
+  });
+
+  await alert.present();
+}
+
+
+requestUserPermission()
+{
+  this.afMessaging.requestToken // getting tokens
+      .subscribe(
+        (token) => { // USER-REQUESTED-TOKEN
+          console.log('Permission granted! Save to the server!', token);
+          
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
 }
 }

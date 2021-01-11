@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 
-import { MenuController, Platform, ToastController } from '@ionic/angular';
+import { AlertController, MenuController, Platform, ToastController } from '@ionic/angular';
 
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -10,6 +10,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Storage } from '@ionic/storage';
 
 import { UserData } from './providers/user-data';
+import { AngularFireMessaging } from '@angular/fire/messaging';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -53,14 +55,16 @@ export class AppComponent implements OnInit {
     private userData: UserData,
     private swUpdate: SwUpdate,
     private toastCtrl: ToastController,
+    private afMessaging:AngularFireMessaging,
+    private alert:AlertController
   ) {
     this.initializeApp();
   }
 
   async ngOnInit() {
     this.checkLoginStatus();
-    this.listenForLoginEvents();
-
+    this.listenForLoginEvents();    
+    
     this.swUpdate.available.subscribe(async res => {
       const toast = await this.toastCtrl.create({
         message: 'Update available!',
@@ -83,9 +87,11 @@ export class AppComponent implements OnInit {
   }
 
   initializeApp() {
-    this.platform.ready().then(() => {
+    this.platform.ready().then( () => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      //this.requestPushNotificationPermission // request push notification permission  This won't display if user doesn't subscribe it
+
     });
   }
 
@@ -126,4 +132,42 @@ export class AppComponent implements OnInit {
     this.storage.set('ion_did_tutorial', false);
     this.router.navigateByUrl('/tutorial');
   }
+
+  requestPushNotificationPermission()
+  {
+    // USER-REQUESTED-TOKEN
+        this.afMessaging.getToken.subscribe(async result =>{
+
+          if(result)
+          {
+            console.log("Token is:"+result);
+          }
+          else{
+            // request the user permission for granting the token.
+           
+             this.requestUserPermission();
+          }
+         
+        },
+        error =>{
+          console.error(error);
+        }
+        );    
+}
+
+requestUserPermission()
+{
+  this.afMessaging.requestToken // getting tokens
+      .subscribe(
+        (token) => { // USER-REQUESTED-TOKEN
+          console.log('Permission granted! Save to the server!', token);
+          
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+}
+
+
 }
