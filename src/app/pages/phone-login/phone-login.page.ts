@@ -9,6 +9,7 @@ import { delay, finalize, first, shareReplay, take } from 'rxjs/operators';
 import { Customer } from '../../interfaces/account-interface';
 import { AccountProvider } from '../../providers/account-provider';
 import { AppService } from '../../providers/app.service';
+import { NotificationProvider } from '../../providers/notification-provider';
 
 @Component({
   selector: 'app-phone-login',
@@ -39,7 +40,8 @@ export class PhoneLoginPage  {
     public formBuilder: FormBuilder,
     public toastController: ToastController,
     public appService:AppService,
-    public afMessaging:AngularFireMessaging
+    public afMessaging:AngularFireMessaging,
+    public notificationProvider:NotificationProvider
     ) { }
 
  ngOnInit()
@@ -244,12 +246,12 @@ async presentLogOutConfirm() {
   await alert.present();
 }
 
-async presentErrorAlert() {
+async presentErrorAlert(message:string='') {
   const alert = await this.alertController.create({
     cssClass: 'my-custom-class',
     header: 'Alert',
     subHeader: 'Error occurred',
-    message: 'Please try again later.',
+    message: 'Please try again later.'+message,
     buttons: ['OK']
   });
 
@@ -340,7 +342,7 @@ async presentRequestNotificationPermissionAlert() {
       }, {
         text: 'Okay',
         handler: async () => {
-          this.requestUserPermission();
+          this.requestPushNotificationPermission();
           // create order.
         // await this.createOrder();
         }
@@ -350,19 +352,92 @@ async presentRequestNotificationPermissionAlert() {
 
   await alert.present();
 }
+requestPushNotificationPermission()
+  {
+    // USER-REQUESTED-TOKEN
+        this.afMessaging.getToken.subscribe(async result =>{
 
+          if(result)
+          {
+            console.log("Token is:"+result);
+            const customerId = this.accountInfoForm.controls['customerId'].value;
+          this.notificationProvider.sendNotificationIdToServer(customerId,result).then(async (result)=>
+          {
+            if(result)
+            {
+              
+              console.log("successfully enabled");
+             await  this.successNotificationToast();
+            }
+            else{
+              await this.presentErrorAlert("firebase error");
+              console.error("error occurred");
+            }
+          })
+
+           
+          }
+          else{
+            // request the user permission for granting the token.
+            //Token will be saved if user first time requesting the token.
+            //each orders carry user token.firebase 
+           
+             this.requestUserPermission();
+          }
+         
+        },
+        error =>{
+          console.error(error);
+        }
+        );    
+}
 
 requestUserPermission()
 {
   this.afMessaging.requestToken // getting tokens
       .subscribe(
-        (token) => { // USER-REQUESTED-TOKEN
+        async (token) => { // USER-REQUESTED-TOKEN
+          if(token){
           console.log('Permission granted! Save to the server!', token);
-          
+          const customerId = this.accountInfoForm.controls['customerId'].value;
+          this.notificationProvider.sendNotificationIdToServer(customerId,token).then(async (result)=>
+          {
+            if(result)
+            {
+              console.log("successfully enabled");
+             await  this.successNotificationToast();
+            }
+            else{
+              await this.presentErrorAlert("firebase error");
+              console.error("error occurred");
+            }
+          })
+          }
+          else
+          {
+            console.error("notification error:",token);
+           await this.presentErrorAlert("token null");
+          }
+
         },
-        (error) => {
+        async (error) => {
+
           console.error(error);
+          await this.presentErrorAlert("error"+error);
         }
       );
 }
+
+  async successNotificationToast()
+{
+  const toast = await this.toastController.create({
+    message: 'Notification has been successfully enabled.',
+    duration: 2000,
+    position:'top',
+    color:"success"
+  });
+  toast.present();
+}
+
+
 }

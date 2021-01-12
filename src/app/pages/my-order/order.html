@@ -1,6 +1,9 @@
 
 		<ion-header>
 			<ion-toolbar color="crimson">
+				<ion-buttons slot="start">
+					<ion-menu-button style="color: white;"></ion-menu-button>
+				  </ion-buttons>
 				<ng-container *ngIf="isLoggedInUser; then showLoggedUserHeader; else showDefaultHeader">
 
 				</ng-container>

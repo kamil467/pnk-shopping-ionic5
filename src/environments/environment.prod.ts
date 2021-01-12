@@ -26,7 +26,8 @@ export const environment = {
  CUSTOMER_COLLECTION:"customer",
  ORDER_SUMMARY:"order_summary",
  CUSTOMER_DELIVERY_PERSONAL_INFO:"customer_delivery_personal_info",
- ORDERED_ITEMS:"ordered_items"
+ ORDERED_ITEMS:"ordered_items",
+ NOTIFICATION:"notification"
 
 
 };
@@ -40,6 +41,7 @@ export const firebaseConfig ={
   messagingSenderId: "858321314978",
   appId: "1:858321314978:web:9f649c995b8a3b98ce23fb",
   measurementId: "G-Y6LVPT1C5Y"
+ 
 };
 
 

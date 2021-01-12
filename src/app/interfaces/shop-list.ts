@@ -33,4 +33,5 @@ export interface DeliveryOrderConfig
     minimumOrderValue:number,
     maximumOrderValue:number,
     maximumQuantity:number,
+    paymentMode:string
 }

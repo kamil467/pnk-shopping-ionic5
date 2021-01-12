@@ -1,34 +1,52 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="crimson">
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button style="color: white;"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Support</ion-title>
+    <ion-title style="color: white;">Support</ion-title>
   </ion-toolbar>
 
 </ion-header>
 
 <ion-content>
   <div class="support-logo">
-    <img src="assets/img/appicon.svg" alt="Ionic Logo">
+    <img src="assets/img/appicon.png" alt="PnkShopping">
   </div>
 
-  <form #submitForm="ngForm" novalidate (ngSubmit)="submit(submitForm)">
-    <ion-list lines="none">
-      <ion-item>
-        <ion-label position="stacked" color="primary">Enter your support message below</ion-label>
-        <ion-textarea [(ngModel)]="supportMessage" name="supportQuestion" #supportQuestion="ngModel" rows="6" required></ion-textarea>
-      </ion-item>
-    </ion-list>
+  <ion-card>
+    <ion-card-header color="crimson">
+      <span style="color:white">Support Information</span>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid>
+        <ion-row>
+          <ion-col><ion-icon name="mail"></ion-icon></ion-col>
+          <ion-col><ion-label>pnkshop.support@gmail.com</ion-label></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col><ion-icon name="call"></ion-icon></ion-col>
+          <ion-col><ion-label>+918884081427</ion-label></ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col><ion-icon name="logo-whatsapp"></ion-icon></ion-col>
+          <ion-col><ion-label>+918884081427</ion-label></ion-col>
+        </ion-row>
+        <ion-card>
+          <ion-card-content>
+            <p>
+              We are also actively respond to queries which submitted via google play store.
+            </p>
+          </ion-card-content>
+        </ion-card>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+  
 
-    <ion-text color="danger">
-      <p [hidden]="supportQuestion.valid || submitted === false" class="ion-padding-start">
-        Support message is required
+      <p style="text-align: center;">
+      <ion-note>App Version:1.0</ion-note>
       </p>
-    </ion-text>
+   
+  
 
-    <div class="ion-padding">
-      <ion-button expand="block" type="submit">Submit</ion-button>
-    </div>
-  </form>
 </ion-content>

@@ -1,6 +1,10 @@
 
 <ion-header translucent="true">
+ 
   <ion-toolbar color="crimson">
+    <ion-buttons slot="start">
+      <ion-menu-button style="color: white;"></ion-menu-button>
+    </ion-buttons>
     Market Place
   </ion-toolbar>
 </ion-header>
@@ -8,7 +12,7 @@
   <ion-card [routerLink]="['/app/tabs/market/shoplist','suprmrkt']">
     <img src="../../../assets/img/supermarketTile.jpg" />
     <div class="card-title">Super Markets</div>
-    <div class="card-subtitle">41 Listings</div>
+    <div class="card-subtitle"></div>
   </ion-card>
 
   <ion-card [routerLink]="['/app/tabs/market/shoplist','fdrst']">
@@ -16,6 +20,6 @@
       src="../../../assets/img/foodRestTile.jpg"
     />
     <div class="card-title">Food Restaurants</div>
-    <div class="card-subtitle">64 Listings</div>
+    <div class="card-subtitle"></div>
   </ion-card>
 </ion-content>

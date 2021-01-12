@@ -5,6 +5,7 @@ import { SchedulePage } from '../schedule/schedule';
 import { MarketplacePage } from '../marketplace/marketplace';
 import { CategoryListPage } from '../product-category/category';
 import { MyOrderPage } from '../my-order/order';
+import { SupportPage } from '../support/support';
 
 
 const routes: Routes = [
@@ -106,7 +107,15 @@ const routes: Routes = [
           }
         ]
       },
-    
+      {
+        path: 'support',
+        children: [
+          {
+            path: '',
+           loadChildren:() => import("../support/support.module").then(m => m.SupportModule)
+          }
+        ]
+      },
       {
         path: '',
         redirectTo: '/app/tabs/schedule',

@@ -77,19 +77,23 @@
 
         <div *ngIf="shop.deliveryOrderConfig">
           <ion-chip color="crimson">
-            <ion-icon name="pricetag"></ion-icon>      <ion-label >   DeliveryCharge:{{shop.deliveryOrderConfig.deliveryCharge |currency:'INR' }}</ion-label>
+            <ion-icon name="pricetag"></ion-icon><ion-label >   DeliveryCharge:{{shop.deliveryOrderConfig.deliveryCharge |currency:'INR' }}</ion-label>
           </ion-chip>
           <ion-chip color="crimson">
             <ion-icon name="pricetag"></ion-icon>  <ion-label >minimumOrder:{{shop.deliveryOrderConfig.minimumOrderValue| currency:'INR'}}</ion-label>
           </ion-chip>
+          <ion-chip color="crimson">
+            <ion-icon name="logo-paypal"></ion-icon>  <ion-label >{{shop.deliveryOrderConfig.paymentMode}}</ion-label>
+          </ion-chip>
+          <ion-chip color="crimson">
+            <ion-icon name="location"></ion-icon>
+            <ion-label *ngFor="let area of shop.serviceArea ">
+            {{area.cityName}},
+        </ion-label>
+          </ion-chip>
         </div>
     
-        <ion-chip color="crimson">
-          <ion-icon name="location"></ion-icon>
-          <ion-label *ngFor="let area of shop.serviceArea ">
-          {{area.cityName}},
-      </ion-label>
-        </ion-chip>
+       
       </ion-row>
      </ion-grid>
       
