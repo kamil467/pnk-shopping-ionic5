@@ -8,6 +8,7 @@ import { BasketProvider } from "./basket-provider";
 import { environment } from '../../environments/environment';
 import { Customer } from "../interfaces/account-interface";
 import { AngularFirestore } from "@angular/fire/firestore";
+import { AngularFireMessaging } from "@angular/fire/messaging";
 
 @Injectable()
 export class OrderProvider {
@@ -15,8 +16,24 @@ export class OrderProvider {
  // Data initilaization//
 
   constructor(private basketProvider: BasketProvider, private httpClient:HttpClient,
-    private angularFireStore: AngularFirestore) {
+    private angularFireStore: AngularFirestore,
+    private afMessaging:AngularFireMessaging) {
  
+  }
+
+  getUserTokenId():string
+  {
+    let token =null;
+    const tokeRef = this.afMessaging.getToken.subscribe(result =>{
+      if(result)
+      {
+      token = result;
+      }
+      else{
+        console.error("Token Id is null");
+      }
+    })
+    return token;
   }
   
   //true - success 
@@ -57,6 +74,7 @@ const customerDeliveryPersonalInfo: CustomerDeliveryPersonalInfo ={
   landmark:customer.landmark,
   postCode:customer.postCode,
   id:null, // auto generated id.
+  userTokenId:this.getUserTokenId() // null if no token generated
 }
 // first --> Firebase API call to store OrderSummary
 // if success -- >  make 2nd API get the id of doucment and create a new collection ordered_items

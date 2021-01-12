@@ -34,6 +34,7 @@ export interface CustomerDeliveryPersonalInfo
   deliveryLocation:string,
   landmark:string,
   contactNo:string,
-  postCode:number
+  postCode:number,
+  userTokenId:string // use to send push notification on orders.
 }
 
