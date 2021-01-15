@@ -52,7 +52,7 @@ this.accountInfoForm = this.formBuilder.group(
      name:[{value:'',disabled:true},Validators.required],
      address:[{value:'',disabled:true},Validators.required],
      phoneNumber:[{value:'',disabled:true}],
-    alternativeContact:[{value:'',disabled:true},Validators.required],
+    alternativeContact:[{value:'',disabled:true}],
     landmark:[{value:'',disabled:true},Validators.required],
     postCode:[{value:'',disabled:true},Validators.required],
     customerId:[{value:''}]
