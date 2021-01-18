@@ -14,19 +14,19 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
+<div *ngIf="basketObjObservable; else loadingErrorTemplate">
+	<div *ngIf = "basketObjObservable.totalItemsCount != 0">
 
-<ion-content class="card-background-page">
-	<div *ngIf="basketObjObservable; else loadingErrorTemplate">
-		<div *ngIf = "basketObjObservable.totalItemsCount != 0">
-
-		
-		<ion-fab vertical="top" horizontal="end" slot="fixed" >
-			<ion-fab-button  routerLink="/app/tabs/market/my-basket">
-				<ion-badge  >{{basketObjObservable.totalItemsCount}}</ion-badge>
-				<ion-icon name="cart-sharp"></ion-icon></ion-fab-button>
-		  </ion-fab>
-	</div>
+	
+	<ion-fab vertical="top" horizontal="end" slot="float" >
+		<ion-fab-button  routerLink="/app/tabs/market/my-basket">
+			<ion-badge  >{{basketObjObservable.totalItemsCount}}</ion-badge>
+			<ion-icon name="cart-sharp"></ion-icon></ion-fab-button>
+	  </ion-fab>
 </div>
+</div>
+<ion-content class="card-background-page">
+
   <div *ngIf="allProductsAbservable | async as allProductOb; else loadingErrorTemplate ">
   <ion-grid>
 	
