@@ -10,7 +10,7 @@
       <ion-button (click)="backButton()"><ion-icon name="arrow-back"></ion-icon></ion-button>
     </ion-buttons>
    <ion-title>
-      Product Category
+      Product Category :{{shopName}}
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -36,7 +36,7 @@
 					<ng-container *ngIf="category != undefined; then pccard;">
 					</ng-container>
 					<ng-template #pccard>
-						<ion-card [routerLink]="['/app/tabs/market/product-list',category.id,category.storeCode]">
+						<ion-card [routerLink]="['/app/tabs/market/product-list',category.id,category.storeCode,category.name]">
 							<ng-container *ngIf="category.imageURL != null; then customImage;else defaultImage">
 							</ng-container>
 							<ng-template #customImage>

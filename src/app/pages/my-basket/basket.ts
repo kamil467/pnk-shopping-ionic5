@@ -44,6 +44,7 @@ public navParams = new NavParams();
   }
 
   ngOnInit(){
+
   this.basketItems  = this.basketProvider.getBasketDirect();  // load basket Items
   this.updateTotal();
   }

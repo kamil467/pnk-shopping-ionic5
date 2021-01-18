@@ -39,12 +39,12 @@ const routes: Routes = [
          
           },
               {
-                path:'product-category-list/:storeCode',
+                path:'product-category-list/:storeCode/:shopName',
                 loadChildren:() => import ('../product-category/category.module').then(m => m.CategoryModule)
              },
 
               {
-                path:'product-list/:productCategoryCode/:storeCode',
+                path:'product-list/:productCategoryCode/:storeCode/:categoryName',
                 loadChildren:() => import ('../product-list/product-list.module').then(m => m.ProductListModule)
              }
              ,

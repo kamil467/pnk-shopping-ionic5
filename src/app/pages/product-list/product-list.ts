@@ -24,6 +24,7 @@ export class ProductListPage implements OnInit {
 allProductsAbservable:Observable<Product[]>
 basketObjObservable:BasketObj
   defaultHref='';
+  categoryName:string;
 constructor(public productListProvider:ProductListProvider,public basketProvider: BasketProvider,
 public loader:LoadingController,public alert:AlertController,
 private route: ActivatedRoute)
@@ -45,6 +46,10 @@ const productCategoryCode = this.route
                             .snapshot
                             .paramMap
                             .get('productCategoryCode');  // get the productcategoryCode.
+                            this.categoryName = this.route
+                            .snapshot
+                            .paramMap
+                            .get("categoryName");
                             
  this.allProductsAbservable=  this.productListProvider
                              .getActiveProductList(productCategoryCode,storeCode); // observable will be called on template  

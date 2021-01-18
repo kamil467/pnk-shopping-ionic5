@@ -29,6 +29,7 @@ export class CategoryListPage implements OnInit{
   defaultHref='';
   basketDirect:BasketObj;
   shopSubscription:Subscription;
+  shopName:string;
 
   constructor(
     public categoryListProvider: CategoryListProvider,public alert:AlertController,
@@ -53,6 +54,11 @@ export class CategoryListPage implements OnInit{
                     .paramMap
                     .get('storeCode'); //get the shopcode from params
 
+
+                    this.shopName = this.route
+                    .snapshot
+                    .paramMap
+                    .get("shopName");
    // load product category.
     this.productCatgeoryListObservable =  this.categoryListProvider
                                           .getActiveProductCategoryListByShopCode(storeCode)
