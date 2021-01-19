@@ -18,9 +18,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
-
-
-
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 
 @NgModule({
   imports: [
@@ -37,12 +35,13 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
     AngularFireMessagingModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
+    
     ServiceWorkerModule.register('combined-sw.js', {
       enabled: environment.production
     })
   ],
   declarations: [AppComponent],
-  providers: [InAppBrowser, SplashScreen, StatusBar],
+  providers: [InAppBrowser, SplashScreen, StatusBar,FCM],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

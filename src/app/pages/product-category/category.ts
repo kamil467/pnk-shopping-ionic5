@@ -30,6 +30,13 @@ export class CategoryListPage implements OnInit{
   basketDirect:BasketObj;
   shopSubscription:Subscription;
   shopName:string;
+  slideOpt ={
+    direction: 'horizontal',
+    slidesPerView: 2,
+    pagination: {
+      el: '.swiper-pagination',
+    }
+  }
 
   constructor(
     public categoryListProvider: CategoryListProvider,public alert:AlertController,

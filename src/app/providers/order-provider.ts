@@ -9,14 +9,14 @@ import { environment } from '../../environments/environment';
 import { Customer } from "../interfaces/account-interface";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { AngularFireMessaging } from "@angular/fire/messaging";
-
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 @Injectable()
 export class OrderProvider {
 
  // Data initilaization//
 
   constructor(private basketProvider: BasketProvider, private httpClient:HttpClient,
-    private angularFireStore: AngularFirestore,
+    private angularFireStore: AngularFirestore,private fcm : FCM,
     private afMessaging:AngularFireMessaging) {
  
   }
@@ -68,14 +68,21 @@ basketObj.items.forEach(x =>{
   totalItems:totalItemCount,
   totalOrderValue:totalOrderValue  // excluding delivery charge.
  }
-const customerDeliveryPersonalInfo: CustomerDeliveryPersonalInfo ={
+
+
+let customerDeliveryPersonalInfo: CustomerDeliveryPersonalInfo ={
   contactNo:customer.phoneNumber,
   deliveryLocation:customer.address, 
   landmark:customer.landmark,
   postCode:customer.postCode,
   id:null, // auto generated id.
-  userTokenId:this.getUserTokenId() // null if no token generated
+  userTokenId:null// null if no token generated this.getUserTokenId() 
 }
+
+this.getFCMToken().then((tokenId) =>{
+  customerDeliveryPersonalInfo.userTokenId = tokenId;
+})
+
 // first --> Firebase API call to store OrderSummary
 // if success -- >  make 2nd API get the id of doucment and create a new collection ordered_items
 // if success (first call)  -- make 3rd API to create customerpersonalDeliveryInfo.
@@ -186,4 +193,17 @@ private handleError(error: HttpErrorResponse,caller:string= null) {
   return throwError(
     'Something bad happened; please try again later.');
 }
+async getFCMToken():Promise<string> {
+
+  let fcmtoken:string = null;
+ await this.fcm.getToken().then(token => {
+    // Register your new token in your back-end if you want
+    // backend.registerToken(token)
+    fcmtoken =  token;   
+  }).catch(()=>{
+    fcmtoken="no-token";
+  });
+  return fcmtoken;
+}
+
 }

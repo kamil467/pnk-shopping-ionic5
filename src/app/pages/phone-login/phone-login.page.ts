@@ -10,6 +10,8 @@ import { Customer } from '../../interfaces/account-interface';
 import { AccountProvider } from '../../providers/account-provider';
 import { AppService } from '../../providers/app.service';
 import { NotificationProvider } from '../../providers/notification-provider';
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
+
 
 @Component({
   selector: 'app-phone-login',
@@ -41,7 +43,8 @@ export class PhoneLoginPage  {
     public toastController: ToastController,
     public appService:AppService,
     public afMessaging:AngularFireMessaging,
-    public notificationProvider:NotificationProvider
+    public notificationProvider:NotificationProvider,
+    private fcm :FCM
     ) { }
 
  ngOnInit()
@@ -326,7 +329,7 @@ cancel()
 }
 
 
-async presentRequestNotificationPermissionAlert() {
+async presentRequestNotificationPermissionAlert(channelMode:any) {
   const alert = await this.alertController.create({
     cssClass: 'my-custom-class',
     header: 'Enable Notification?',
@@ -342,7 +345,8 @@ async presentRequestNotificationPermissionAlert() {
       }, {
         text: 'Okay',
         handler: async () => {
-          this.requestPushNotificationPermission();
+          this.subscribeToTopic(channelMode);
+         // this.requestPushNotificationPermission();
           // create order.
         // await this.createOrder();
         }
@@ -438,6 +442,44 @@ requestUserPermission()
   });
   toast.present();
 }
+subscribeToTopic(channelName:any) {
+  console.log("channelnamwe is:"+channelName);
+  if(channelName == 'orderUpdate')
+  {
+    this.getToken(channelName);
+    // get the token and update it on firebase.
+  }
+  else
+  {
+    this.fcm.subscribeToTopic(channelName).then(async ()=>{
+      await this.successNotificationToast();
+        }).catch((err)=>{
+          this.presentErrorAlert();
+        });
+  }
+  
+}
 
+getToken(channelName:any) {
+  this.fcm.getToken().then(token => {
+    const customerId = this.accountInfoForm.controls['customerId'].value;
+    this.notificationProvider.sendNotificationIdToServer(customerId,token).then(async (result)=>
+    {
+      if(result)
+      {
+        console.log("successfully enabled");
+        this.fcm.subscribeToTopic(channelName).then(async ()=>{
+          await this.successNotificationToast();
+            }).catch((err)=>{
+              this.presentErrorAlert();
+            });
+      }
+      else{
+        await this.presentErrorAlert("firebase error");
+        console.error("error occurred");
+      }
+    })
+  });
+}
 
 }

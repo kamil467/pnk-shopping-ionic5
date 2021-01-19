@@ -12,6 +12,7 @@ import { Storage } from '@ionic/storage';
 import { UserData } from './providers/user-data';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { catchError } from 'rxjs/operators';
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 
 @Component({
   selector: 'app-root',
@@ -56,12 +57,16 @@ export class AppComponent implements OnInit {
     private swUpdate: SwUpdate,
     private toastCtrl: ToastController,
     private afMessaging:AngularFireMessaging,
-    private alert:AlertController
+    private alert:AlertController,
+    private fcm: FCM
   ) {
     this.initializeApp();
   }
 
   async ngOnInit() {
+    this.platform.backButton.subscribeWithPriority(10, async () => {
+     await this.presentAppExitAlert();
+    });
     this.checkLoginStatus();
     this.listenForLoginEvents();    
     
@@ -88,12 +93,59 @@ export class AppComponent implements OnInit {
 
   initializeApp() {
     this.platform.ready().then( () => {
+
+   // firebase push notification
+
+   this.fcm.onNotification().subscribe(async data => {
+    if (data.wasTapped) {
+      console.log("Received in background");
+    } else {
+      console.log("Received in foreground");
+      // display toast
+      const notificationToast = await this.toastCtrl.create({
+        message:(<any>data).body,
+        position: 'top',
+        buttons: [
+          {
+            role: 'cancel',
+            text: 'Ignore'
+          }
+        ]
+      });
+    await notificationToast.present();
+    };
+  });
+
+  this.fcm.onTokenRefresh().subscribe(token => {
+    // Register your new token in your back-end if you want
+    // backend.registerToken(token);
+  });
+  //End- firebase push notification
+
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       //this.requestPushNotificationPermission // request push notification permission  This won't display if user doesn't subscribe it
 
     });
   }
+
+  // firebase specific push notification codes
+  subscribeToTopic() {
+    this.fcm.subscribeToTopic('enappd');
+  }
+  getToken() {
+    this.fcm.getToken().then(async token => {
+      // Register your new token in your back-end if you want
+      // backend.registerToken(token);
+     await  this.presentTestAlert(token);
+     
+    });
+  }
+  unsubscribeFromTopic() {
+    this.fcm.unsubscribeFromTopic('enappd');
+  }
+
+// firebase push notifications
 
   checkLoginStatus() {
     return this.userData.isLoggedIn().then(loggedIn => {
@@ -168,6 +220,61 @@ requestUserPermission()
         }
       );
 }
+
+async presentAppExitAlert()
+{
+  const alert = await this.alert.create({
+    cssClass: 'my-custom-class',
+    header: 'Exit App!',
+    message: '<strong>Do you want to exit from pnkshop?</strong>',
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+         // do nothing.
+        }
+      }, {
+        text: 'Okay',
+        handler: () => {
+         // do nothing.
+         navigator['app'].exitApp();  // exit from app.
+        }
+      }
+    ]
+  });
+
+  await alert.present();
+}
+
+async presentTestAlert(data:any)
+{
+  const alert = await this.alert.create({
+    cssClass: 'my-custom-class',
+    header: 'Test Data',
+    message: data,
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary',
+        handler: () => {
+         // do nothing.
+        }
+      }, {
+        text: 'Okay',
+        handler: () => {
+         // do nothing.
+ 
+        }
+      }
+    ]
+  });
+
+  await alert.present();
+}
+
 
 
 }

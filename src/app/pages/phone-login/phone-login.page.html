@@ -77,12 +77,18 @@
     <ion-card-header>Notification <ion-icon name="notifications-outline"></ion-icon></ion-card-header>
     <ion-card-content>
   <ion-label>
-    Pleasse enable notification for getting latest updates on your order.
+   Latest updates on your order.
   </ion-label>
   <p style="text-align: center;">
-    <ion-button color="crimson" fill="outline" round (click)="presentRequestNotificationPermissionAlert()" > <ion-icon name="notifications"></ion-icon>Enable </ion-button>
+    <ion-button color="crimson" fill="outline" round (click)="presentRequestNotificationPermissionAlert('orderUpdate')" > <ion-icon name="notifications"></ion-icon>Enable </ion-button>
   </p>
   
+  <ion-label>
+    Shops offer updates 
+  </ion-label>
+  <p style="text-align: center;">
+    <ion-button color="crimson" fill="outline" round (click)="presentRequestNotificationPermissionAlert('offerUpdate')" > <ion-icon name="notifications"></ion-icon>Enable </ion-button>
+  </p>
     </ion-card-content>
   </ion-card>
 

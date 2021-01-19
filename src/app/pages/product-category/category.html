@@ -26,8 +26,96 @@
 </div>
 </div>
 <ion-content class="card-background-page">
- 
+	<ion-card>
+<ion-card-header>
+	<ion-card-subtitle>
+		Special Offer Zone
+	</ion-card-subtitle>
+</ion-card-header>
+<ion-card-content>
+ <ion-slides [options]="slideOpt" pager="true">
+<ion-slide>
+	<ion-card class="slide-card">
+		<ion-card-header>
+			<ion-card-subtitle>
+				<img height="inherit"
+                  src="../../../assets/img/product_category.png"
+                />
+			</ion-card-subtitle>
+			
+		</ion-card-header>
+		<ion-card-content>
+        <ion-row>
+		
+			Amul Butter
 
+		</ion-row>
+		<ion-row>
+			<strong><del> Rs.100 </del></strong>
+		</ion-row>
+	<ion-row>
+		<strong><ins>Rs.80 only</ins></strong>
+	</ion-row>
+		</ion-card-content>
+	</ion-card>
+</ion-slide>
+<ion-slide>
+
+	<ion-card class="slide-card">
+		<ion-card-header>
+			<ion-card-subtitle>
+				<img height="inherit"
+                  src="../../../assets/img/product_category.png"
+                />
+			</ion-card-subtitle>
+			
+		</ion-card-header>
+		<ion-card-content>
+        <ion-row>
+		
+		Milk Packet
+
+		</ion-row>
+		<ion-row>
+			<strong><del> Rs.180 </del></strong>
+		</ion-row>
+	<ion-row>
+		<strong><ins>Rs.160 only</ins></strong>
+	</ion-row>
+		</ion-card-content>
+	</ion-card>
+</ion-slide>
+<ion-slide>
+
+	<ion-card class="slide-card">
+		<ion-card-header>
+			<ion-card-subtitle>
+				<img height="inherit"
+                  src="../../../assets/img/product_category.png"
+                />
+			</ion-card-subtitle>
+			
+		</ion-card-header>
+		<ion-card-content>
+        <ion-row>
+		
+			Amul Butter
+
+		</ion-row>
+		<ion-row>
+			<strong><del> Rs.100 </del></strong>
+		</ion-row>
+	<ion-row>
+		<strong><ins>Rs.80 only</ins></strong>
+	</ion-row>
+		</ion-card-content>
+	</ion-card>
+</ion-slide>
+</ion-slides>
+</ion-card-content>
+</ion-card>
+
+<hr />
 	<div *ngIf="productCatgeoryListObservable | async as catList ; else loadingErrorTemplate">
 	  
 	<ion-grid>

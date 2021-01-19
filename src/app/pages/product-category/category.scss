@@ -13,3 +13,18 @@ ion-toolbar
     left:50%;
     top:50%;
   }
+
+  ion-slides {
+    height: 20%;
+  }
+  .slide-card
+  {
+    height:inherit;
+    margin:0;
+    border:1px solid crimson;
+  }
+
+  ion-slide
+  {
+    height:inherit;
+  }
