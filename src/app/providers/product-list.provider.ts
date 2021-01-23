@@ -80,7 +80,16 @@ return productsMapResult;
   .collection<Shop>(environment.SHOP_LIST_COLLECTION)
   .doc(shopCode)
   .collection<Product>(environment.OFFER_ZONE)
-  .valueChanges()
+  .snapshotChanges()
+  .pipe(map(data =>  {
+    
+    return data.map(eachProductDocument =>{
+      const payLoadData = eachProductDocument.payload.doc.data() as Product;
+      const id = eachProductDocument.payload.doc.id;
+      return ({...payLoadData,id:id});
+    })
+    
+  }))
   .pipe(catchError(err =>this.handleError(err)));
 
   return offerZoneRef;
