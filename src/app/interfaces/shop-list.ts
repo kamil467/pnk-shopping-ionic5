@@ -14,7 +14,8 @@ export interface Shop{
  categoryCode:string,
  shopContactNumber1:number,
  shopContactNumber2:number,
- deliveryOrderConfig:DeliveryOrderConfig
+ deliveryOrderConfig:DeliveryOrderConfig,
+ showOfferZone:boolean
 }
 
 export interface StoreServiceArea {

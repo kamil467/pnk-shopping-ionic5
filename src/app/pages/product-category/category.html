@@ -26,92 +26,92 @@
 </div>
 </div>
 <ion-content class="card-background-page">
-	<ion-card>
+	<ion-card *ngIf="isEnableForOfferZone">
 <ion-card-header>
 	<ion-card-subtitle>
 		Special Offer Zone
 	</ion-card-subtitle>
 </ion-card-header>
 <ion-card-content>
- <ion-slides [options]="slideOpt" pager="true">
-<ion-slide>
-	<ion-card class="slide-card">
-		<ion-card-header>
-			<ion-card-subtitle>
-				<img height="inherit"
-                  src="../../../assets/img/product_category.png"
-                />
-			</ion-card-subtitle>
-			
-		</ion-card-header>
-		<ion-card-content>
-        <ion-row>
-		
-			Amul Butter
+	<div *ngIf="offerZoneProducts | async as allProductOb; else offerZoneLoader ">
+ <ion-slides [options]="slideOpt" pager="true"  >
+<ion-slide *ngFor="let product of allProductOb" >
+	<ion-card (click)="addToBasket(product)" class="offer-zone-product-card">
+		<ion-ripple-effect></ion-ripple-effect>
+		<ng-container *ngIf="product.productImageUrl != null; then customImage;else defaultImage">
+		</ng-container>
+		<ng-template #customImage>
+			<img [src]="product.productImageUrl" />
+</ng-template>
+			<ng-template #defaultImage>
+				<img
+src="../../../assets/img/default.jpg"
+/>
+</ng-template>
+				<ion-row>
+					<ion-col col-10>
+						<div>{{product.name}}</div>
+					</ion-col>
+					<ion-col col-2>
+						<ion-icon name="information-circle"></ion-icon>
+					</ion-col>
+				</ion-row>
+				<ion-row>
+					<ion-col col>
+						<ion-note>
+							{{product.size}}
+						</ion-note>
+					</ion-col>
+					<ng-container *ngIf="product.inStock == true">
+						<ion-col col class="col-end-align">
+							<ion-badge color="secondary">stock</ion-badge>
+						</ion-col>
+					</ng-container>
+					<ng-container *ngIf="product.inStock == false">
+						<ion-col col class="col-end-align">
+							<ion-badge color="danger">no stock</ion-badge>
+						</ion-col>
+					</ng-container>
+				</ion-row>
 
-		</ion-row>
-		<ion-row>
-			<strong><del> Rs.100 </del></strong>
-		</ion-row>
-	<ion-row>
-		<strong><ins>Rs.80 only</ins></strong>
-	</ion-row>
-		</ion-card-content>
+				<ion-row>
+					<ng-container *ngIf="product.price != 0; then displayOld;"></ng-container>
+					<ng-template #displayOld>
+						<ion-col>
+							<strong><del>{{product.price  | currency:'INR'}}</del></strong>
+						</ion-col>
+					</ng-template>
+					<ion-col class="newprice">
+						<strong><ins>{{product.offeredPrice  | currency:'INR'}}</ins></strong>
+					</ion-col>
+				</ion-row>
+
+				<!-- <ion-row>
+					<ng-container
+						*ngIf="product.inStock == true; then addCart; else showOutOfStock">
+					</ng-container>
+					<ng-template #addCart>
+						<ion-col col-12 align-self-center text-center class="cart-button" (click)="addToBasket(product)">
+							<ion-icon name="basket"></ion-icon> Add
+						</ion-col>
+					</ng-template>
+
+					<ng-template #showOutOfStock>
+						<ion-col col-12 align-self-center text-center class="cart-button out-stock">
+							<ion-icon name="basket"></ion-icon> Add
+						</ion-col>
+					</ng-template>
+				</ion-row> -->
 	</ion-card>
 </ion-slide>
-<ion-slide>
 
-	<ion-card class="slide-card">
-		<ion-card-header>
-			<ion-card-subtitle>
-				<img height="inherit"
-                  src="../../../assets/img/product_category.png"
-                />
-			</ion-card-subtitle>
-			
-		</ion-card-header>
-		<ion-card-content>
-        <ion-row>
-		
-		Milk Packet
-
-		</ion-row>
-		<ion-row>
-			<strong><del> Rs.180 </del></strong>
-		</ion-row>
-	<ion-row>
-		<strong><ins>Rs.160 only</ins></strong>
-	</ion-row>
-		</ion-card-content>
-	</ion-card>
-</ion-slide>
-<ion-slide>
-
-	<ion-card class="slide-card">
-		<ion-card-header>
-			<ion-card-subtitle>
-				<img height="inherit"
-                  src="../../../assets/img/product_category.png"
-                />
-			</ion-card-subtitle>
-			
-		</ion-card-header>
-		<ion-card-content>
-        <ion-row>
-		
-			Amul Butter
-
-		</ion-row>
-		<ion-row>
-			<strong><del> Rs.100 </del></strong>
-		</ion-row>
-	<ion-row>
-		<strong><ins>Rs.80 only</ins></strong>
-	</ion-row>
-		</ion-card-content>
-	</ion-card>
-</ion-slide>
 </ion-slides>
+</div>
+<ng-template #offerZoneLoader>
+<p>
+	Loading offers.......
+</p>
+</ng-template>
 </ion-card-content>
 </ion-card>
 

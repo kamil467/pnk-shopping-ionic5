@@ -4,10 +4,11 @@ import { AlertController, LoadingController,  NavController, Platform } from "@i
 import { concat, from,  Observable, of, Subscription, throwError } from "rxjs";
 import { catchError, concatMap, delay, map } from "rxjs/operators";
 import { BasketFooterObj, BasketObj } from "../../interfaces/basket-interface";
-import { ProductCategory  } from "../../interfaces/product-category";
+import { Product, ProductCategory  } from "../../interfaces/product-category";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
 import { BasketProvider } from "../../providers/basket-provider";
 import { CategoryListProvider } from "../../providers/product-category-provider";
+import { ProductListProvider } from "../../providers/product-list.provider";
 import { ShopListProvider } from "../../providers/shoplist-provider";
 import { BuildGridArray } from "../../Utility/utility";
 
@@ -30,6 +31,8 @@ export class CategoryListPage implements OnInit{
   basketDirect:BasketObj;
   shopSubscription:Subscription;
   shopName:string;
+  isEnableForOfferZone:boolean;
+  offerZoneProducts:Observable<Product[]>;
   slideOpt ={
     direction: 'horizontal',
     slidesPerView: 2,
@@ -43,6 +46,7 @@ export class CategoryListPage implements OnInit{
     public loadingController:LoadingController, public basketProvider: BasketProvider,
     public shopProvider:ShopListProvider,public platform:Platform,public navCtrl: NavController,
     private route: ActivatedRoute,
+    private productProvider:ProductListProvider,
     private changeRef: ChangeDetectorRef
   ) {
     const storeCode = this.route
@@ -75,6 +79,13 @@ export class CategoryListPage implements OnInit{
    .getActiveShopByStoreCode(storeCode).subscribe(shop =>{
     if(shop != undefined)
     {
+      this.isEnableForOfferZone = shop.showOfferZone;  // check for enablibng offerzone.
+      console.log(this.isEnableForOfferZone);
+      if(shop.showOfferZone)
+      {
+        // call api to get offerzone products.
+        this.offerZoneProducts = this.productProvider.getOfferZoneProducts(storeCode);
+      }
       this.basketDirect = this.basketProvider.initiateBasket(shop);  // load basket first time.
     }
     else{
@@ -152,5 +163,16 @@ ionViewWillEnter()
   ngOnDestroy()
   {
     this.shopSubscription.unsubscribe();
+  }
+
+  addToBasket(product:Product)
+  {
+    console.log("special offer zone product clicked");
+    console.log(product);
+    if(product != null || product != undefined){
+    this.basketProvider.addItemToBasket(product);
+    this.basketDirect = this.basketProvider.getBasketDirect();
+    }
+    
   }
 }

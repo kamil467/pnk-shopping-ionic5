@@ -160,8 +160,8 @@
 				</ion-chip>
 			</div>
 	
-			<div *ngIf="((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) > basketItems.deliveryOrderConfig.minimumOrderValue) 
-				&& ((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) < basketItems.deliveryOrderConfig.maximumOrderValue)
+			<div *ngIf="((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) <= basketItems.deliveryOrderConfig.minimumOrderValue) 
+				&& ((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) <= basketItems.deliveryOrderConfig.maximumOrderValue)
 			">
 
 		    <ng-container *ngIf="isLoggedIn; then showOrderNow; else showLogin">

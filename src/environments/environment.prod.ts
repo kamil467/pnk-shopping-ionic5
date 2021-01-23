@@ -27,7 +27,8 @@ export const environment = {
  ORDER_SUMMARY:"order_summary",
  CUSTOMER_DELIVERY_PERSONAL_INFO:"customer_delivery_personal_info",
  ORDERED_ITEMS:"ordered_items",
- NOTIFICATION:"notification"
+ NOTIFICATION:"notification",
+ OFFER_ZONE:"offer_zone"
 
 
 };

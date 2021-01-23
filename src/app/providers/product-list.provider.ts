@@ -6,6 +6,7 @@ import { map } from "rxjs/operators";
 import { Product, ProductCategoryProductMapping } from "../interfaces/product-category";
 import { environment } from '../../environments/environment'
 import { AngularFirestore } from "@angular/fire/firestore";
+import { Shop } from "../interfaces/shop-list";
 @Injectable({ providedIn: "root" })
 export class ProductListProvider {
   
@@ -71,6 +72,21 @@ return productsMapResult;
                       );
                       return productList;
  }
+
+ ///Get products list for special offerzone
+ getOfferZoneProducts(shopCode:string):Observable<Product[]>
+ {
+  const offerZoneRef = this.angularFireCloudStore
+  .collection<Shop>(environment.SHOP_LIST_COLLECTION)
+  .doc(shopCode)
+  .collection<Product>(environment.OFFER_ZONE)
+  .valueChanges()
+  .pipe(catchError(err =>this.handleError(err)));
+
+  return offerZoneRef;
+ 
+ }
+
 
   private handleError(error: HttpErrorResponse,caller:string= null) {
   if (error.error instanceof ErrorEvent) {
