@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "858321314978-blcgc5h58q9i6ofuhl9amjtoe9cni4n3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kstech.pnkshopping",
+            "certificate_hash": "dccd1d96561d2b31936831daf99a1ea917901618"
+          }
+        },
+        {
           "client_id": "858321314978-4akcf4eputnpk9731rc84kk6a94rtj9k.apps.googleusercontent.com",
           "client_type": 3
         }
