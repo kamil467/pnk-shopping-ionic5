@@ -286,6 +286,9 @@ MIT
 @ionic-native/in-app-browser
 MIT
 
+@ionic-native/network
+MIT
+
 @ionic-native/splash-screen
 MIT
 

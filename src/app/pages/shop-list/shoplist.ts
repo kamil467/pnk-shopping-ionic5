@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { AlertController, LoadingController } from "@ionic/angular";
+import { AlertController, LoadingController, NavController, Platform } from "@ionic/angular";
 import { from, merge, Observable, throwError } from "rxjs";
 import { catchError, concatMap, concatMapTo, finalize, first, map, mergeMap, shareReplay, switchMap, toArray } from "rxjs/operators";
 import { Shop, StoreServiceArea } from "../../interfaces/shop-list";
@@ -29,12 +29,18 @@ export class ShoplistPage implements OnInit {
     public shopListProvider: ShopListProvider,
     public alert:AlertController,
     public loading:LoadingController, 
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private platform: Platform,
+    public navCtrl: NavController,
   ) {
 
   }
 async ngOnInit() {
 
+  //handle back button
+  this.platform.backButton.subscribeWithPriority(10, async () => {
+  this.navCtrl.pop();
+   });
   // firebase code
   const categoryCode = this.route.snapshot.paramMap.get('categoryCode'); //get the shop catgeory code from params
  this.shopListObservable =  this.shopListProvider.getActiveShopsByCategoryFirebase(categoryCode).pipe(first());

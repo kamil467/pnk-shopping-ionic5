@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { AngularFireAuth } from "@angular/fire/auth";
 import { ActivatedRoute,Router } from "@angular/router";
-import { AlertController, NavController, NavParams, ToastController } from "@ionic/angular";
+import { Network } from "@ionic-native/network/ngx";
+import { AlertController, LoadingController, NavController, NavParams, Platform, ToastController } from "@ionic/angular";
 import { Observable, Subscriber, Subscription } from "rxjs";
 import { catchError, concatMap, finalize, first, map, shareReplay } from "rxjs/operators";
 import { BasketObj, OrderItem } from "../../interfaces/basket-interface";
@@ -9,6 +10,7 @@ import { AccountProvider } from "../../providers/account-provider";
 import { AppService } from "../../providers/app.service";
 import { BasketProvider } from "../../providers/basket-provider";
 import { OrderProvider } from "../../providers/order-provider";
+
 
 
 @Component({
@@ -27,6 +29,7 @@ export class BasketPage   implements OnInit {
   orderRef:Subscription;
   serviceRed:Subscription;
   public loading$ = this.appService.loading.asObservable();   // get the subject value.
+  networkSubscription:Subscription;
 
 public navParams = new NavParams();
   constructor(
@@ -38,13 +41,16 @@ public navParams = new NavParams();
    public appService:AppService,
    public toastController: ToastController,
    public activatedRoute:ActivatedRoute,
-   public router:Router
+   public router:Router,
+   public platform:Platform,public loadingController:LoadingController,private network:Network
   ) {
    
   }
 
   ngOnInit(){
-
+    this.platform.backButton.subscribeWithPriority(10, async () => {
+      this.navCtrl.pop();
+       });
   this.basketItems  = this.basketProvider.getBasketDirect();  // load basket Items
   this.updateTotal();
   }
@@ -145,6 +151,10 @@ ngOnDestroy()
  {
   //this.orderRef.unsubscribe();
  }
+ if(this.networkSubscription != undefined)
+ {
+   this.networkSubscription.unsubscribe();
+ }
  //this.serviceRed.unsubscribe();
 }
 
@@ -180,40 +190,46 @@ async createOrderButtonClicked()
 
 async createOrder()
 {
+if(this.networkWatch()){
   const getBasketDirect = this.basketProvider.getBasketDirect();
   const createOrderRef = this.angularFireAuth.authState.pipe(first(),
   concatMap(user => 
     this.accountProvider.getCustomer(user.phoneNumber)
     .pipe(first())));
     
-    const processingOrder = await this.alert.create({
-      cssClass: 'my-custom-class',
-      header: 'Placing your order!',
-      message: '<strong>Please kindly wait...!!!</strong>',
+    const processingOrder = await this.loadingController.create({
+      spinner: "bubbles",
+      message: 'Placing your order please kindly wait.....',
+      translucent: true,
+      cssClass: 'custom-class custom-loading'
     });
-    processingOrder.present();
+    await processingOrder.present();
+
 this.orderRef= createOrderRef.subscribe(customer =>{
       this.orderProvider.placeOrder(getBasketDirect,customer).then(async result  =>
         {
           console.log("Order success:"+result);
-
           // dismiss it here
-          processingOrder.dismiss();
+         await processingOrder.dismiss();
          await this.presentCustomerOrderSuccessToast();
           // navigate to order page.
           this.navCtrl.navigateRoot('/app/tabs/market').then(()=>{
             this.router.navigate(['/app/tabs/myorder']);
           })
-        }).catch(error =>{
-            processingOrder.dismiss();
+        }).catch(async error =>{
+           await  processingOrder.dismiss();
             console.error("Order failed");
-            this.presentAlert("Order failed.","createOrder");
+            await this.presentAlert("Order failed.","createOrder");
             }
       
         )
     });
     
-  
+}
+else
+{
+  await this.presentAlert("Please kindly check your internet connection","Network failure");
+}
                             
 }
 
@@ -226,6 +242,16 @@ async presentCustomerOrderSuccessToast() {
     color:"success"
   });
   toast.present();
+}
+
+ networkWatch():boolean
+{
+
+  if(this.network.type === 'none')
+  {
+    return false;
+  }
+  return true;
 }
 
 }

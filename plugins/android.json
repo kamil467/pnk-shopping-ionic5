@@ -36,6 +36,9 @@
     },
     "cordova-plugin-androidx-adapter": {
       "PACKAGE_NAME": "com.kstech.pnkshopping"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "com.kstech.pnkshopping"
     }
   },
   "dependent_plugins": {}

@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { AlertController, LoadingController } from "@ionic/angular";
+import { AlertController, LoadingController, NavController, Platform } from "@ionic/angular";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import {  BasketObj } from "../../interfaces/basket-interface";
@@ -26,8 +26,8 @@ basketObjObservable:BasketObj
   defaultHref='';
   categoryName:string;
 constructor(public productListProvider:ProductListProvider,public basketProvider: BasketProvider,
-public loader:LoadingController,public alert:AlertController,
-private route: ActivatedRoute)
+public loader:LoadingController,public alert:AlertController,public nvctrl:NavController,
+private route: ActivatedRoute,public platform:Platform)
 {
 
 }
@@ -38,6 +38,9 @@ private route: ActivatedRoute)
 
   // call product-list API to load active products. 
  ngOnInit() { 
+  this.platform.backButton.subscribeWithPriority(10, async () => {
+  this.nvctrl.pop();
+     });
 const storeCode = this.route
                  .snapshot
                  .paramMap

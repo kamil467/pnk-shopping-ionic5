@@ -19,6 +19,7 @@ import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
+import { Network } from '@ionic-native/network/ngx';
 
 @NgModule({
   imports: [
@@ -41,7 +42,7 @@ import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
     })
   ],
   declarations: [AppComponent],
-  providers: [InAppBrowser, SplashScreen, StatusBar,FCM],
+  providers: [InAppBrowser, SplashScreen, StatusBar,FCM,Network],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

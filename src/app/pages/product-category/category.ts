@@ -60,6 +60,9 @@ export class CategoryListPage implements OnInit{
   }
   
  ngOnInit(){
+  this.platform.backButton.subscribeWithPriority(10, async () => {
+    await this.backButton()
+     });
   const storeCode = this.route
                     .snapshot
                     .paramMap
