@@ -20,6 +20,11 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
       loginHint:'+911234567890',
       whitelistedCountries:['IN','+91'],
       buttonColor:'crimson',
+      recaptchaParameters: {
+        type: 'image',
+        size: 'invisible',
+         badge:'none' // or 'inline'
+    }
       
     }
     // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
