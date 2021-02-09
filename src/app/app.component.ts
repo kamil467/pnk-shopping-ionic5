@@ -13,6 +13,7 @@ import { UserData } from './providers/user-data';
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { catchError } from 'rxjs/operators';
 import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
+import { Network } from '@ionic-native/network/ngx';
 
 @Component({
   selector: 'app-root',
@@ -58,12 +59,25 @@ export class AppComponent implements OnInit {
     private toastCtrl: ToastController,
     private afMessaging:AngularFireMessaging,
     private alert:AlertController,
-    private fcm: FCM
+    private fcm: FCM,private network:Network
   ) {
     this.initializeApp();
   }
 
   async ngOnInit() {
+    if(!this.networkWatch())
+    {
+      const alert = await this.alert.create({
+        cssClass: 'my-custom-class',
+        header: 'Alert',
+        subHeader: 'Network Error',
+        message: 'Please kindly check your intenet connection',
+        buttons: ['OK']
+      });
+    
+      await alert.present();
+    }
+
     this.platform.backButton.subscribeWithPriority(10, async () => {
      await this.presentAppExitAlert();
     });
@@ -275,6 +289,13 @@ async presentTestAlert(data:any)
   await alert.present();
 }
 
-
+ networkWatch():boolean
+{
+  if(this.network.type === 'none')
+  {
+    return false;
+  }
+  return true;
+}
 
 }

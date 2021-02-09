@@ -31,7 +31,7 @@ import { Network } from '@ionic-native/network/ngx';
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     AngularFireStorageModule,
-    AngularFirestoreModule.enablePersistence(),
+    AngularFirestoreModule.enablePersistence(),  // enable offline support in future releases.
     HttpClientJsonpModule,
     AngularFireMessagingModule,
     IonicModule.forRoot(),

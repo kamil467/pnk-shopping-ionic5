@@ -20,7 +20,6 @@ export class OrderProvider {
     private afMessaging:AngularFireMessaging) {
  
   }
-
   getUserTokenId():string
   {
     let token =null;
@@ -132,19 +131,31 @@ return finalOrderRef;
 
 getOrderedItemsBySummaryId(summaryId:string):Observable<OrderItem[]>
 {
-  console.log("getOrderedItemsBySummaryId called"+summaryId);
   const orderItemRef = this.angularFireStore
-                       .collection<OrderSummary>(environment.ORDER_SUMMARY)
-                       .doc(summaryId)
-                        .collection<OrderItem>(environment.ORDERED_ITEMS)
-                        .valueChanges();
+                        .collection<OrderItem>(environment.ORDER_SUMMARY+"/"+summaryId+"/"+environment.ORDERED_ITEMS)
+                        .snapshotChanges()
+                        .pipe(map(doc =>
+                          {
+                            return doc.map( item =>
+                              {
+                                
+                                const r = item.payload.doc.ref;
+                                r.onSnapshot(s =>{
+                                  includeMetadataChanges:true;   // refresh subcollection
+                                })
+
+
+                              const id = item.payload.doc.id;
+                              const payloadData = item.payload.doc.data() as OrderItem;
+                              return ({...payloadData,orderItemId:id});
+                              })
+                          }),catchError(err => this.handleError(err)));
 
                         return orderItemRef;
 }
 
 getCustomerDeliveryInfo(summaryId:string):Observable<CustomerDeliveryPersonalInfo>
 {
-  console.log("getCustomerDeliveryInfo called"+summaryId);
   const customerDeliveryInfoRef = this.angularFireStore
                        .collection<OrderSummary>(environment.ORDER_SUMMARY)
                        .doc(summaryId)
@@ -168,7 +179,6 @@ getOrderSummary(customerId:string):Observable<OrderSummary[]>
     return item.map(finalData =>{
       const id = finalData.payload.doc.id;
       const payloadData = finalData.payload.doc.data() as OrderSummary;
-      console.log(payloadData.creationTime);
          return  ({...payloadData,id:id})
     })
     }))
