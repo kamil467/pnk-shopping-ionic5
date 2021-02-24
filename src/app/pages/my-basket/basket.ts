@@ -30,7 +30,7 @@ export class BasketPage   implements OnInit {
   serviceRed:Subscription;
   public loading$ = this.appService.loading.asObservable();   // get the subject value.
   networkSubscription:Subscription;
-
+  isCheckOutAllowedByShopHours:boolean; // enable-disable checkout button by shop hours.
 public navParams = new NavParams();
   constructor(
     public navCtrl: NavController,
@@ -44,7 +44,6 @@ public navParams = new NavParams();
    public router:Router,
    public platform:Platform,public loadingController:LoadingController,private network:Network
   ) {
-   
   }
 
   ngOnInit(){
@@ -53,10 +52,18 @@ public navParams = new NavParams();
        });
   this.basketItems  = this.basketProvider.getBasketDirect();  // load basket Items
   this.updateTotal();
+
   }
   ionViewWillEnter()
   {
     this.getLoggedInUser();
+    
+    if(this.basketItems.shopType == 'fdrst'){
+    this.isCheckOutAllowedByShopHours = this.basketProvider.checkShopAvailability(this.basketItems.operationalHours);
+    }
+    else{
+      this.isCheckOutAllowedByShopHours = true;
+    }
   }
 
   addQuantity(item: OrderItem) {

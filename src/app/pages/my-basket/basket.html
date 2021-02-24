@@ -159,6 +159,12 @@
 					<ion-label>Maximum Order value : <strong> {{basketItems.deliveryOrderConfig.maximumOrderValue | currency :'INR'}} </strong></ion-label>
 				</ion-chip>
 			</div>
+			<div *ngIf="!isCheckOutAllowedByShopHours">
+				<ion-chip color="crimson" >
+					<ion-icon name="close-circle"></ion-icon>
+					<ion-label>Shop is closed now. <strong>Please order when shop is open.</strong></ion-label>
+				</ion-chip>
+			</div>
 	
 			<div *ngIf="(((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) > basketItems.deliveryOrderConfig.minimumOrderValue) 
 				&& ((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) < basketItems.deliveryOrderConfig.maximumOrderValue)) ||
@@ -166,7 +172,6 @@
 				|| ((basketTotalAmount + basketItems.deliveryOrderConfig.deliveryCharge) == basketItems.deliveryOrderConfig.maximumOrderValue)) 
 				
 			">
-
 		    <ng-container *ngIf="isLoggedIn; then showOrderNow; else showLogin">
 
 			</ng-container>
@@ -174,7 +179,7 @@
 				<div class="text-center" *ngIf="showOrderNowButton">
 					<!-- check customer postal code and shop service area postal code-->
 					<div *ngIf="isServiceAvailable">
-						<ion-button class="order-now" fill="outline" *ngIf="isServiceAvailable=='true'" round color="crimson" (click)="createOrderButtonClicked()"> Order Now</ion-button>
+						<ion-button class="order-now" fill="outline" *ngIf="isServiceAvailable=='true' && isCheckOutAllowedByShopHours" round color="crimson" (click)="createOrderButtonClicked()"> Order Now</ion-button>
 					    <ion-card  *ngIf="isServiceAvailable=='false'">
 							<ion-card-header color="crimson">
 							 No Service  <ion-icon name="alert"></ion-icon>

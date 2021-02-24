@@ -8,6 +8,8 @@ export interface BasketObj {
   serviceArea: StoreServiceArea[];
   totalItemsCount:number;
   deliveryOrderConfig:DeliveryOrderConfig;  //this is used to perform precheck validation
+  operationalHours:string;
+  shopType:string;
 }
 
 export interface OrderItem {
@@ -25,3 +27,36 @@ export interface BasketFooterObj {
   totalBasket: number;
   storecode: string;
 }
+
+
+export function get24FormattedHour(inputHour:string):string
+{
+  let map = new Map<string,string>();
+  map.set("01AM","01");
+  map.set( "02AM" ,"02");
+  map.set("03AM","03");
+  map.set("04AM","04");
+  map.set("05AM","05");
+  map.set("06AM","06");
+  map.set("07AM","07");
+  map.set("08AM","08");
+  map.set("09AM","09");
+  map.set("10AM","10");
+  map.set("11AM","11");
+  map.set("12AM","00");
+  map.set("01PM","13");
+  map.set("02PM","14");
+  map.set("03PM","15");
+  map.set("04PM","16");
+  map.set("05PM","17");
+  map.set("06PM","18");
+  map.set("07PM","19");
+  map.set("08PM","20");
+  map.set("09PM","21");
+  map.set("10PM","22");
+  map.set("11PM","23");
+  map.set("12PM","12");
+
+ return map.get(inputHour)
+
+} 
