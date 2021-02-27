@@ -20,7 +20,8 @@
 
   <div *ngIf="shopListObservable | async as sList; else loadingErrorTemplate">
  <div *ngFor="let shop of sList ">
-    <ion-card [routerLink]="['/app/tabs/market/product-category-list',shop.storeCode,shop.name]">
+    <ion-card [routerLink]="['/app/tabs/market/product-category-list',shop.storeCode,shop.name]" class="ion-activatable ripple-parent">
+      <ion-ripple-effect></ion-ripple-effect>
       <ion-card-header>
         <ion-card-title> {{shop.name}}</ion-card-title>
         <ion-card-subtitle>

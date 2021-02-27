@@ -9,13 +9,15 @@
   </ion-toolbar>
 </ion-header>
 <ion-content class="card-background-page">
-  <ion-card [routerLink]="['/app/tabs/market/shoplist','suprmrkt']">
+  <ion-card [routerLink]="['/app/tabs/market/shoplist','suprmrkt']" class="ion-activatable ripple-parent">
+    <ion-ripple-effect></ion-ripple-effect>
     <img src="../../../assets/img/supermarketTile.jpg" />
     <div class="card-title">Super Markets</div>
     <div class="card-subtitle"></div>
   </ion-card>
 
-  <ion-card [routerLink]="['/app/tabs/market/shoplist','fdrst']">
+  <ion-card [routerLink]="['/app/tabs/market/shoplist','fdrst']" class="ion-activatable ripple-parent">
+    <ion-ripple-effect></ion-ripple-effect>
     <img
       src="../../../assets/img/foodRestTile.jpg"
     />

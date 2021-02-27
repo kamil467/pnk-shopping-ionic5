@@ -36,7 +36,7 @@
 	<div *ngIf="offerZoneProducts | async as allProductOb; else offerZoneLoader ">
  <ion-slides [options]="slideOpt" pager="true"  >
 <ion-slide *ngFor="let product of allProductOb" >
-	<ion-card (click)="addToBasket(product)" class="offer-zone-product-card">
+	<ion-card (click)="addToBasket(product)" class="offer-zone-product-card ion-activatable ripple-parent">
 		<ion-ripple-effect></ion-ripple-effect>
 		<ng-container *ngIf="product.productImageUrl != null; then customImage;else defaultImage">
 		</ng-container>
@@ -124,7 +124,8 @@ src="../../../assets/img/default.jpg"
 					<ng-container *ngIf="category != undefined; then pccard;">
 					</ng-container>
 					<ng-template #pccard>
-						<ion-card [routerLink]="['/app/tabs/market/product-list',category.id,category.storeCode,category.name]">
+						<ion-card [routerLink]="['/app/tabs/market/product-list',category.id,category.storeCode,category.name]" class="ion-activatable ripple-parent">
+							<ion-ripple-effect></ion-ripple-effect>
 							<ng-container *ngIf="category.imageURL != null; then customImage;else defaultImage">
 							</ng-container>
 							<ng-template #customImage>
