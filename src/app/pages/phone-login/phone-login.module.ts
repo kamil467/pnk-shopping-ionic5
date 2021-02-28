@@ -22,7 +22,7 @@ const firebaseUiAuthConfig: firebaseui.auth.Config = {
       buttonColor:'crimson',
       recaptchaParameters: {
         type: 'image',
-        size: 'invisible',
+        size: 'invisible', //invisible 
          badge:'none' // or 'inline'
     }
       

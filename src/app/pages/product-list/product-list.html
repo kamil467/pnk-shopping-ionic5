@@ -39,7 +39,7 @@
 							<ng-container *ngIf="product.productImageUrl != null; then customImage;else defaultImage">
 							</ng-container>
 							<ng-template #customImage>
-								<img [src]="product.productImageUrl" />
+								<img class="img" [img-preloader]="product.productImageUrl" />
               </ng-template>
 								<ng-template #defaultImage>
 									<img

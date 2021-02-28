@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ShoplistPage } from './shoplist';
 import { ShopListRoutingModule } from './shoplist-routing.module';
+import { ImagepreloaderDirective, ImagePreLoaderModule } from '../../directive/imagepreloader.directive';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ShopListRoutingModule
+    ShopListRoutingModule,
+    ImagePreLoaderModule
   ],
   declarations: [
     ShoplistPage

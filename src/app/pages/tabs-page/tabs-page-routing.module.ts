@@ -6,6 +6,7 @@ import { MarketplacePage } from '../marketplace/marketplace';
 import { CategoryListPage } from '../product-category/category';
 import { MyOrderPage } from '../my-order/order';
 import { SupportPage } from '../support/support';
+import { ImagepreloaderDirective } from '../../directive/imagepreloader.directive';
 
 
 const routes: Routes = [

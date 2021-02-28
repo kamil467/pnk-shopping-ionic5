@@ -35,7 +35,7 @@
         *ngIf="shop.tileImageUrl!=null; then customImage;else defaultImage"
       ></ng-container>
       <ng-template #customImage>
-        <img [src]="shop.tileImageUrl" />
+        <img class="img"    [img-preloader]="shop.tileImageUrl" />
       </ng-template>
       <ng-template #defaultImage>
         <ng-container *ngIf="shop.categoryCode=='fdrst'">

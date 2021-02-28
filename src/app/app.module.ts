@@ -20,6 +20,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 import { Network } from '@ionic-native/network/ngx';
+import { ImagepreloaderDirective } from './directive/imagepreloader.directive';
 
 @NgModule({
   imports: [

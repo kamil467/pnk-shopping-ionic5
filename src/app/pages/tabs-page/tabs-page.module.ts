@@ -30,7 +30,7 @@ import { OrderPageModule } from '../my-order/order.module';
     OrderPageModule
   ],
   declarations: [
-    TabsPage,
+    TabsPage
   ]
 })
 export class TabsModule { }

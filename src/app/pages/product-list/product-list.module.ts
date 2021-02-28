@@ -4,9 +4,10 @@ import { FormsModule } from "@angular/forms";
 import { IonicModule } from "@ionic/angular";
 import { ProductListPage } from "./product-list";
 import { ProductListRoutingModule } from "./product-list-routing.module";
+import { ImagePreLoaderModule } from "../../directive/imagepreloader.directive";
 
 @NgModule({
-  imports: [CommonModule, FormsModule, IonicModule,ProductListRoutingModule],
+  imports: [CommonModule, FormsModule, IonicModule,ProductListRoutingModule,ImagePreLoaderModule],
   declarations: [ProductListPage],
   entryComponents: [ProductListPage]
 })
