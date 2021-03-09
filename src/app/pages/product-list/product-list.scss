@@ -1,6 +1,7 @@
 //page-product-list {
   .card-background-page {
-    background-color: #b94545;
+
+    color:white;
   
     .newprice {
       text-align: end;
@@ -33,7 +34,8 @@ ion-toolbar
 .product-card
 {
   margin:0;
-border:2px solid crimson;
+border:2px solid white;
+background-color: white;
 
 }
 .ripple-parent
@@ -41,4 +43,9 @@ border:2px solid crimson;
   position: relative;
   overflow: hidden;
 }
+
 //}
+ion-content{
+
+  --ion-background-color:crimson;
+}

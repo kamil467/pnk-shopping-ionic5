@@ -16,12 +16,17 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="card-background-page">
 
-  <div *ngIf="shopListObservable | async as sList; else loadingErrorTemplate">
+
+<ion-content class="card-background-page" style="background-color: crimson;">
+  <ng-template #loadingErrorTemplate>
+    <mat-progress-bar mode="query"></mat-progress-bar>
+  </ng-template>
+
+  <div *ngIf="shopListObservable | async as sList; else loadingErrorTemplate" >
  <div *ngFor="let shop of sList ">
-    <ion-card [routerLink]="['/app/tabs/market/product-category-list',shop.storeCode,shop.name]" class="ion-activatable ripple-parent">
-      <ion-ripple-effect></ion-ripple-effect>
+    <ion-card matRipple [matRippleColor]="crimson"  [routerLink]="['/app/tabs/market/product-category-list',shop.storeCode,shop.name]" class="ion-activatable ripple-parent shop-card">
+      <!-- <ion-ripple-effect></ion-ripple-effect> -->
       <ion-card-header>
         <ion-card-title> {{shop.name}}</ion-card-title>
         <ion-card-subtitle>
@@ -35,7 +40,12 @@
         *ngIf="shop.tileImageUrl!=null; then customImage;else defaultImage"
       ></ng-container>
       <ng-template #customImage>
-        <img class="img"    [img-preloader]="shop.tileImageUrl" />
+        <ng-container  *ngIf="shop.categoryCode=='suprmrkt'">
+          <ion-img class="img"  [url]="shop.tileImageUrl" [customCache]="{fallbackUrl: '../../../assets/img/supermarket.jpg'}" alt="Shop-image"></ion-img>
+        </ng-container>
+        <ng-container *ngIf="shop.categoryCode=='fdrst'">
+          <ion-img class="img"  [url]="shop.tileImageUrl" [customCache]="{fallbackUrl: '../../../assets/img/foodRestTile.jpg'}" alt="Shop-image"> </ion-img>
+        </ng-container>
       </ng-template>
       <ng-template #defaultImage>
         <ng-container *ngIf="shop.categoryCode=='fdrst'">
@@ -101,9 +111,13 @@
     </ion-card>
   </div>
 </div>
+
+
 <ng-template #loadingErrorTemplate>
-  <div class="spin"> <ion-spinner name="bubbles"></ion-spinner>
-    </div>
+  <mat-progress-bar mode="query" [color]="crimson"></mat-progress-bar>
+  <!-- <div class="spin"> <ion-spinner name="bubbles"></ion-spinner>
+    </div> -->
     
 </ng-template>
 </ion-content>
+

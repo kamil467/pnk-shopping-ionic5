@@ -15,36 +15,39 @@
   </ion-toolbar>
 </ion-header>
 <div *ngIf="basketObjObservable; else loadingErrorTemplate">
-	<div *ngIf = "basketObjObservable.totalItemsCount != 0">
-
-	
+	<div *ngIf = "basketObjObservable.totalItemsCount != 0">	
 	<ion-fab vertical="top" horizontal="end" slot="float" >
-		<ion-fab-button  routerLink="/app/tabs/market/my-basket">
+		<!-- <ion-fab-button  routerLink="/app/tabs/market/my-basket">
 			<ion-badge  >{{basketObjObservable.totalItemsCount}}</ion-badge>
-			<ion-icon name="cart-sharp"></ion-icon></ion-fab-button>
+			<ion-icon name="cart-sharp"></ion-icon></ion-fab-button> -->
+			<ion-fab-button routerLink="/app/tabs/market/my-basket">
+				
+				<mat-icon [matBadge]="basketObjObservable.totalItemsCount" matBadgeColor="warn"><ion-icon name="cart-sharp"></ion-icon></mat-icon>
+			</ion-fab-button>
 	  </ion-fab>
 </div>
 </div>
 <ion-content class="card-background-page">
-
   <div *ngIf="allProductsAbservable | async as allProductOb; else loadingErrorTemplate ">
+	  <ion-card class="product-parent-card">
   <ion-grid>
 	
 			<ion-row>
 				<ion-col col-6 *ngFor="let product of allProductOb" size="6">
 					<ng-container *ngIf="product != undefined; then productcard;"></ng-container>
 					<ng-template #productcard>
-						<ion-card (click)="addToBasket(product)" class="product-card ion-activatable ripple-parent">
-							<ion-ripple-effect></ion-ripple-effect>
+						<ion-card matRipple  (click)="addToBasket(product)" class="product-card ion-activatable ripple-parent">
+							<!-- <ion-ripple-effect></ion-ripple-effect> -->
 							<ng-container *ngIf="product.productImageUrl != null; then customImage;else defaultImage">
 							</ng-container>
 							<ng-template #customImage>
-								<img class="img" [img-preloader]="product.productImageUrl" />
+								<!-- <img class="img" [img-preloader]="product.productImageUrl" /> -->
+								<ion-img class="img"  [url]="product.productImageUrl" [customCache]="{fallbackUrl: '../../../assets/img/default.jpg'}" alt="product-image"></ion-img>
               </ng-template>
 								<ng-template #defaultImage>
-									<img
+									<ion-img
                   src="../../../assets/img/default.jpg"
-                />
+                ></ion-img>
               </ng-template>
 									<ion-row>
 										<ion-col col-10>
@@ -105,10 +108,11 @@
 				</ion-col>
 			</ion-row>
 	</ion-grid>
+</ion-card>
 </div>
 <ng-template #loadingErrorTemplate>
-	<div class="spin"> <ion-spinner name="bubbles"></ion-spinner>
-	  </div>
-	  
+	<!-- <div class="spin"> <ion-spinner name="bubbles"></ion-spinner>
+	  </div> -->
+	  <mat-progress-bar mode="query" [color]="crimson"></mat-progress-bar>
   </ng-template>
 </ion-content>

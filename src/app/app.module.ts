@@ -21,6 +21,7 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx";
 import { Network } from '@ionic-native/network/ngx';
 import { ImagepreloaderDirective } from './directive/imagepreloader.directive';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -37,10 +38,10 @@ import { ImagepreloaderDirective } from './directive/imagepreloader.directive';
     AngularFireMessagingModule,
     IonicModule.forRoot(),
     IonicStorageModule.forRoot(),
-    
     ServiceWorkerModule.register('combined-sw.js', {
       enabled: environment.production
-    })
+    }),
+    BrowserAnimationsModule
   ],
   declarations: [AppComponent],
   providers: [InAppBrowser, SplashScreen, StatusBar,FCM,Network],

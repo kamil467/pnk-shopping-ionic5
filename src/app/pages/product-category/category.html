@@ -19,16 +19,25 @@
 
 	
 	<ion-fab vertical="top" horizontal="end" slot="fixed" >
-		<ion-fab-button   outline routerLink="/app/tabs/market/my-basket">
+		<!-- <ion-fab-button  outline routerLink="/app/tabs/market/my-basket">
 			<ion-badge >{{basketDirect.totalItemsCount}}</ion-badge>
-			<ion-icon name="cart-sharp"></ion-icon></ion-fab-button>
+			<ion-icon name="cart-sharp"></ion-icon></ion-fab-button> -->		
+		
+				<ion-fab-button  routerLink="/app/tabs/market/my-basket"> 
+				
+					<mat-icon [matBadge]="basketDirect.totalItemsCount" matBadgeColor="warn"><ion-icon name="cart-sharp"></ion-icon></mat-icon>
+				</ion-fab-button>
+				
+		
+			
+		
 	  </ion-fab>
 </div>
 </div>
 <ion-content class="card-background-page">
-	<ion-card *ngIf="isEnableForOfferZone">
+	<ion-card class="offer-zone-product-card-parent"  *ngIf="isEnableForOfferZone">
 <ion-card-header>
-	<ion-card-subtitle>
+	<ion-card-subtitle style="color:white">
 		Special Offer Zone
 	</ion-card-subtitle>
 </ion-card-header>
@@ -36,12 +45,13 @@
 	<div *ngIf="offerZoneProducts | async as allProductOb; else offerZoneLoader ">
  <ion-slides [options]="slideOpt" pager="true"  >
 <ion-slide *ngFor="let product of allProductOb" >
-	<ion-card (click)="addToBasket(product)" class="offer-zone-product-card ion-activatable ripple-parent">
-		<ion-ripple-effect></ion-ripple-effect>
+	<ion-card (click)="addToBasket(product)" class="offer-zone-product-card ion-activatable ripple-parent" matRipple>
+		<!-- <ion-ripple-effect></ion-ripple-effect> -->
 		<ng-container *ngIf="product.productImageUrl != null; then customImage;else defaultImage">
 		</ng-container>
 		<ng-template #customImage>
-			<img [img-preloader]="product.productImageUrl" />
+			<!-- <img [img-preloader]="product.productImageUrl" /> -->
+			<img class="img"  [url]="product.productImageUrl" [customCache]="{fallbackUrl: '../../../assets/img/default.jpg'}" alt="product-image" />
 </ng-template>
 			<ng-template #defaultImage>
 				<img
@@ -108,28 +118,33 @@ src="../../../assets/img/default.jpg"
 </ion-slides>
 </div>
 <ng-template #offerZoneLoader>
-<p>
-	Loading offers.......
-</p>
+	<mat-progress-bar mode="query" [color]="crimson"></mat-progress-bar>
 </ng-template>
 </ion-card-content>
 </ion-card>
 
 <hr />
 	<div *ngIf="productCatgeoryListObservable | async as catList ; else loadingErrorTemplate">
-	  
+	  <ion-card class="grid-parent-card">  
+		<ion-card-header>
+			<ion-card-subtitle style="color:white">
+				Product Categories
+			</ion-card-subtitle>
+		</ion-card-header>
+	
 	<ion-grid>
 			<ion-row>
 				<ion-col col-4 *ngFor="let category of catList" size="4">
 					<ng-container *ngIf="category != undefined; then pccard;">
 					</ng-container>
 					<ng-template #pccard>
-						<ion-card [routerLink]="['/app/tabs/market/product-list',category.id,category.storeCode,category.name]" class="ion-activatable ripple-parent">
-							<ion-ripple-effect></ion-ripple-effect>
+						<ion-card  matRipple  [routerLink]="['/app/tabs/market/product-list',category.id,category.storeCode,category.name]" class="ion-activatable ripple-parent" style="margin: 0;">
+							<!-- <ion-ripple-effect></ion-ripple-effect> -->
 							<ng-container *ngIf="category.imageURL != null; then customImage;else defaultImage">
 							</ng-container>
 							<ng-template #customImage>
-								<img [img-preloader]="category.imageURL" />
+							<!--	<img [img-preloader]="category.imageURL" /> -->
+							<img class="img"  [url]="category.imageURL" [customCache]="{fallbackUrl: '../../../assets/img/product_category.png'}" alt="product-category-image" />
               </ng-template>
 								<ng-template #defaultImage>
 									<img
@@ -147,11 +162,12 @@ src="../../../assets/img/default.jpg"
 			</ion-row>
 
 	</ion-grid>
+</ion-card>
 	</div>
 	<ng-template #loadingErrorTemplate>
-		<div class="spin"> <ion-spinner name="bubbles"></ion-spinner>
-		  </div>
-		  
+		<!-- <div class="spin"> <ion-spinner name="bubbles"></ion-spinner>
+		  </div> -->
+		  <mat-progress-bar mode="query" [color]="crimson"></mat-progress-bar>
 	  </ng-template>
 </ion-content>
 <!--

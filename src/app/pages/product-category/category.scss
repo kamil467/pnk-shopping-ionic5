@@ -3,9 +3,11 @@ ion-toolbar
     color:white;
 }
 .cat-name {
-    background-color: crimson;
+    border: 1px solid crimson;
+    background-color:white;
     font-weight: bold;
-    color: white;
+    color: crimson;
+    text-align: center;
   }
   .spin
   {
@@ -39,3 +41,8 @@ border:2px solid crimson;
     position: relative;
     overflow: hidden;
   }
+  .offer-zone-product-card-parent,.grid-parent-card
+  {
+    background-color: crimson;
+  } 
+

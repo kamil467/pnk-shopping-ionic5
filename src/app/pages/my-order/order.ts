@@ -24,6 +24,7 @@ export class MyOrderPage implements OnInit{
   ngOnINtLoadCount : number= 0;
   isRecentOrdersAvailable:boolean
   isHistoryOrdersAvailable:boolean;
+  step = 0;
   public loading$ = this.appService.loading.asObservable();
 
   constructor(private loader:LoadingController,private alertController:AlertController,
@@ -33,6 +34,19 @@ export class MyOrderPage implements OnInit{
     public appService:AppService) {
 
 
+  }
+
+
+  setStep(index: number) {
+    this.step = index;
+  }
+
+  nextStep() {
+    this.step++;
+  }
+
+  prevStep() {
+    this.step--;
   }
 
 ngOnInit()

@@ -36,4 +36,20 @@ ion-note
   position: relative;
   overflow: hidden;
 }
+.shop-card
+{
+  background-color: #FFE4E1;
+  
+}
+.shop-parent-card
+{
+  background-color: crimson;
+}
+#background-content{
+  background-color: crimson;
+}
+ion-content{
+
+  --ion-background-color:crimson;
+}
 //}
