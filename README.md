@@ -1,4 +1,4 @@
-# pnk-shopping-ionic5
+# pnk-shopping
 
 Pnk Shopping Application - Grocery and Food ordering online app. 
 
